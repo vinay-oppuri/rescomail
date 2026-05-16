@@ -14,7 +14,7 @@ const HomeNavbar = () => {
     ]
 
     return (
-        <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-0">
+        <nav className=" mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:py-6 md:px-0">
             <Link href="/" className="inline-flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center border bg-primary font-heading text-sm text-primary-foreground">
                     R

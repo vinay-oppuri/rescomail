@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@repo/ui/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@repo/ui/components/tooltip";
+import { ScrollToTop } from "@repo/ui/components/scroll-to-top";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({
         >
           <TooltipProvider>
             {children}
+            <ScrollToTop />
           </TooltipProvider>
         </ThemeProvider>
       </body>

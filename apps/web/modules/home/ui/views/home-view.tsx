@@ -6,9 +6,11 @@ import Link from "next/link"
 const HomeView = () => {
     return (
         <main className="min-h-screen bg-background">
-            <HomeNavbar />
+            <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
+                <HomeNavbar />
+            </div>
 
-            <section className="border-y bg-muted/20 py-20 lg:py-28">
+            <section className="py-20 lg:py-28">
                 <div className="relative z-10 mx-auto max-w-7xl px-6">
                     <div className="text-center max-w-4xl mx-auto">
                         <div className="mb-8 inline-flex items-center gap-2 rounded-none border bg-background px-3 py-1 text-sm font-medium">
