@@ -3,6 +3,7 @@
 import { signOut, useSession } from "@repo/auth/client";
 import {
     Avatar,
+    AvatarFallback,
     AvatarImage,
     Badge,
     Button,
@@ -11,7 +12,6 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
@@ -25,88 +25,97 @@ import {
 } from "@repo/ui";
 import { Calendar, Camera, LogOut, Mail, Shield, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const DashboardUserProfile = () => {
-    const { data } = useSession();
+    const { data, isPending } = useSession();
     const router = useRouter();
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     const onSignOut = async () => {
         await signOut({
             fetchOptions: {
                 onSuccess: () => {
-                    router.push("/sign-in");
+                    router.push("/login");
                 },
             },
         });
     };
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-2 border-none px-2 transition-colors hover:bg-primary/10"
-                >
-                    <div className="flex h-7 w-7 items-center justify-center border border-primary/20 bg-primary/10">
-                        {data?.user?.image ? (
-                            <Avatar className="h-7 w-7 rounded-none">
-                                <AvatarImage
-                                    className="h-7 w-7 rounded-none"
-                                    src={data.user.image}
-                                />
-                            </Avatar>
-                        ) : (
-                            <User className="h-4 w-4 text-primary" />
-                        )}
-                    </div>
-                    <span className="hidden text-[10px] font-bold uppercase sm:inline-block">Account </span>
-                </Button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="end">
-                <DropdownMenuGroup>
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <UserProfileDialog />
-                    <DropdownMenuItem>Billing </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <DropdownMenuItem>Subscription</DropdownMenuItem>
-                    <DropdownMenuItem
-                        variant="destructive"
-                        onClick={onSignOut}
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="gap-2 border-none px-2 transition-colors hover:bg-primary/10"
                     >
-                        <LogOut className="mr-2 h-4 w-4" /> Sign Out
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
+                        <div className="flex h-7 w-7 items-center justify-center border border-primary/20 bg-primary/10 overflow-hidden">
+                            {data?.user?.image ? (
+                                <img
+                                    src={data.user.image}
+                                    alt={data.user.name || "User"}
+                                    className="h-full w-full object-cover"
+                                />
+                            ) : (
+                                <User className="h-4 w-4 text-primary" />
+                            )}
+                        </div>
+                        <span className="hidden text-[10px] font-bold uppercase sm:inline-block">Account </span>
+                    </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end">
+                    <DropdownMenuGroup>
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuItem onSelect={() => setIsProfileOpen(true)}>
+                            Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>Billing</DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem>Subscription</DropdownMenuItem>
+                        <DropdownMenuItem
+                            variant="destructive"
+                            onClick={onSignOut}
+                        >
+                            <LogOut className="mr-2 h-4 w-4" /> Sign Out
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <UserProfileDialog
+                isOpen={isProfileOpen}
+                onOpenChange={setIsProfileOpen}
+                data={data}
+            />
+        </>
     );
 };
 
 export { DashboardUserProfile };
 
-const UserProfileDialog = () => {
-    const { data } = useSession();
+interface UserProfileDialogProps {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    data: any;
+}
 
+const UserProfileDialog = ({ isOpen, onOpenChange, data }: UserProfileDialogProps) => {
     const user = data?.user;
 
     const initials =
         user?.name
             ?.split(" ")
-            .map((n) => n[0])
+            .map((n: string) => n[0])
             .join("")
             .toUpperCase() || "U";
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    Profile
-                </DropdownMenuItem>
-            </DialogTrigger>
-
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-130">
                 <DialogHeader className="space-y-2">
                     <DialogTitle className="text-xl font-bold">
@@ -122,18 +131,22 @@ const UserProfileDialog = () => {
                     {/* Profile Header */}
                     <div className="flex items-center gap-4">
                         <div className="relative">
-                            <Avatar className="h-20 w-20 border">
-                                {data?.user.image ? (
-                                    <AvatarImage src={user?.image || ""} />
+                            <div className="flex h-20 w-20 items-center justify-center border bg-muted overflow-hidden">
+                                {user?.image ? (
+                                    <img
+                                        src={user.image}
+                                        alt={user.name || "User"}
+                                        className="h-full w-full object-cover"
+                                    />
                                 ) : (
-                                    <User className="h-4 w-4 text-primary" />
+                                    <span className="text-xl font-medium text-muted-foreground">{initials}</span>
                                 )}
-                            </Avatar>
+                            </div>
 
                             <Button
                                 size="icon"
                                 variant="secondary"
-                                className="absolute -bottom-2 -right-2 h-7 w-7 rounded-full"
+                                className="absolute -bottom-2 -right-2 h-7 w-7 rounded-none border"
                             >
                                 <Camera className="h-3.5 w-3.5" />
                             </Button>
@@ -219,11 +232,11 @@ const UserProfileDialog = () => {
 
                     {/* Actions */}
                     <div className="flex items-center justify-end gap-2">
-                        <Button variant="outline">
+                        <Button variant="outline" onClick={() => onOpenChange(false)}>
                             Cancel
                         </Button>
 
-                        <Button>
+                        <Button onClick={() => onOpenChange(false)}>
                             Save Changes
                         </Button>
                     </div>

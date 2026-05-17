@@ -65,8 +65,7 @@ const AuthLogin = () => {
       }
 
       form.reset();
-      router.push("/dashboard");
-      router.refresh();
+      window.location.href = "/dashboard";
     } catch (error) {
       setAuthError(getErrorMessage(error, "Unable to sign in."));
     }
@@ -125,7 +124,7 @@ const AuthLogin = () => {
               <FormField
                 control={form.control}
                 name="email"
-                render={({ field }) => (
+                render={({ field }: any) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
@@ -144,7 +143,7 @@ const AuthLogin = () => {
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field }) => (
+                render={({ field }: any) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
                       <FormLabel>Password</FormLabel>

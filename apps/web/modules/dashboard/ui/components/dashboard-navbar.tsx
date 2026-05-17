@@ -21,8 +21,8 @@ const DashboardNavbar = () => {
         <div className="flex flex-1 items-center gap-4 md:gap-8">
           <form className="hidden md:flex flex-1 max-w-sm relative group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
-            <Input 
-              placeholder="Search applications..." 
+            <Input
+              placeholder="Search applications..."
               className="h-9 rounded-none border-border bg-muted/30 pl-9 transition-colors focus-visible:bg-muted/50 focus-visible:ring-1"
             />
           </form>

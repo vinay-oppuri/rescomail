@@ -31,7 +31,7 @@ const HomeNavbar = () => {
             </div>
             <div className="flex items-center gap-4">
                 <Button asChild className="gap-2 px-3">
-                    <Link href="/login"><LogIn /> Login</Link>
+                    <Link href="/dashboard"><LogIn /> Login</Link>
                 </Button>
                 <ThemeToggle />
             </div>

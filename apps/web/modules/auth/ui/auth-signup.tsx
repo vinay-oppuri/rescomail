@@ -70,8 +70,7 @@ const AuthSignup = () => {
       }
 
       form.reset();
-      router.push("/dashboard");
-      router.refresh();
+      window.location.href = "/dashboard";
     } catch (error) {
       setAuthError(getErrorMessage(error, "Unable to create an account."));
     }
@@ -133,7 +132,7 @@ const AuthSignup = () => {
                 <FormField
                   control={form.control}
                   name="firstName"
-                  render={({ field }) => (
+                  render={({ field }: any) => (
                     <FormItem>
                       <FormLabel>First name</FormLabel>
                       <FormControl>
@@ -151,7 +150,7 @@ const AuthSignup = () => {
                 <FormField
                   control={form.control}
                   name="lastName"
-                  render={({ field }) => (
+                  render={({ field }: any) => (
                     <FormItem>
                       <FormLabel>Last name</FormLabel>
                       <FormControl>
@@ -170,7 +169,7 @@ const AuthSignup = () => {
               <FormField
                 control={form.control}
                 name="email"
-                render={({ field }) => (
+                render={({ field }: any) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
@@ -189,7 +188,7 @@ const AuthSignup = () => {
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field }) => (
+                render={({ field }: any) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
