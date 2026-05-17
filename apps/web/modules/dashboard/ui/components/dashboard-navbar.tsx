@@ -4,6 +4,7 @@ import { Button } from "@repo/ui/components/button"
 import { Input } from "@repo/ui/components/input"
 import { Bell, Search, User } from "lucide-react"
 import { SidebarTrigger } from "@repo/ui/components/sidebar"
+import { DashboardUserProfile } from "./dashboard-user-profile"
 
 const DashboardNavbar = () => {
   return (
@@ -32,12 +33,7 @@ const DashboardNavbar = () => {
             <Bell className="h-5 w-5 transition-transform group-hover:rotate-12" />
           </Button>
           <div className="h-6 w-px bg-border mx-1 hidden sm:block" />
-          <Button variant="ghost" size="sm" className="gap-2 rounded-none px-2 hover:bg-muted transition-colors">
-            <div className="h-7 w-7 bg-primary/10 flex items-center justify-center rounded-none border border-primary/20">
-              <User className="h-4 w-4 text-primary" />
-            </div>
-            <span className="hidden sm:inline-block font-bold text-[10px] uppercase">Account</span>
-          </Button>
+          <DashboardUserProfile />
         </div>
       </div>
     </header>

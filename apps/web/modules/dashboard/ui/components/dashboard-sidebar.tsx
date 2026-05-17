@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import {
   Briefcase,
   FileText,
@@ -28,6 +27,7 @@ import { Button } from "@repo/ui/components/button"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@repo/ui/lib/utils"
+import { signOut } from "@repo/auth/client"
 
 const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -112,7 +112,9 @@ const DashboardSidebar = () => {
         
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="h-11 w-full justify-start gap-3 rounded-none px-3 font-medium text-muted-foreground transition-colors hover:bg-destructive/5 hover:text-destructive">
+            <SidebarMenuButton
+              onClick={() => signOut()} 
+              className="h-11 w-full justify-start gap-3 rounded-none px-3 font-medium text-muted-foreground transition-colors hover:bg-destructive/5 hover:text-destructive">
               <LogOut className="h-4 w-4" />
               <span>Sign Out</span>
             </SidebarMenuButton>
