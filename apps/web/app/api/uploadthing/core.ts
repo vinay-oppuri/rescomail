@@ -2,15 +2,14 @@ import { auth } from "@repo/auth";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { z } from "zod";
+import { resumeUploadSchema } from "@repo/validations";
 
 import { createResumeUpload } from "@/modules/resumes/server/resumes";
 import { triggerResumeParsing } from "@/modules/resumes/server/resume-parsing";
 
 const f = createUploadthing();
 
-const resumeUploadInput = z.object({
-  title: z.string().trim().max(120).optional(),
-});
+const resumeUploadInput = resumeUploadSchema;
 
 export const ourFileRouter = {
   resumeUploader: f(

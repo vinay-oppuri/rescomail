@@ -28,6 +28,8 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
 
+  apps/ai-service: {}
+
   apps/web:
     dependencies:
       '@hookform/resolvers':
@@ -42,6 +44,9 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@repo/validations':
+        specifier: workspace:*
+        version: link:../../packages/validations
       '@uploadthing/react':
         specifier: ^7.3.3
         version: 7.3.3(next@16.2.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(uploadthing@7.7.4(express@5.2.1)(next@16.2.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.3.0))
@@ -57,9 +62,6 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      pdfjs-dist:
-        specifier: ^3.11.174
-        version: 3.11.174
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -275,6 +277,22 @@ importers:
         version: 4.3.0
       typescript:
         specifier: 5.9.2
+        version: 5.9.2
+
+  packages/validations:
+    dependencies:
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: ^5.5.4
         version: 5.9.2
 
 packages:
@@ -6531,11 +6549,11 @@ snapshots:
 
   '@types/pdf-parse@1.1.5':
     dependencies:
-      '@types/node': 20.19.41
+      '@types/node': 22.19.19
 
   '@types/pg@8.20.0':
     dependencies:
-      '@types/node': 20.19.41
+      '@types/node': 22.19.19
       pg-protocol: 1.13.0
       pg-types: 2.2.0
 

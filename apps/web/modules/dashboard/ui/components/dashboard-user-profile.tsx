@@ -179,12 +179,12 @@ const UserProfileDialog = ({ isOpen, onOpenChange, data }: UserProfileDialogProp
                             <Label htmlFor="name">Full Name</Label>
 
                             <div className="relative">
-                                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
 
                                 <Input
                                     id="name"
                                     defaultValue={user?.name || ""}
-                                    className="pl-10"
+                                    className="h-9 pl-10"
                                     placeholder="Enter your full name"
                                 />
                             </div>
@@ -193,23 +193,16 @@ const UserProfileDialog = ({ isOpen, onOpenChange, data }: UserProfileDialogProp
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email Address</Label>
 
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    defaultValue={user?.email || ""}
-                                    className="pl-10"
-                                    disabled
-                                />
+                            <div className="flex items-center gap-3 h-9 bg-muted/60 border px-3">
+                                <Mail className="h-4 w-4 text-muted-foreground" />
+                                <div className="text-muted-foreground">{data?.user.email}</div>
                             </div>
                         </div>
 
                         <div className="grid gap-2">
                             <Label>Account Status</Label>
 
-                            <div className="flex items-center gap-2 rounded-md border p-3 text-sm">
+                            <div className="h-9 flex items-center gap-3 border px-3">
                                 <Shield className="h-4 w-4 text-green-500" />
 
                                 <span className="font-medium">
@@ -221,7 +214,7 @@ const UserProfileDialog = ({ isOpen, onOpenChange, data }: UserProfileDialogProp
                         <div className="grid gap-2">
                             <Label>Member Since</Label>
 
-                            <div className="flex items-center gap-2 rounded-md border p-3 text-sm text-muted-foreground">
+                            <div className="h-9 flex items-center gap-3 border px-3 text-muted-foreground">
                                 <Calendar className="h-4 w-4" />
                                 May 2026
                             </div>

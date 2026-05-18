@@ -47,7 +47,7 @@ const DashboardSidebar = () => {
           <div className="flex h-9 w-9 items-center justify-center rounded-none bg-primary text-primary-foreground font-bold transition-colors group-hover:bg-primary/90">
             R
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-0.5">
             <span className="font-bold text-lg tracking-tight leading-none">Rescomail</span>
             <span className="text-[10px] text-muted-foreground font-medium tracking-wider uppercase opacity-70">AI Copilot</span>
           </div>

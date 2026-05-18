@@ -19,13 +19,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { loginSchema, type LoginInput } from "@repo/validations";
 
-const loginSchema = z.object({
-  email: z.string().trim().email("Enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormValues = LoginInput;
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (error instanceof Error && error.message) {
