@@ -5,23 +5,26 @@ from .schemas import StructuredResume
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+REQUEST_TIMEOUT = (5, 60)
+
 
 def structure_with_gemini(preprocessed: dict) -> dict:
     if not GEMINI_API_KEY:
-        print("[AI Structurer] No Gemini API Key. Returning fallback.")
-        return {
+        fallback = {
             "personalInfo": {
                 "name": preprocessed["name"],
                 "email": preprocessed["email"],
                 "phone": preprocessed["phone"]
             },
-            "skills": ["Communication", "FastAPI"],
-            "experience": [{"role": "Applicant", "company": "Unknown", "duration": "Present", "description": "Needs API key."}],
-            "education": [{"degree": "Unknown", "school": "Unknown", "year": "Unknown"}]
+            "skills": [],
+            "experience": [],
+            "education": []
         }
-    
+
+        return StructuredResume.model_validate(fallback).model_dump()
+
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
-    
+
     prompt = f"""You are an ATS parser. Extract and strictly format into JSON matching the schema.
 Text: {preprocessed["raw"][:4000]} # Limit to 4k chars to avoid token issues for now
 
@@ -78,15 +81,17 @@ Extracted Phone: {preprocessed['phone']}
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
             "responseMimeType": "application/json",
-            "responseSchema": gemini_schema
+            "responseSchema": gemini_schema,
+            "temperature": 0.1
         }
     }
 
-    resp = requests.post(url, json=payload)
+    resp = requests.post(url, json=payload, timeout=REQUEST_TIMEOUT)
     if resp.status_code != 200:
-        print("Gemini error:", resp.text)
-        raise Exception(f"Gemini API Error: {resp.status_code}")
-    
+        raise RuntimeError(f"Gemini API Error: {resp.status_code}")
+
     data = resp.json()
     text = data.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "{}")
-    return json.loads(text)
+    parsed = json.loads(text)
+
+    return StructuredResume.model_validate(parsed).model_dump()

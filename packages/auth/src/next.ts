@@ -1,5 +1,5 @@
-import { toNextJsHandler } from "better-auth/next-js"
+import { toNextJsHandler } from "better-auth/next-js";
 
-import { auth } from "./index"
+import { auth } from "./index";
 
-export const handlers = toNextJsHandler(auth)
+export const handlers = toNextJsHandler(auth);

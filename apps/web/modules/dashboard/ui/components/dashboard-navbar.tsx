@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Button } from "@repo/ui/components/button"
-import { Input } from "@repo/ui/components/input"
-import { Bell, Search, User } from "lucide-react"
-import { SidebarTrigger } from "@repo/ui/components/sidebar"
-import { DashboardUserProfile } from "./dashboard-user-profile"
+import { Button } from "@repo/ui/components/button";
+import { Input } from "@repo/ui/components/input";
+import { Bell, Search } from "lucide-react";
+import { SidebarTrigger } from "@repo/ui/components/sidebar";
+import { DashboardUserProfile } from "./dashboard-user-profile";
 
 const DashboardNavbar = () => {
   return (
@@ -29,7 +29,11 @@ const DashboardNavbar = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="rounded-none hover:bg-muted group">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-none hover:bg-muted group"
+          >
             <Bell className="h-5 w-5 transition-transform group-hover:rotate-12" />
           </Button>
           <div className="h-6 w-px bg-border mx-1 hidden sm:block" />
@@ -37,8 +41,7 @@ const DashboardNavbar = () => {
         </div>
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default DashboardNavbar
-
+export default DashboardNavbar;

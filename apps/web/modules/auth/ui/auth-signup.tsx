@@ -18,7 +18,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { signupSchema, type SignupInput } from "@repo/validations";
 
 type SignupFormValues = SignupInput;
@@ -64,7 +63,8 @@ const AuthSignup = () => {
       }
 
       form.reset();
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
+      router.refresh();
     } catch (error) {
       setAuthError(getErrorMessage(error, "Unable to create an account."));
     }
@@ -126,7 +126,7 @@ const AuthSignup = () => {
                 <FormField
                   control={form.control}
                   name="firstName"
-                  render={({ field }: any) => (
+                  render={({ field }) => (
                     <FormItem>
                       <FormLabel>First name</FormLabel>
                       <FormControl>
@@ -144,7 +144,7 @@ const AuthSignup = () => {
                 <FormField
                   control={form.control}
                   name="lastName"
-                  render={({ field }: any) => (
+                  render={({ field }) => (
                     <FormItem>
                       <FormLabel>Last name</FormLabel>
                       <FormControl>
@@ -163,7 +163,7 @@ const AuthSignup = () => {
               <FormField
                 control={form.control}
                 name="email"
-                render={({ field }: any) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
@@ -182,7 +182,7 @@ const AuthSignup = () => {
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field }: any) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>

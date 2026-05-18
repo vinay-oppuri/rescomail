@@ -10,17 +10,21 @@
     "./next": "./src/next.ts"
   },
   "scripts": {
+    "lint": "eslint .",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@repo/db": "workspace:*",
+    "@repo/env": "workspace:*",
     "better-auth": "^1.6.11",
     "drizzle-orm": "^0.45.2",
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",
+    "eslint": "^9.39.1",
     "typescript": "5.9.2"
   }
 }

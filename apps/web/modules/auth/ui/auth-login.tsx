@@ -18,7 +18,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { loginSchema, type LoginInput } from "@repo/validations";
 
 type LoginFormValues = LoginInput;
@@ -61,7 +60,8 @@ const AuthLogin = () => {
       }
 
       form.reset();
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
+      router.refresh();
     } catch (error) {
       setAuthError(getErrorMessage(error, "Unable to sign in."));
     }
@@ -120,7 +120,7 @@ const AuthLogin = () => {
               <FormField
                 control={form.control}
                 name="email"
-                render={({ field }: any) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
@@ -139,12 +139,12 @@ const AuthLogin = () => {
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field }: any) => (
+                render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
                       <FormLabel>Password</FormLabel>
                       <Link
-                        href="#"
+                        href="/forgot-password"
                         className="text-sm font-medium text-primary hover:underline"
                       >
                         Forgot password?

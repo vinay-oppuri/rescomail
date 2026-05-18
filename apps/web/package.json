@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
+    "@repo/env": "workspace:*",
     "@repo/ui": "workspace:*",
     "@repo/validations": "workspace:*",
     "@uploadthing/react": "^7.3.3",

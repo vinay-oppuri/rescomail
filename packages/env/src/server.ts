@@ -1,0 +1,65 @@
+import { z } from "zod";
+
+const emptyStringToUndefined = (value: unknown) =>
+  typeof value === "string" && value.trim() === "" ? undefined : value;
+
+const optionalNonEmptyString = z.preprocess(
+  emptyStringToUndefined,
+  z.string().trim().min(1).optional(),
+);
+
+const optionalUrl = z.preprocess(
+  emptyStringToUndefined,
+  z.string().url().optional(),
+);
+
+const requiredSecret = z
+  .string()
+  .trim()
+  .min(32, "Must be at least 32 characters.");
+
+const serverEnvSchema = z
+  .object({
+    NODE_ENV: z
+      .enum(["development", "test", "production"])
+      .default("development"),
+    DATABASE_URL: z.string().url(),
+    BETTER_AUTH_URL: z.string().url().default("http://localhost:3000"),
+    NEXT_PUBLIC_BETTER_AUTH_URL: z
+      .string()
+      .url()
+      .default("http://localhost:3000"),
+    BETTER_AUTH_SECRET: requiredSecret,
+    GOOGLE_CLIENT_ID: optionalNonEmptyString,
+    GOOGLE_CLIENT_SECRET: optionalNonEmptyString,
+    UPLOADTHING_TOKEN: optionalNonEmptyString,
+    RESUME_PARSER_WEBHOOK_URL: optionalUrl,
+    RESUME_PARSER_API_KEY: optionalNonEmptyString,
+    AI_SERVICE_URL: z.string().url().default("http://localhost:8000"),
+  })
+  .superRefine((env, ctx) => {
+    const hasGoogleId = Boolean(env.GOOGLE_CLIENT_ID);
+    const hasGoogleSecret = Boolean(env.GOOGLE_CLIENT_SECRET);
+
+    if (hasGoogleId !== hasGoogleSecret) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["GOOGLE_CLIENT_ID"],
+        message:
+          "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be configured together.",
+      });
+    }
+
+    if (env.RESUME_PARSER_WEBHOOK_URL && !env.RESUME_PARSER_API_KEY) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["RESUME_PARSER_API_KEY"],
+        message:
+          "RESUME_PARSER_API_KEY is required when RESUME_PARSER_WEBHOOK_URL is configured.",
+      });
+    }
+  });
+
+export const serverEnv = serverEnvSchema.parse(process.env);
+
+export type ServerEnv = z.infer<typeof serverEnvSchema>;

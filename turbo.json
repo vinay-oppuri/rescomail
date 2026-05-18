@@ -1,6 +1,18 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "AI_SERVICE_URL",
+    "BETTER_AUTH_SECRET",
+    "BETTER_AUTH_URL",
+    "DATABASE_URL",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "NEXT_PUBLIC_BETTER_AUTH_URL",
+    "RESUME_PARSER_API_KEY",
+    "RESUME_PARSER_WEBHOOK_URL",
+    "UPLOADTHING_TOKEN"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
