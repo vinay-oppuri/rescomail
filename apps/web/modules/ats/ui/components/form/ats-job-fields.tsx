@@ -27,25 +27,27 @@ const AtsJobFields = ({
 }: AtsJobFieldsProps) => (
   <>
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-      <label className="grid gap-2 text-sm">
-        <span className="font-medium">Target role</span>
-        <input
-          value={jobTitle}
-          onChange={(event) => onJobTitleChange(event.target.value)}
-          className={inputClassName}
-          placeholder="Backend engineer"
-        />
-      </label>
+      <div className="flex items-center gap-2">
+        <label className="grid gap-2 text-sm">
+          <span className="font-medium">Target role</span>
+          <input
+            value={jobTitle}
+            onChange={(event) => onJobTitleChange(event.target.value)}
+            className={`${inputClassName} w-full`}
+            placeholder="Backend engineer"
+          />
+        </label>
 
-      <label className="grid gap-2 text-sm">
-        <span className="font-medium">Company</span>
-        <input
-          value={companyName}
-          onChange={(event) => onCompanyNameChange(event.target.value)}
-          className={inputClassName}
-          placeholder="Acme"
-        />
-      </label>
+        <label className="grid gap-2 text-sm">
+          <span className="font-medium">Company</span>
+          <input
+            value={companyName}
+            onChange={(event) => onCompanyNameChange(event.target.value)}
+            className={`${inputClassName} w-full`}
+            placeholder="Acme"
+          />
+        </label>
+      </div>
     </div>
 
     <label className="grid gap-2 text-sm">

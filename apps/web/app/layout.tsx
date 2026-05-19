@@ -5,6 +5,7 @@ import { cn } from "@repo/ui/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@repo/ui/components/tooltip";
 import { ScrollToTop } from "@repo/ui/components/scroll-to-top";
+import { TRPCReactProvider } from "@repo/trpc/client";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -37,17 +38,19 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TooltipProvider>
-            {children}
-            <ScrollToTop />
-          </TooltipProvider>
-        </ThemeProvider>
+        <TRPCReactProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TooltipProvider>
+              {children}
+              <ScrollToTop />
+            </TooltipProvider>
+          </ThemeProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );
