@@ -9,6 +9,7 @@ import {
   Plus,
   Sparkles,
   LogOut,
+  Target,
 } from "lucide-react";
 
 import {
@@ -32,6 +33,7 @@ import { signOut } from "@repo/auth/client";
 const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "AI Resumes", href: "/dashboard/resumes", icon: FileText },
+  { name: "ATS Analysis", href: "/dashboard/ats", icon: Target },
   { name: "Job Tracker", href: "/dashboard/applications", icon: Briefcase },
   { name: "Cold Emails", href: "/dashboard/emails", icon: Mail },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },

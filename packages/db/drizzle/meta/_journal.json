@@ -8,6 +8,13 @@
       "when": 1779121137199,
       "tag": "0000_first_the_stranger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1779185674177,
+      "tag": "0001_striped_human_robot",
+      "breakpoints": true
     }
   ]
 }

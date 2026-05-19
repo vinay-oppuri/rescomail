@@ -1,0 +1,26 @@
+import logging
+
+from fastapi import APIRouter, Depends, HTTPException
+
+from app.api.dependencies import require_service_auth
+from app.pipelines.ats_analysis import analyze_ats
+from app.schemas.ats import AtsAnalysisResponse, AtsAnalyzeRequest
+
+logger = logging.getLogger("rescomail.ai-service.ats")
+router = APIRouter(prefix="/ats", tags=["ats"])
+
+
+@router.post("/analyze", response_model=AtsAnalysisResponse)
+async def analyze_ats_route(
+    request: AtsAnalyzeRequest,
+    _auth: None = Depends(require_service_auth),
+):
+    logger.info("Running ATS analysis for resume %s", request.resumeId or "inline")
+
+    try:
+        return analyze_ats(request)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    except Exception as error:
+        logger.exception("ATS analysis failed for resume %s", request.resumeId)
+        raise HTTPException(status_code=500, detail=str(error)) from error

@@ -1,0 +1,1 @@
+"""Rescomail AI service package."""
