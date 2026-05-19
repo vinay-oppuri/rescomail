@@ -14,7 +14,6 @@
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/env": "workspace:*",
-    "@repo/trpc": "workspace:*",
     "@repo/ui": "workspace:*",
     "@repo/validations": "workspace:*",
     "@uploadthing/react": "^7.3.3",
