@@ -7,11 +7,31 @@ on:
       - master
       - main
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   web:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: rescomail
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rescomail"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/rescomail
+      CI: true
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/rescomail
       BETTER_AUTH_URL: http://localhost:3000
       NEXT_PUBLIC_BETTER_AUTH_URL: http://localhost:3000
       BETTER_AUTH_SECRET: ci-secret-that-is-long-enough-for-better-auth
@@ -33,6 +53,7 @@ jobs:
 
   ai-service:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: apps/ai-service

@@ -2,7 +2,7 @@ import { auth } from "@repo/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, Badge, Button } from "@repo/ui";
+import { Card, CardContent, CardHeader, CardTitle, Badge, Button } from "@repo/ui";
 import { FileText, Activity, Sparkles, Upload, Award, Briefcase, ChevronRight, BarChart2 } from "lucide-react";
 import { 
   getResumesCount, 
@@ -56,7 +56,7 @@ const DashboardView = async () => {
                         <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
                             Hello, {session.user.name || "User"}
                         </h1>
-                        <p className="text-muted-foreground text-sm max-w-[620px]">
+                        <p className="text-muted-foreground text-sm max-w-155">
                             Optimize your application pipeline with AI tools. Scan your resumes against job descriptions, audit key phrases, and tailors your profiles to land more interviews.
                         </p>
                     </div>
@@ -212,7 +212,7 @@ const DashboardView = async () => {
                         <div className="flex flex-col items-center justify-center p-8 border border-dashed rounded-none text-center bg-card/30">
                             <Sparkles className="h-8 w-8 text-muted-foreground/50 mb-3" />
                             <p className="text-sm font-medium text-muted-foreground">No recent scans yet</p>
-                            <p className="text-xs text-muted-foreground/70 mt-1 max-w-[250px]">
+                            <p className="text-xs text-muted-foreground/70 mt-1 max-w-62.5">
                                 Upload your resume and scan against a job description to get started.
                             </p>
                             <Button asChild size="sm" variant="outline" className="rounded-none mt-4">
@@ -237,7 +237,7 @@ const DashboardView = async () => {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="text-xs text-muted-foreground leading-relaxed rounded-none">
-                                Aim for a Match Score of <strong className="text-foreground">75% or higher</strong> before applying. This typically covers 90% of the recruiter's baseline keyword queries.
+                                Aim for a Match Score of <strong className="text-foreground">75% or higher</strong> before applying. This typically covers 90% of the recruiter&apos;s baseline keyword queries.
                             </CardContent>
                         </Card>
 
@@ -248,7 +248,7 @@ const DashboardView = async () => {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="text-xs text-muted-foreground leading-relaxed rounded-none">
-                                Avoid passive language. Use high-impact verbs like <em className="text-foreground font-semibold not-italic">"Engineered"</em>, <em className="text-foreground font-semibold not-italic">"Streamlined"</em>, and <em className="text-foreground font-semibold not-italic">"Spearheaded"</em> aligned with key job requirements.
+                                Avoid passive language. Use high-impact verbs like <em className="text-foreground font-semibold not-italic">&quot;Engineered&quot;</em>, <em className="text-foreground font-semibold not-italic">&quot;Streamlined&quot;</em>, and <em className="text-foreground font-semibold not-italic">&quot;Spearheaded&quot;</em> aligned with key job requirements.
                             </CardContent>
                         </Card>
                     </div>

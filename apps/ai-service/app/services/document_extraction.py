@@ -55,11 +55,18 @@ def extract_text_from_url(file_url: str) -> str:
 
 def _allowed_hosts() -> set[str]:
     raw_hosts = os.getenv("RESUME_FILE_ALLOWED_HOSTS", "")
-    return {
-        host.strip().lower()
-        for host in raw_hosts.split(",")
-        if host.strip()
-    }
+    hosts: set[str] = set()
+
+    for host in raw_hosts.split(","):
+        host = host.strip().lower()
+
+        if not host:
+            continue
+
+        parsed = urlparse(host if "://" in host else f"//{host}")
+        hosts.add(parsed.hostname or host)
+
+    return hosts
 
 
 def _max_download_bytes() -> int:
