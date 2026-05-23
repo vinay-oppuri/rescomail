@@ -32,6 +32,8 @@ const serverEnvSchema = z
     BETTER_AUTH_SECRET: requiredSecret,
     GOOGLE_CLIENT_ID: optionalNonEmptyString,
     GOOGLE_CLIENT_SECRET: optionalNonEmptyString,
+    RESEND_API_KEY: optionalNonEmptyString,
+    RESEND_FROM_EMAIL: optionalNonEmptyString,
     UPLOADTHING_TOKEN: optionalNonEmptyString,
     RESUME_PARSER_WEBHOOK_URL: optionalUrl,
     RESUME_PARSER_API_KEY: optionalNonEmptyString,

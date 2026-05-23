@@ -20,6 +20,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { signupSchema, type SignupInput } from "@repo/validations";
 
+import { PasswordInput } from "./password-input";
+
 type SignupFormValues = SignupInput;
 
 const getErrorMessage = (error: unknown, fallback: string) => {
@@ -131,7 +133,7 @@ const AuthSignup = () => {
                       <FormLabel>First name</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="John"
+                          placeholder="Elon"
                           autoComplete="given-name"
                           disabled={isPending}
                           {...field}
@@ -149,7 +151,7 @@ const AuthSignup = () => {
                       <FormLabel>Last name</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Doe"
+                          placeholder="Musk"
                           autoComplete="family-name"
                           disabled={isPending}
                           {...field}
@@ -169,7 +171,7 @@ const AuthSignup = () => {
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="name@example.com"
+                        placeholder="elon@musk.com"
                         autoComplete="email"
                         disabled={isPending}
                         {...field}
@@ -186,8 +188,7 @@ const AuthSignup = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
+                      <PasswordInput
                         autoComplete="new-password"
                         disabled={isPending}
                         {...field}

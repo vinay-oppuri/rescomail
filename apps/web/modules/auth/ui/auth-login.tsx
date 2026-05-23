@@ -20,6 +20,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { loginSchema, type LoginInput } from "@repo/validations";
 
+import { PasswordInput } from "./password-input";
+
 type LoginFormValues = LoginInput;
 
 const getErrorMessage = (error: unknown, fallback: string) => {
@@ -151,8 +153,7 @@ const AuthLogin = () => {
                       </Link>
                     </div>
                     <FormControl>
-                      <Input
-                        type="password"
+                      <PasswordInput
                         autoComplete="current-password"
                         disabled={isPending}
                         {...field}
