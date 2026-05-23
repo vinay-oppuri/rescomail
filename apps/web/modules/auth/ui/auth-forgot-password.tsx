@@ -75,19 +75,19 @@ const AuthForgotPassword = () => {
 
   return (
     <div className="flex min-h-screen w-full flex-col lg:flex-row">
-      <div className="flex w-full items-center justify-center p-8 lg:w-1/2 lg:p-16">
-        <div className="w-full max-w-sm space-y-8">
+      <div className="flex w-full items-center justify-center p-6 sm:p-8 lg:w-1/2 lg:p-16">
+        <div className="w-full max-w-sm space-y-6 md:space-y-8">
           <div className="space-y-2">
-            <Link href="/" className="group mb-8 flex items-center gap-2">
+            <Link href="/" className="group mb-6 md:mb-8 flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-none bg-primary font-bold text-primary-foreground">
                 R
               </div>
-              <span className="text-xl font-bold">Rescomail</span>
+              <span className="text-base md:text-xl font-bold">Rescomail</span>
             </Link>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
               Reset your password
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Enter your account email and we&apos;ll send a secure reset link.
             </p>
           </div>
@@ -133,7 +133,7 @@ const AuthForgotPassword = () => {
               />
               <Button
                 type="submit"
-                className="h-10 w-full text-base"
+                className="h-10 w-full text-sm md:text-base"
                 size="lg"
                 disabled={form.formState.isSubmitting}
               >
@@ -161,7 +161,7 @@ const AuthForgotPassword = () => {
               <Mail className="h-4 w-4 text-primary" />
               Secure account recovery
             </div>
-            <h2 className="text-4xl font-bold leading-tight">
+            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
               Get back to your resumes, outreach, and applications.
             </h2>
             <div className="space-y-4 pt-8">
@@ -172,7 +172,7 @@ const AuthForgotPassword = () => {
               ].map((text) => (
                 <div key={text} className="flex items-center gap-3">
                   <div className="h-1.5 w-1.5 bg-primary" />
-                  <span className="text-lg text-muted-foreground">{text}</span>
+                  <span className="text-sm md:text-lg text-muted-foreground">{text}</span>
                 </div>
               ))}
             </div>

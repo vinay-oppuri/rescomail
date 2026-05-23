@@ -49,7 +49,7 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">AI Resumes</h1>
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight">AI Resumes</h1>
           <p className="text-sm text-muted-foreground">
             Upload resumes, track parsing status, and prepare them for ATS
             analysis.

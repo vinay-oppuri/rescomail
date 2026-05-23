@@ -36,7 +36,7 @@ export default function RootLayout({
         jetbrainsMono.variable
       )}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col text-sm md:text-base">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

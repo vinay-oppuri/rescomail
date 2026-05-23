@@ -97,19 +97,19 @@ const AuthSignup = () => {
   return (
     <div className="flex min-h-screen w-full flex-col lg:flex-row">
       {/* Left Side - Signup Form */}
-      <div className="flex w-full items-center justify-center p-8 lg:w-1/2 lg:p-16">
-        <div className="w-full max-w-sm space-y-8">
+      <div className="flex w-full items-center justify-center p-6 sm:p-8 lg:w-1/2 lg:p-16">
+        <div className="w-full max-w-sm space-y-6 md:space-y-8">
           <div className="space-y-2">
-            <Link href="/" className="group mb-8 flex items-center gap-2">
+            <Link href="/" className="group mb-6 md:mb-8 flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-none bg-primary font-bold text-primary-foreground">
                 R
               </div>
-              <span className="text-xl font-bold">Rescomail</span>
+              <span className="text-base md:text-xl font-bold">Rescomail</span>
             </Link>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
               Create an account
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Start your journey to landing your dream job today
             </p>
           </div>
@@ -200,7 +200,7 @@ const AuthSignup = () => {
               />
               <Button
                 type="submit"
-                className="h-10 w-full text-base"
+                className="h-10 w-full text-sm md:text-base"
                 size="lg"
                 disabled={isPending}
               >
@@ -255,7 +255,7 @@ const AuthSignup = () => {
               <CheckCircle2 className="h-4 w-4 text-primary" />
               Trusted by developers worldwide
             </div>
-            <h2 className="text-4xl font-bold leading-tight">
+            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
               The best investment I made for my career this year.
             </h2>
             <div className="space-y-6 pt-8">

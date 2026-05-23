@@ -53,7 +53,7 @@ const DashboardView = async () => {
                             <Sparkles className="h-5 w-5 text-primary" />
                             <span className="text-xs font-semibold uppercase tracking-wider text-primary">AI Job Application Copilot</span>
                         </div>
-                        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+                        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
                             Hello, {session.user.name || "User"}
                         </h1>
                         <p className="text-muted-foreground text-sm max-w-155">

@@ -10,27 +10,27 @@ const HomeView = () => {
         <HomeNavbar />
       </div>
 
-      <section className="py-20 lg:py-28">
+      <section className="py-12 md:py-20 lg:py-28 min-h-screen pt-20 md:pt-0">
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="mb-8 inline-flex items-center gap-2 rounded-none border bg-background px-3 py-1 text-sm font-medium">
+            <div className="mb-6 md:mb-8 inline-flex items-center gap-2 rounded-none border bg-background px-3 py-1 text-xs md:text-sm font-medium">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-none bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-none h-2 w-2 bg-primary"></span>
               </span>
-              New: AI-Powered Resume Tailoring is here
+              AI-Powered Resume Tailoring is here
             </div>
-            <h1 className="mb-8 text-4xl font-bold tracking-tight text-foreground lg:text-6xl">
+            <h1 className="mb-6 md:mb-8 text-3xl md:text-4xl font-bold tracking-tight text-foreground lg:text-6xl">
               Land Your Dream Job with{" "}
               <span className="text-primary">Rescomail</span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg lg:text-xl text-muted-foreground mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
               The ultimate AI Job Application Copilot. Optimize your resume for
               ATS, generate personalized cold emails, and track your
               applications in one place.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="px-8 h-12 text-base" asChild>
+              <Button size="lg" className="w-[80%] sm:w-auto px-8 h-12 text-sm md:text-base" asChild>
                 <Link href="/signup">
                   Get Started Free <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -38,7 +38,7 @@ const HomeView = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="px-8 h-12 text-base"
+                className="w-[80%] sm:w-auto px-8 h-12 text-sm md:text-base"
                 asChild
               >
                 <Link href="#features">View Demo</Link>
@@ -48,10 +48,10 @@ const HomeView = () => {
         </div>
       </section>
 
-      <section id="features" className="py-24">
+      <section id="features" className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold mb-4">
+          <div className="text-center max-w-2xl mx-auto mb-10 md:mb-16">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
               Everything you need to succeed
             </h2>
             <p className="text-muted-foreground">
@@ -88,7 +88,7 @@ const HomeView = () => {
                 <div className="w-12 h-12 rounded-none bg-primary/10 flex items-center justify-center mb-6">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                <h3 className="text-lg md:text-xl font-bold mb-3">{feature.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>
@@ -98,10 +98,10 @@ const HomeView = () => {
         </div>
       </section>
 
-      <section id="pricing" className="py-24">
+      <section id="pricing" className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-2xl mb-10">
-            <h2 className="text-3xl font-bold mb-3">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">
               Simple pricing for the MVP
             </h2>
             <p className="text-muted-foreground">
@@ -129,9 +129,9 @@ const HomeView = () => {
               },
             ].map((plan) => (
               <div key={plan.name} className="border bg-background p-6">
-                <h3 className="text-lg font-bold">{plan.name}</h3>
-                <p className="mt-4 text-3xl font-bold">{plan.price}</p>
-                <p className="mt-3 text-sm text-muted-foreground">
+                <h3 className="text-base md:text-lg font-bold">{plan.name}</h3>
+                <p className="mt-2 md:mt-4 text-2xl md:text-3xl font-bold">{plan.price}</p>
+                <p className="mt-2 md:mt-3 text-xs md:text-sm text-muted-foreground">
                   {plan.detail}
                 </p>
               </div>
@@ -140,10 +140,10 @@ const HomeView = () => {
         </div>
       </section>
 
-      <section id="about" className="py-24">
+      <section id="about" className="py-16 md:py-24">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[0.8fr_1fr]">
           <div>
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
               Built for serious job search workflows
             </h2>
             <p className="text-muted-foreground leading-7">
@@ -171,10 +171,10 @@ const HomeView = () => {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-24">
+      <section id="faq" className="py-16 md:py-24">
         <div className="mx-auto max-w-4xl px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold tracking-tight">
+          <div className="text-center mb-10 md:mb-16">
+            <h2 className="text-2xl md:text-4xl font-bold tracking-tight">
               Frequently Asked Questions
             </h2>
           </div>
@@ -209,27 +209,27 @@ const HomeView = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="mx-auto max-w-7xl px-6 py-24">
-        <div className="relative overflow-hidden rounded-none border bg-primary px-8 py-20 text-center text-primary-foreground">
+      <section className="mx-auto max-w-7xl px-6 py-16 md:py-24">
+        <div className="relative overflow-hidden rounded-none border bg-primary px-6 md:px-8 py-12 md:py-20 text-center text-primary-foreground">
           <div className="relative z-10">
-            <h2 className="text-4xl font-bold tracking-tight lg:text-5xl">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight lg:text-5xl">
               Start Optimizing Your Resume Today
             </h2>
 
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-primary-foreground/80">
+            <p className="mx-auto mt-4 md:mt-6 max-w-2xl text-base md:text-lg text-primary-foreground/80">
               Join students and developers using Rescomail to improve ATS
               scores, generate better applications, and land more interviews.
             </p>
 
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <Button size="lg" variant="secondary" className="px-8" asChild>
+            <div className="mt-8 md:mt-10 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4">
+              <Button size="lg" variant="secondary" className="w-full sm:w-auto px-8" asChild>
                 <Link href="/signup">Upload Resume</Link>
               </Button>
 
               <Button
                 size="lg"
                 variant="outline"
-                className="px-8 bg-transparent border-primary-foreground/30 hover:bg-primary-foreground/10 text-primary-foreground"
+                className="w-full sm:w-auto px-8 bg-transparent border-primary-foreground/30 hover:bg-primary-foreground/10 text-primary-foreground"
                 asChild
               >
                 <Link href="mailto:support@rescomail.com">Book Demo</Link>
