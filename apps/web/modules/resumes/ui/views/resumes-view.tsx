@@ -4,6 +4,7 @@ import { FileText } from "lucide-react";
 
 import type { ResumeListItem } from "../../server/resumes";
 import ResumeUploadPanel from "../components/resume-upload-panel";
+import ResumeActionsRow from "../components/resume-actions-row";
 
 interface ResumesViewProps {
   resumes: ResumeListItem[];
@@ -61,8 +62,13 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
         <ResumeUploadPanel />
 
         <div className="min-h-80 border bg-background">
-          <div className="border-b px-4 py-3">
+          <div className="border-b px-4 py-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold">Resume library</h2>
+            {resumes.length > 0 && (
+              <span className="text-xs text-muted-foreground">
+                {resumes.length} {resumes.length === 1 ? "resume" : "resumes"}
+              </span>
+            )}
           </div>
 
           {resumes.length === 0 ? (
@@ -111,6 +117,12 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
                         Open PDF
                       </a>
                     </Button>
+
+                    <ResumeActionsRow
+                      resumeId={resume.id}
+                      resumeTitle={resume.title}
+                      canAnalyse={resume.status === "parsed"}
+                    />
                   </div>
                 </div>
               ))}

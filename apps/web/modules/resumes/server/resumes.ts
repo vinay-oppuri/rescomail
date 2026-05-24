@@ -1,5 +1,6 @@
 import { db, resumes } from "@repo/db";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, and } from "drizzle-orm";
+import { UTApi } from "uploadthing/server";
 
 export type CreateResumeUploadInput = {
   userId: string;
@@ -42,6 +43,31 @@ export const getResumesForUser = async (userId: string) => {
     where: eq(resumes.userId, userId),
     orderBy: [desc(resumes.createdAt)],
   });
+};
+
+export const deleteResume = async (resumeId: string, userId: string) => {
+  const [resume] = await db
+    .select({ id: resumes.id, fileKey: resumes.fileKey })
+    .from(resumes)
+    .where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId)))
+    .limit(1);
+
+  if (!resume) {
+    throw new Error("Resume not found or access denied.");
+  }
+
+  // Delete file from UploadThing storage
+  try {
+    const utapi = new UTApi();
+    await utapi.deleteFiles(resume.fileKey);
+  } catch {
+    // Non-fatal: log but continue with DB deletion
+    console.warn("Failed to delete file from storage:", resume.fileKey);
+  }
+
+  await db
+    .delete(resumes)
+    .where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId)));
 };
 
 export type ResumeListItem = Awaited<
