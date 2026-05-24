@@ -1,4 +1,6 @@
+import { jsonb } from "drizzle-orm/pg-core";
 import { boolean, text, timestamp, pgTable } from "drizzle-orm/pg-core";
+import { companyStageEnum, employmentTypeEnum, seniorityEnum, workModeEnum } from "./enums";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -48,4 +50,31 @@ export const verification = pgTable("verification", {
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
+});
+
+
+
+export const userPreferences = pgTable("user_preferences", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  targetRoles: text("target_roles").array().notNull().default([]),
+  targetSeniority: seniorityEnum("target_seniority"),
+  industryPreferences: text("industry_preferences").array().default([]),
+  salaryExpectation: jsonb("salary_expectation").$type<{
+    min?: number;
+    ideal?: number;
+    currency: string;
+  }>(),
+  preferredLocations: jsonb("preferred_locations").$type<{
+    country?: string;
+    state?: string;
+    city?: string;
+    remote?: boolean;
+  }[]>(),
+  workModes: workModeEnum("work_modes").array().default(["remote"]),
+  employmentTypes: employmentTypeEnum("employment_types").array().default(["full_time"]),
+  companyPreferences: companyStageEnum("company_preferences").array().default(["open"]),
+  excludedCompanies: text("excluded_companies").array().default([]),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

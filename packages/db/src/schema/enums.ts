@@ -21,3 +21,34 @@ export const usageEventType = pgEnum("usage_event_type", [
   "cold_email_generate",
   "application_create",
 ]);
+
+
+export const seniorityEnum = pgEnum("seniority", [
+  "intern",
+  "new_grad",
+  "junior",
+  "mid",
+  "senior",
+  "lead",
+]);
+
+export const workModeEnum = pgEnum("work_mode", [
+  "remote",
+  "hybrid",
+  "onsite",
+]);
+
+export const employmentTypeEnum = pgEnum("employment_type", [
+  "internship",
+  "full_time",
+  "part_time",
+  "contract",
+  "freelance",
+]);
+
+export const companyStageEnum = pgEnum("company_stage", [
+  "startup",
+  "scaleup",
+  "enterprise",
+  "open",
+]);
