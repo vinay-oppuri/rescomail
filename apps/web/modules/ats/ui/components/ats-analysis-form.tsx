@@ -1,7 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { AlertTriangle, ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { AlertTriangle, ArrowRight, Loader2, Sparkles, Zap } from "lucide-react";
 import { Button } from "@repo/ui/components/button";
 import { Badge } from "@repo/ui/components/badge";
 
@@ -20,39 +20,53 @@ const AtsAnalysisForm = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col border bg-background">
-      <div className="flex items-start justify-between gap-3 border-b px-4 py-3">
+    <form onSubmit={onSubmit} className="flex flex-col border-0 bg-background/60 shadow-xl ring-1 ring-border/50 backdrop-blur-2xl transition-all duration-500">
+      <div className="flex items-start justify-between gap-3 border-b border-border/40 bg-muted/20 px-4 py-3">
         <div>
-          <h2 className="text-sm font-semibold">Analysis setup</h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Resume, target role, and priority terms
+          <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight text-foreground">
+            <Zap className="h-4 w-4 text-primary" />
+            Analysis setup
+          </h2>
+          <p className="mt-1.5 text-sm text-muted-foreground/80">
+            Provide the resume and target role to extract actionable intelligence.
           </p>
         </div>
-        <Badge variant="outline" className="shrink-0">
-          Live model
+        <Badge variant="outline" className="shrink-0 rounded-none border-primary/5 bg-muted/30 text-xs text-primary shadow-sm p-3">
+          Live BGE Model
         </Badge>
       </div>
 
       <div className="flex flex-col gap-4 p-4">
         <AtsResumePicker />
+        
+        <div className="h-px w-full bg-border/40 m-4 mx-auto" />
 
         <AtsJobFields />
 
         {error ? (
-          <div className="flex gap-2 border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">
+          <div className="flex gap-3 border-l-4 border-l-destructive border-y border-r border-y-destructive/20 border-r-destructive/20 bg-destructive/5 p-4 text-sm text-destructive shadow-sm">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-            <p>{error}</p>
+            <p className="font-medium">{error}</p>
           </div>
         ) : null}
 
-        <Button type="submit" disabled={!canAnalyze || isAnalyzing}>
+        <Button 
+          type="submit" 
+          disabled={!canAnalyze || isAnalyzing}
+          className="group relative mt-2 h-12 w-full overflow-hidden rounded-none bg-primary text-primary-foreground shadow-md transition-all hover:shadow-lg disabled:opacity-50"
+        >
+          <div className="absolute inset-0 flex h-full w-full justify-center transform-[skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:transform-[skew(-12deg)_translateX(100%)]">
+            <div className="relative h-full w-8 bg-white/20" />
+          </div>
           {isAnalyzing ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
           )}
-          Analyze fit
-          {!isAnalyzing ? <ArrowRight className="h-4 w-4" /> : null}
+          <span className="font-semibold tracking-wide">
+            {isAnalyzing ? "Analyzing Fit..." : "Analyze Match"}
+          </span>
+          {!isAnalyzing && <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />}
         </Button>
       </div>
     </form>

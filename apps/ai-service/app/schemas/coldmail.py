@@ -59,3 +59,4 @@ class ColdEmailResponse(BaseModel):
     personalizationNotes: list[str] = Field(default_factory=list, max_length=6)
     qualityScore: int = Field(ge=0, le=100)
     estimatedReadTimeSeconds: int = Field(ge=10, le=300)
+    companyContext: str | None = Field(default=None, max_length=2_000)

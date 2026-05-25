@@ -3,7 +3,7 @@ import { coldEmails, db, resumes, usageEvents } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 import { ColdmailError } from "./coldmail-errors";
-import { getCompanyContextFromWebsite } from "./company-context";
+
 import { runAiColdmailGeneration } from "./coldmail-service-client";
 
 export const generateColdEmailForUser = async (
@@ -18,18 +18,16 @@ export const generateColdEmailForUser = async (
   }
 
   try {
-    const companyContext = await getCompanyContextFromWebsite({
-      companyWebsiteUrl: input.companyWebsiteUrl,
-      companyName: input.companyName,
-      jobTitle: input.jobTitle,
-    });
     const draft = await runAiColdmailGeneration(
       {
         ...input,
-        companyContext,
+        companyContext: "", // AI service will fetch if empty
       },
       resume,
     );
+    
+    // AI service might have fetched context, use it or fallback to empty string
+    const companyContext = draft.companyContext || "";
 
     const [savedDraft] = await db
       .insert(coldEmails)
@@ -71,6 +69,7 @@ export const generateColdEmailForUser = async (
 
     return {
       ...draft,
+      companyContext,
       coldEmailId: savedDraft?.id,
     };
   } catch (error) {

@@ -1,6 +1,13 @@
 "use client";
 
 import { Badge } from "@repo/ui/components/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@repo/ui/components/select";
 import { FileText } from "lucide-react";
 
 import { useAtsStore } from "../../../store/ats-store";
@@ -21,19 +28,14 @@ const formatDate = (value: string) =>
   }).format(new Date(value));
 
 const statusVariant = (status: string) => {
-  if (status === "parse_failed") {
-    return "destructive";
-  }
-
-  if (status === "parsed") {
-    return "default";
-  }
-
+  if (status === "parse_failed") return "destructive";
+  if (status === "parsed") return "default";
   return "outline";
 };
 
 const AtsResumePicker = () => {
   const { resumes, resumeId, setResumeId } = useAtsStore();
+
   const selectedResume = resumes.find((r) => r.id === resumeId);
 
   return (
@@ -45,44 +47,58 @@ const AtsResumePicker = () => {
             {resumes.length} available
           </span>
         </span>
-        <select
+
+        <Select
           value={resumeId}
-          onChange={(event) => setResumeId(event.target.value)}
-          className="h-10 w-full border bg-background px-3 text-sm outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring/50"
+          onValueChange={setResumeId}
           disabled={resumes.length === 0}
         >
-          {resumes.length === 0 ? <option value="">No resumes uploaded</option> : null}
-          {resumes.map((resume) => (
-            <option key={resume.id} value={resume.id}>
-              {resume.title}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="h-9! w-full bg-background! border-foreground/5!">
+            <SelectValue placeholder="Select a resume" />
+          </SelectTrigger>
+
+          <SelectContent>
+            {resumes.length === 0 ? (
+              <SelectItem value="empty" disabled>
+                No resumes uploaded
+              </SelectItem>
+            ) : (
+              resumes.map((resume) => (
+                <SelectItem key={resume.id} value={resume.id}>
+                  {resume.title}
+                </SelectItem>
+              ))
+            )}
+          </SelectContent>
+        </Select>
       </label>
 
-      {selectedResume ? (
-        <div className="border bg-muted/20 text-xs text-muted-foreground">
+      {selectedResume && (
+        <div className="border border-foreground/5 bg-muted/20 text-xs text-muted-foreground">
           <div className="grid grid-cols-[36px_1fr_auto] items-center gap-3 p-3">
-            <div className="flex h-9 w-9 items-center justify-center border bg-background">
+            <div className="flex h-9 w-9 items-center justify-center border border-foreground/5! bg-background">
               <FileText className="h-4 w-4" />
             </div>
+
             <div className="min-w-0">
               <p className="truncate font-medium text-foreground">
                 {selectedResume.fileName}
               </p>
               <p>{formatDate(selectedResume.createdAt)}</p>
             </div>
+
             <Badge variant={statusVariant(selectedResume.status)}>
               {statusLabel[selectedResume.status] ?? selectedResume.status}
             </Badge>
           </div>
-          {selectedResume.parsingError ? (
+
+          {selectedResume.parsingError && (
             <p className="border-t px-3 py-2 text-destructive">
               {selectedResume.parsingError}
             </p>
-          ) : null}
+          )}
         </div>
-      ) : null}
+      )}
     </>
   );
 };

@@ -9,7 +9,25 @@ from app.services.text_cleaning import clean_resume_text
 def generate_coldmail(request: ColdEmailGenerateRequest) -> ColdEmailResponse:
     resume_text = _resolve_resume_text(request)
     structured_resume = request.structuredResume
-    return generate_cold_email_draft(request, resume_text, structured_resume)
+    
+    if not request.companyContext and request.companyWebsiteUrl:
+        from app.services.company_context import get_company_context_from_website
+        request.companyContext = get_company_context_from_website(
+            request.companyWebsiteUrl, 
+            request.companyName, 
+            request.jobTitle
+        )
+
+    response = generate_cold_email_draft(request, resume_text, structured_resume)
+    if hasattr(response, "companyContext"):
+        response.companyContext = request.companyContext
+    elif isinstance(response, dict):
+        response["companyContext"] = request.companyContext
+    else:
+        # Pydantic v2
+        response.companyContext = request.companyContext
+
+    return response
 
 
 def _resolve_resume_text(request: ColdEmailGenerateRequest) -> str:

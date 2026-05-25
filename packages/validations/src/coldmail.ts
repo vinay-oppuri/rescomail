@@ -67,6 +67,7 @@ export const coldEmailResponseSchema = z.object({
   personalizationNotes: z.array(z.string().trim().min(1).max(300)).max(6),
   qualityScore: z.number().int().min(0).max(100),
   estimatedReadTimeSeconds: z.number().int().min(10).max(300),
+  companyContext: z.string().optional(),
 });
 
 export type ColdEmailGenerateInput = z.infer<typeof coldEmailGenerateSchema>;

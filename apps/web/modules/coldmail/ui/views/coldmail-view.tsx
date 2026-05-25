@@ -36,8 +36,8 @@ const ColdmailView = ({ emails, resumes }: ColdmailViewProps) => {
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
-      <div className="flex flex-col gap-4 border-b pb-5 lg:flex-row lg:items-end lg:justify-between">
-        <div className="w-full max-w-3xl space-y-2">
+      <div className="flex flex-col gap-4 border-b border-foreground/5 pb-5 lg:flex-row lg:items-end lg:justify-start lg:gap-12">
+        <div className="max-w-3xl space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="outline" className="gap-1">
               <Sparkles className="h-3 w-3" />
@@ -89,12 +89,12 @@ const ColdmailView = ({ emails, resumes }: ColdmailViewProps) => {
               )}
               {history.map((email) => (
                 <SelectItem key={email.id} value={email.id}>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="font-medium text-foreground">
+                  <div className="flex w-full items-center gap-2 overflow-hidden">
+                    <span className="truncate font-medium text-foreground">
                       {email.subject || "Untitled email"}
                     </span>
-                    <span className="text-xs text-muted-foreground">
-                      {email.companyName || email.resumeTitle}
+                    <span className="shrink-0 text-xs text-muted-foreground">
+                      • {email.companyName || email.resumeTitle}
                     </span>
                   </div>
                 </SelectItem>
@@ -108,8 +108,8 @@ const ColdmailView = ({ emails, resumes }: ColdmailViewProps) => {
         {showComposer ? (
           <ColdmailComposer />
         ) : (
-          <section className="min-h-175 overflow-hidden rounded-none border bg-background shadow-sm">
-            <div className="flex items-center justify-between gap-3 border-b px-5 py-3">
+          <section className="min-h-175 overflow-hidden rounded-none border border-foreground/5 bg-background shadow-sm">
+            <div className="flex items-center justify-between gap-3 border-b border-foreground/5 px-5 py-3">
               <div>
                 <h2 className="text-sm font-semibold">Generated draft</h2>
                 <p className="text-xs text-muted-foreground">

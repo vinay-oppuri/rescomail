@@ -87,8 +87,8 @@ const ColdmailComposer = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col rounded-none border bg-background shadow-sm overflow-hidden">
-      <div className="flex items-start justify-between gap-3 border-b bg-muted/10 px-5 py-4">
+    <form onSubmit={onSubmit} className="flex flex-col rounded-none border border-foreground/5 bg-background shadow-sm overflow-hidden">
+      <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-5 py-4">
         <div>
           <h2 className="text-base font-semibold tracking-tight text-foreground">Email Composer</h2>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -113,7 +113,7 @@ const ColdmailComposer = () => {
             <div className="space-y-2">
               <Label htmlFor="resume">Resume Source</Label>
               <Select value={resumeId} onValueChange={setResumeId}>
-                <SelectTrigger id="resume" className="w-full rounded-none bg-muted/50 transition-colors hover:bg-muted/80">
+                <SelectTrigger id="resume" className="w-full rounded-none bg-muted/20! border-foreground/5!">
                   <SelectValue placeholder="Select parsed resume" />
                 </SelectTrigger>
                 <SelectContent className="rounded-none">
@@ -147,7 +147,7 @@ const ColdmailComposer = () => {
                   value={tone}
                   onValueChange={(value) => setTone(value as ColdEmailTone)}
                 >
-                  <SelectTrigger id="tone" className="w-full rounded-none bg-muted/50 transition-colors hover:bg-muted/80">
+                  <SelectTrigger id="tone" className="w-full rounded-none bg-muted/20! border-foreground/5!">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-none">
@@ -168,7 +168,7 @@ const ColdmailComposer = () => {
                   value={length}
                   onValueChange={(value) => setLength(value as ColdEmailLength)}
                 >
-                  <SelectTrigger id="length" className="w-full rounded-none bg-muted/50 transition-colors hover:bg-muted/80">
+                  <SelectTrigger id="length" className="w-full rounded-none bg-muted/20! border-foreground/5!">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-none">
@@ -187,7 +187,7 @@ const ColdmailComposer = () => {
         </div>
 
         {/* Section 2: Target */}
-        <div className="space-y-4 pt-5 border-t border-muted/50">
+        <div className="space-y-4 pt-5 border-t border-foreground/5">
           <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <Building2 className="h-4 w-4 text-primary" />
             Target Information
@@ -201,7 +201,7 @@ const ColdmailComposer = () => {
                 value={jobTitle}
                 onChange={(event) => setJobTitle(event.target.value)}
                 placeholder="e.g. Product Engineer"
-                className="rounded-none bg-muted/50 transition-colors hover:bg-muted/80 focus:bg-background"
+                className="rounded-none bg-muted/20! border-foreground/5!"
               />
             </div>
 
@@ -212,7 +212,7 @@ const ColdmailComposer = () => {
                 value={companyName}
                 onChange={(event) => setCompanyName(event.target.value)}
                 placeholder="e.g. Acme Corp"
-                className="rounded-none bg-muted/50 transition-colors hover:bg-muted/80 focus:bg-background"
+                className="rounded-none bg-muted/20! border-foreground/5!"
               />
             </div>
 
@@ -224,7 +224,7 @@ const ColdmailComposer = () => {
                 onChange={(event) => setCompanyWebsiteUrl(event.target.value)}
                 placeholder="https://acme.com"
                 inputMode="url"
-                className="rounded-none bg-muted/50 transition-colors hover:bg-muted/80 focus:bg-background"
+                className="rounded-none bg-muted/20! border-foreground/5!"
               />
             </div>
 
@@ -235,7 +235,7 @@ const ColdmailComposer = () => {
                 value={recipientName}
                 onChange={(event) => setRecipientName(event.target.value)}
                 placeholder="e.g. Alex Morgan"
-                className="rounded-none bg-muted/50 transition-colors hover:bg-muted/80 focus:bg-background"
+                className="rounded-none bg-muted/20! border-foreground/5!"
               />
             </div>
 
@@ -246,14 +246,14 @@ const ColdmailComposer = () => {
                 value={recipientRole}
                 onChange={(event) => setRecipientRole(event.target.value)}
                 placeholder="e.g. Recruiting Lead"
-                className="rounded-none bg-muted/50 transition-colors hover:bg-muted/80 focus:bg-background"
+                className="rounded-none bg-muted/20! border-foreground/5!"
               />
             </div>
           </div>
         </div>
 
         {/* Section 3: Content */}
-        <div className="space-y-4 pt-5 border-t border-muted/50">
+        <div className="space-y-4 pt-5 border-t border-foreground/5">
           <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <FileText className="h-4 w-4 text-primary" />
             Content & Personalization
@@ -267,7 +267,7 @@ const ColdmailComposer = () => {
                 value={jobDescription}
                 onChange={(event) => setJobDescription(event.target.value)}
                 placeholder="Paste the target role or recruiter post"
-                className="min-h-48 resize-y rounded-none bg-muted/50 transition-colors hover:bg-muted/80 focus:bg-background leading-relaxed"
+                className="min-h-48 resize-y rounded-none bg-muted/20! border-foreground/5! leading-relaxed"
               />
             </div>
 
@@ -279,7 +279,7 @@ const ColdmailComposer = () => {
                   setCallToAction(value as ColdEmailCallToAction)
                 }
               >
-                <SelectTrigger id="cta" className="w-full rounded-none bg-muted/50 transition-colors hover:bg-muted/80">
+                <SelectTrigger id="cta" className="w-full rounded-none bg-muted/20! border-foreground/5!">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="rounded-none">
@@ -303,7 +303,7 @@ const ColdmailComposer = () => {
                 value={personalNote}
                 onChange={(event) => setPersonalNote(event.target.value)}
                 placeholder="Add any specific angle, personal connection, or context to include in the draft..."
-                className="min-h-24 resize-y rounded-none bg-muted/50 transition-colors hover:bg-muted/80 focus:bg-background"
+                className="min-h-24 resize-y rounded-none bg-muted/20! border-foreground/5!"
               />
             </div>
           </div>
@@ -319,7 +319,7 @@ const ColdmailComposer = () => {
         <Button 
           type="submit" 
           disabled={!canGenerate || isGenerating}
-          className="mt-4 h-12 w-full rounded-none bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none font-medium text-base"
+          className="mt-4 h-12 w-full rounded-none bg-linear-to-r from-primary to-primary/80 text-primary-foreground shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none font-medium text-base"
         >
           {isGenerating ? (
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />

@@ -1,12 +1,9 @@
 "use client";
 
+import { Input, Label, Textarea } from "@repo/ui";
 import { useAtsStore } from "../../../store/ats-store";
 
-const inputClassName =
-  "h-9 border bg-background px-3 text-sm outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring/50";
-
-const textareaClassName =
-  "resize-y border bg-background px-3 py-2 text-sm leading-6 outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring/50";
+const fieldClassName = "border-foreground/5! bg-muted/20!";
 
 const AtsJobFields = () => {
   const {
@@ -27,54 +24,56 @@ const AtsJobFields = () => {
   return (
     <>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
-        <label className="grid gap-2 text-sm">
+        <Label className="grid gap-2 text-sm">
           <span className="font-medium">Target role</span>
-          <input
+          <Input
             value={jobTitle}
             onChange={(event) => setJobTitle(event.target.value)}
-            className={`${inputClassName} w-full`}
+            className={fieldClassName}
             placeholder="Machine learning engineer"
           />
-        </label>
+        </Label>
 
-        <label className="grid gap-2 text-sm">
+        <Label className="grid gap-2 text-sm">
           <span className="font-medium">Company</span>
-          <input
+          <Input
             value={companyName}
             onChange={(event) => setCompanyName(event.target.value)}
-            className={`${inputClassName} w-full`}
+            className={fieldClassName}
             placeholder="Acme AI"
           />
-        </label>
+        </Label>
       </div>
 
-      <label className="grid gap-2 text-sm">
+      <Label className="grid gap-2 text-sm">
         <span className="flex items-center justify-between gap-3">
           <span className="font-medium">Job description</span>
           <span className="text-xs text-muted-foreground">
             {jobWordCount} words
           </span>
         </span>
-        <textarea
+
+        <Textarea
           value={jobDescription}
           onChange={(event) => setJobDescription(event.target.value)}
-          className={`min-h-64 ${textareaClassName}`}
+          className={`min-h-64 ${fieldClassName}`}
           placeholder="Paste the role description here..."
         />
-      </label>
+      </Label>
 
-      <label className="grid gap-2 text-sm">
+      <Label className="grid gap-2 text-sm">
         <span className="flex items-center justify-between gap-3">
           <span className="font-medium">Priority keywords</span>
           <span className="text-xs text-muted-foreground">Optional</span>
         </span>
-        <textarea
+
+        <Textarea
           value={keywordText}
           onChange={(event) => setKeywordText(event.target.value)}
-          className={`min-h-20 ${textareaClassName}`}
+          className={`min-h-20 ${fieldClassName}`}
           placeholder="Python, FastAPI, SQL"
         />
-      </label>
+      </Label>
     </>
   );
 };
