@@ -1,6 +1,6 @@
-import type { AtsAnalysisResponse } from "@repo/validations";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
 
+import { useAtsStore } from "../../store/ats-store";
 import AtsEvidenceMap from "./results/ats-evidence-map";
 import AtsIntelligencePanel from "./results/ats-intelligence-panel";
 import AtsJobProfilePanel from "./results/ats-job-profile-panel";
@@ -10,11 +10,13 @@ import AtsRewritePlan from "./results/ats-rewrite-plan";
 import AtsScoreOverview from "./results/ats-score-overview";
 import AtsSuggestionsPanel from "./results/ats-suggestions-panel";
 
-interface AtsAnalysisResultsProps {
-  analysis: AtsAnalysisResponse;
-}
+const AtsAnalysisResults = () => {
+  const { analysis } = useAtsStore();
 
-const AtsAnalysisResults = ({ analysis }: AtsAnalysisResultsProps) => {
+  if (!analysis) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col">
       <AtsScoreOverview analysis={analysis} />

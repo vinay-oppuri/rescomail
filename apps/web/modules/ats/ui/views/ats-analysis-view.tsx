@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Badge } from "@repo/ui/components/badge";
 import {
   BrainCircuit,
@@ -13,11 +13,11 @@ import {
 
 import type { AtsAnalysisHistoryItem } from "../../server/ats-history";
 import type { AtsResumeOption } from "../../server/ats-resumes";
+import { useAtsStore } from "../../store/ats-store";
 import AtsAnalysisForm from "../components/ats-analysis-form";
 import AtsAnalysisHistory from "../components/ats-analysis-history";
 import AtsAnalysisResults from "../components/ats-analysis-results";
 import AtsEmptyState from "../components/ats-empty-state";
-import { useAtsAnalysis } from "../hooks/use-ats-analysis";
 
 interface AtsAnalysisViewProps {
   analyses: AtsAnalysisHistoryItem[];
@@ -25,24 +25,20 @@ interface AtsAnalysisViewProps {
 }
 
 const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
-  const ats = useAtsAnalysis(analyses, resumes);
-  const parsedResumes = resumes.filter((resume) => resume.status === "parsed").length;
-  
-  // Toggle state for displaying the form vs. the match report
-  const [showForm, setShowForm] = useState(!ats.analysis);
+  const { initStore, showForm, setShowForm, analysis, history } = useAtsStore();
 
-  const bestScore = ats.history.reduce(
-    (score, item) => Math.max(score, item.overallScore),
+  // Hydrate the store with the latest server data each time the server
+  // re-renders (e.g. after router.refresh()). Form fields are preserved.
+  useEffect(() => {
+    initStore(analyses, resumes);
+  }, [analyses, resumes, initStore]);
+
+  const parsedResumes = resumes.filter((r) => r.status === "parsed").length;
+  const bestScore = history.reduce(
+    (score: number, item) => Math.max(score, item.overallScore),
     0,
   );
-  const latestRun = ats.history[0];
-
-  // Automatically switch to the report view when an analysis successfully completes
-  useEffect(() => {
-    if (ats.analysis && !ats.isAnalyzing) {
-      setShowForm(false);
-    }
-  }, [ats.analysis, ats.isAnalyzing]);
+  const latestRun = history[0];
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
@@ -74,7 +70,7 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
           <StatTile
             icon={Target}
             label="Runs"
-            value={`${ats.history.length}`}
+            value={`${history.length}`}
             detail="analyses"
           />
           <StatTile
@@ -94,28 +90,11 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
 
       {/* Updated Grid: 1fr (Left) for Form/Report, 400px (Right) for History */}
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_400px]">
-        
+
         {/* LEFT COLUMN: Form or Match Report */}
         <div className="flex flex-col gap-5">
           {showForm ? (
-            <AtsAnalysisForm
-              resumes={resumes}
-              selectedResume={ats.selectedResume}
-              resumeId={ats.resumeId}
-              jobTitle={ats.jobTitle}
-              companyName={ats.companyName}
-              jobDescription={ats.jobDescription}
-              keywordText={ats.keywordText}
-              error={ats.error}
-              canAnalyze={ats.canAnalyze}
-              isAnalyzing={ats.isAnalyzing}
-              onSubmit={ats.handleAnalyze}
-              onResumeIdChange={ats.setResumeId}
-              onJobTitleChange={ats.setJobTitle}
-              onCompanyNameChange={ats.setCompanyName}
-              onJobDescriptionChange={ats.setJobDescription}
-              onKeywordTextChange={ats.setKeywordText}
-            />
+            <AtsAnalysisForm />
           ) : (
             <section className="min-h-175 overflow-hidden border bg-background">
               <div className="flex items-center justify-between gap-3 border-b px-5 py-3">
@@ -126,12 +105,12 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  {ats.analysis ? (
+                  {analysis ? (
                     <Badge variant="outline">
-                      {ats.analysis.overallScore}/100
+                      {analysis.overallScore}/100
                     </Badge>
                   ) : null}
-                  
+
                   {/* Plus button to hide report and go back to form */}
                   <button
                     type="button"
@@ -143,9 +122,9 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
                   </button>
                 </div>
               </div>
-              
-              {ats.analysis ? (
-                <AtsAnalysisResults analysis={ats.analysis} />
+
+              {analysis ? (
+                <AtsAnalysisResults />
               ) : (
                 <AtsEmptyState hasResumes={resumes.length > 0} />
               )}
@@ -155,18 +134,9 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
 
         {/* RIGHT COLUMN: History Sidebar */}
         <div className="flex flex-col gap-5 xl:sticky xl:top-20 xl:self-start">
-          <AtsAnalysisHistory
-            analyses={ats.history}
-            selectedAnalysisId={ats.analysis?.analysisId}
-            onSelectAnalysis={(item) => {
-              if (item.analysis) {
-                ats.setAnalysis(item.analysis);
-                setShowForm(false); // Instantly show report when clicking history
-              }
-            }}
-          />
+          <AtsAnalysisHistory />
         </div>
-        
+
       </div>
     </div>
   );

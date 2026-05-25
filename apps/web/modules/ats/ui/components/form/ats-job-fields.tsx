@@ -1,13 +1,6 @@
-interface AtsJobFieldsProps {
-  jobTitle: string;
-  companyName: string;
-  jobDescription: string;
-  keywordText: string;
-  onJobTitleChange: (value: string) => void;
-  onCompanyNameChange: (value: string) => void;
-  onJobDescriptionChange: (value: string) => void;
-  onKeywordTextChange: (value: string) => void;
-}
+"use client";
+
+import { useAtsStore } from "../../../store/ats-store";
 
 const inputClassName =
   "h-9 border bg-background px-3 text-sm outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring/50";
@@ -15,16 +8,18 @@ const inputClassName =
 const textareaClassName =
   "resize-y border bg-background px-3 py-2 text-sm leading-6 outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring/50";
 
-const AtsJobFields = ({
-  jobTitle,
-  companyName,
-  jobDescription,
-  keywordText,
-  onJobTitleChange,
-  onCompanyNameChange,
-  onJobDescriptionChange,
-  onKeywordTextChange,
-}: AtsJobFieldsProps) => {
+const AtsJobFields = () => {
+  const {
+    jobTitle,
+    companyName,
+    jobDescription,
+    keywordText,
+    setJobTitle,
+    setCompanyName,
+    setJobDescription,
+    setKeywordText,
+  } = useAtsStore();
+
   const jobWordCount = jobDescription.trim()
     ? jobDescription.trim().split(/\s+/).length
     : 0;
@@ -36,7 +31,7 @@ const AtsJobFields = ({
           <span className="font-medium">Target role</span>
           <input
             value={jobTitle}
-            onChange={(event) => onJobTitleChange(event.target.value)}
+            onChange={(event) => setJobTitle(event.target.value)}
             className={`${inputClassName} w-full`}
             placeholder="Machine learning engineer"
           />
@@ -46,7 +41,7 @@ const AtsJobFields = ({
           <span className="font-medium">Company</span>
           <input
             value={companyName}
-            onChange={(event) => onCompanyNameChange(event.target.value)}
+            onChange={(event) => setCompanyName(event.target.value)}
             className={`${inputClassName} w-full`}
             placeholder="Acme AI"
           />
@@ -62,7 +57,7 @@ const AtsJobFields = ({
         </span>
         <textarea
           value={jobDescription}
-          onChange={(event) => onJobDescriptionChange(event.target.value)}
+          onChange={(event) => setJobDescription(event.target.value)}
           className={`min-h-64 ${textareaClassName}`}
           placeholder="Paste the role description here..."
         />
@@ -75,7 +70,7 @@ const AtsJobFields = ({
         </span>
         <textarea
           value={keywordText}
-          onChange={(event) => onKeywordTextChange(event.target.value)}
+          onChange={(event) => setKeywordText(event.target.value)}
           className={`min-h-20 ${textareaClassName}`}
           placeholder="Python, FastAPI, SQL"
         />

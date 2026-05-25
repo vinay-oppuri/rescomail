@@ -3,6 +3,7 @@ import { relations } from "drizzle-orm";
 import { atsAnalyses } from "./ats";
 import { user } from "./auth";
 import { subscriptions } from "./billing";
+import { coldEmails } from "./coldmail";
 import { organizationMembers, organizations } from "./organizations";
 import { resumes } from "./resumes";
 import { usageEvents } from "./usage";
@@ -17,6 +18,7 @@ export const organizationsRelations = relations(
     members: many(organizationMembers),
     resumes: many(resumes),
     atsAnalyses: many(atsAnalyses),
+    coldEmails: many(coldEmails),
     usageEvents: many(usageEvents),
     subscriptions: many(subscriptions),
   }),
@@ -64,6 +66,7 @@ export const resumesRelations = relations(resumes, ({ many, one }) => ({
     references: [organizations.id],
   }),
   atsAnalyses: many(atsAnalyses),
+  coldEmails: many(coldEmails),
 }));
 
 export const atsAnalysesRelations = relations(atsAnalyses, ({ one }) => ({
@@ -77,6 +80,21 @@ export const atsAnalysesRelations = relations(atsAnalyses, ({ one }) => ({
   }),
   resume: one(resumes, {
     fields: [atsAnalyses.resumeId],
+    references: [resumes.id],
+  }),
+}));
+
+export const coldEmailsRelations = relations(coldEmails, ({ one }) => ({
+  user: one(user, {
+    fields: [coldEmails.userId],
+    references: [user.id],
+  }),
+  organization: one(organizations, {
+    fields: [coldEmails.organizationId],
+    references: [organizations.id],
+  }),
+  resume: one(resumes, {
+    fields: [coldEmails.resumeId],
     references: [resumes.id],
   }),
 }));

@@ -38,6 +38,7 @@ const serverEnvSchema = z
     RESUME_PARSER_WEBHOOK_URL: optionalUrl,
     RESUME_PARSER_API_KEY: optionalNonEmptyString,
     AI_SERVICE_URL: z.string().url().default("http://localhost:8000"),
+    TAVILY_API_KEY: optionalNonEmptyString,
   })
   .superRefine((env, ctx) => {
     const hasGoogleId = Boolean(env.GOOGLE_CLIENT_ID);

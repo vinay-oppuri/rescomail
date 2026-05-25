@@ -16,6 +16,7 @@ from .ats import (
     AtsScoreBreakdown,
     AtsSuggestion,
 )
+from .coldmail import ColdEmailGenerateRequest, ColdEmailResponse
 
 __all__ = [
     "AtsAnalysisResponse",
@@ -25,6 +26,8 @@ __all__ = [
     "AtsRewriteSuggestion",
     "AtsScoreBreakdown",
     "AtsSuggestion",
+    "ColdEmailGenerateRequest",
+    "ColdEmailResponse",
     "Education",
     "Experience",
     "ParseRequest",
