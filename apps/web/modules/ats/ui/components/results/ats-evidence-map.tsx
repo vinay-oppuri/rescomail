@@ -23,7 +23,7 @@ const AtsEvidenceMap = ({ evidence }: AtsEvidenceMapProps) => (
           </Badge>
           <div className="space-y-1 text-sm text-muted-foreground">
             <p>
-              {item.sourceSection} · {item.strength}/100
+              {item.sourceSection} / {item.strength}/100
             </p>
             {item.snippets[0] ? (
               <p className="line-clamp-2 text-foreground">{item.snippets[0]}</p>

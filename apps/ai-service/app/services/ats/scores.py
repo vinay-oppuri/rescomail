@@ -3,6 +3,7 @@ from app.schemas.ats import AtsJobProfile, AtsKeywordEvidence, AtsScoreBreakdown
 from app.schemas.resume import StructuredResume
 
 from .score_categories import (
+    clamp_score,
     score_experience,
     score_formatting,
     score_impact,
@@ -18,12 +19,19 @@ def build_score_breakdown(
     normalized_job: str,
     job_profile: AtsJobProfile,
     structured_resume: StructuredResume | None,
+    semantic_match_score: int | None = None,
 ) -> AtsScoreBreakdown:
     keyword_score = score_keyword_evidence(evidence, job_profile.requiredKeywords)
+    evidence_semantic_score = score_semantic_depth(evidence)
+    semantic_score = (
+        clamp_score(evidence_semantic_score * 0.55 + semantic_match_score * 0.45)
+        if semantic_match_score is not None
+        else evidence_semantic_score
+    )
 
     return AtsScoreBreakdown(
         keywords=keyword_score,
-        semantic=score_semantic_depth(evidence),
+        semantic=semantic_score,
         skills=score_skills(evidence, normalized_resume, structured_resume),
         experience=score_experience(
             normalized_resume,

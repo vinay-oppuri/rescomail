@@ -24,17 +24,21 @@ const AtsJobFields = ({
   onCompanyNameChange,
   onJobDescriptionChange,
   onKeywordTextChange,
-}: AtsJobFieldsProps) => (
-  <>
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-      <div className="flex items-center gap-2">
+}: AtsJobFieldsProps) => {
+  const jobWordCount = jobDescription.trim()
+    ? jobDescription.trim().split(/\s+/).length
+    : 0;
+
+  return (
+    <>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
         <label className="grid gap-2 text-sm">
           <span className="font-medium">Target role</span>
           <input
             value={jobTitle}
             onChange={(event) => onJobTitleChange(event.target.value)}
             className={`${inputClassName} w-full`}
-            placeholder="Backend engineer"
+            placeholder="Machine learning engineer"
           />
         </label>
 
@@ -44,32 +48,40 @@ const AtsJobFields = ({
             value={companyName}
             onChange={(event) => onCompanyNameChange(event.target.value)}
             className={`${inputClassName} w-full`}
-            placeholder="Acme"
+            placeholder="Acme AI"
           />
         </label>
       </div>
-    </div>
 
-    <label className="grid gap-2 text-sm">
-      <span className="font-medium">Job description</span>
-      <textarea
-        value={jobDescription}
-        onChange={(event) => onJobDescriptionChange(event.target.value)}
-        className={`min-h-56 ${textareaClassName}`}
-        placeholder="Paste the role description here..."
-      />
-    </label>
+      <label className="grid gap-2 text-sm">
+        <span className="flex items-center justify-between gap-3">
+          <span className="font-medium">Job description</span>
+          <span className="text-xs text-muted-foreground">
+            {jobWordCount} words
+          </span>
+        </span>
+        <textarea
+          value={jobDescription}
+          onChange={(event) => onJobDescriptionChange(event.target.value)}
+          className={`min-h-64 ${textareaClassName}`}
+          placeholder="Paste the role description here..."
+        />
+      </label>
 
-    <label className="grid gap-2 text-sm">
-      <span className="font-medium">Priority keywords</span>
-      <textarea
-        value={keywordText}
-        onChange={(event) => onKeywordTextChange(event.target.value)}
-        className={`min-h-20 ${textareaClassName}`}
-        placeholder="Python, FastAPI, SQL"
-      />
-    </label>
-  </>
-);
+      <label className="grid gap-2 text-sm">
+        <span className="flex items-center justify-between gap-3">
+          <span className="font-medium">Priority keywords</span>
+          <span className="text-xs text-muted-foreground">Optional</span>
+        </span>
+        <textarea
+          value={keywordText}
+          onChange={(event) => onKeywordTextChange(event.target.value)}
+          className={`min-h-20 ${textareaClassName}`}
+          placeholder="Python, FastAPI, SQL"
+        />
+      </label>
+    </>
+  );
+};
 
 export default AtsJobFields;

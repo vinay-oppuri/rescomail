@@ -2,6 +2,7 @@ import type { AtsAnalysisResponse } from "@repo/validations";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
 
 import AtsEvidenceMap from "./results/ats-evidence-map";
+import AtsIntelligencePanel from "./results/ats-intelligence-panel";
 import AtsJobProfilePanel from "./results/ats-job-profile-panel";
 import AtsKeywordPanel from "./results/ats-keyword-panel";
 import AtsListSection from "./results/ats-list-section";
@@ -49,6 +50,7 @@ const AtsAnalysisResults = ({ analysis }: AtsAnalysisResultsProps) => {
         <AtsEvidenceMap evidence={analysis.evidence} />
       </div>
 
+      <AtsIntelligencePanel intelligence={analysis.intelligence} />
       <AtsSuggestionsPanel suggestions={analysis.suggestions} />
       <AtsRewritePlan rewrites={analysis.rewriteSuggestions} />
     </div>

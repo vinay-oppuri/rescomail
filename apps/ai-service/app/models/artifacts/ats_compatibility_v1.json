@@ -1,0 +1,15 @@
+{
+  "modelVersion": "ats-compatibility-bge-cross-encoder-v1",
+  "modelType": "calibrated-logistic-feature-model",
+  "intercept": -4.35,
+  "weights": {
+    "keywordEvidence": 1.35,
+    "semanticMatch": 1.55,
+    "crossEncoderRelevance": 1.45,
+    "skillCoverage": 1.2,
+    "experienceFit": 1.05,
+    "impactEvidence": 0.75,
+    "formattingQuality": 0.45,
+    "seniorityAlignment": 0.55
+  }
+}

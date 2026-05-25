@@ -1,4 +1,5 @@
 import { Badge } from "@repo/ui/components/badge";
+import { FileText } from "lucide-react";
 
 import type { AtsResumeOption } from "../../../server/ats-resumes";
 
@@ -44,11 +45,16 @@ const AtsResumePicker = ({
 }: AtsResumePickerProps) => (
   <>
     <label className="grid gap-2 text-sm">
-      <span className="font-medium">Resume</span>
+      <span className="flex items-center justify-between gap-3">
+        <span className="font-medium">Resume</span>
+        <span className="text-xs text-muted-foreground">
+          {resumes.length} available
+        </span>
+      </span>
       <select
         value={resumeId}
         onChange={(event) => onResumeIdChange(event.target.value)}
-        className="h-9 w-full border bg-background px-3 text-sm outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring/50"
+        className="h-10 w-full border bg-background px-3 text-sm outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring/50"
         disabled={resumes.length === 0}
       >
         {resumes.length === 0 ? <option value="">No resumes uploaded</option> : null}
@@ -61,8 +67,11 @@ const AtsResumePicker = ({
     </label>
 
     {selectedResume ? (
-      <div className="border bg-muted/20 p-3 text-xs text-muted-foreground">
-        <div className="flex items-center justify-between gap-3">
+      <div className="border bg-muted/20 text-xs text-muted-foreground">
+        <div className="grid grid-cols-[36px_1fr_auto] items-center gap-3 p-3">
+          <div className="flex h-9 w-9 items-center justify-center border bg-background">
+            <FileText className="h-4 w-4" />
+          </div>
           <div className="min-w-0">
             <p className="truncate font-medium text-foreground">
               {selectedResume.fileName}
@@ -74,7 +83,9 @@ const AtsResumePicker = ({
           </Badge>
         </div>
         {selectedResume.parsingError ? (
-          <p className="mt-2 text-destructive">{selectedResume.parsingError}</p>
+          <p className="border-t px-3 py-2 text-destructive">
+            {selectedResume.parsingError}
+          </p>
         ) : null}
       </div>
     ) : null}

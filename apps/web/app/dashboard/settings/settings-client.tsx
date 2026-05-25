@@ -170,7 +170,7 @@ export default function SettingsClient({ user }: SettingsClientProps) {
             </div>
           </div>
 
-          <Separator  className="bg-foreground/5" />
+          <Separator className="bg-foreground/5" />
 
           {/* Editable fields */}
           <div className="grid gap-5 sm:grid-cols-2">

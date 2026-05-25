@@ -57,6 +57,81 @@ export const atsRewriteSuggestionSchema = z.object({
   after: z.string(),
 });
 
+export const atsSemanticMatchSchema = z.object({
+  resumeToJob: z.number().int().min(0).max(100),
+  titleAlignment: z.number().int().min(0).max(100),
+  requiredSkillCoverage: z.number().int().min(0).max(100),
+  embeddingModel: z.string(),
+  matchedConcepts: z.array(z.string()),
+});
+
+export const atsModelSignalSchema = z.object({
+  label: z.string(),
+  impact: z.number().int().min(-100).max(100),
+  direction: z.enum(["positive", "negative"]),
+});
+
+export const atsCompatibilityPredictionSchema = z.object({
+  modelVersion: z.string(),
+  modelType: z.string(),
+  probability: z.number().int().min(0).max(100),
+  confidence: z.enum(["low", "medium", "high"]),
+  signals: z.array(atsModelSignalSchema),
+});
+
+export const atsSkillGapSchema = z.object({
+  skill: z.string(),
+  severity: z.enum(["critical", "important", "optional"]),
+  currentEvidence: z.enum(["missing", "weak", "semantic"]),
+  recommendation: z.string(),
+  learningFocus: z.string(),
+});
+
+export const atsRetrievalCitationSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  sourceType: z.enum([
+    "recruiter_guideline",
+    "resume_pattern",
+    "domain_knowledge",
+  ]),
+  relevance: z.number().int().min(0).max(100),
+});
+
+export const atsGroundedSuggestionSchema = z.object({
+  title: z.string(),
+  detail: z.string(),
+  citations: z.array(atsRetrievalCitationSchema),
+});
+
+const defaultAtsIntelligence = {
+  semanticMatch: {
+    resumeToJob: 0,
+    titleAlignment: 0,
+    requiredSkillCoverage: 0,
+    embeddingModel: "legacy-analysis",
+    matchedConcepts: [],
+  },
+  compatibilityPrediction: {
+    modelVersion: "legacy-analysis",
+    modelType: "legacy-analysis",
+    probability: 0,
+    confidence: "low" as const,
+    signals: [],
+  },
+  skillGaps: [],
+  recruiterGuidance: [],
+};
+
+export const atsIntelligenceSchema = z
+  .object({
+    semanticMatch: atsSemanticMatchSchema,
+    compatibilityPrediction: atsCompatibilityPredictionSchema,
+    skillGaps: z.array(atsSkillGapSchema),
+    recruiterGuidance: z.array(atsGroundedSuggestionSchema),
+  })
+  .default(defaultAtsIntelligence);
+
 export const atsAnalysisResponseSchema = z.object({
   analysisId: z.string().uuid().optional(),
   resumeId: z.string().nullable().optional(),
@@ -71,6 +146,7 @@ export const atsAnalysisResponseSchema = z.object({
   risks: z.array(z.string()),
   suggestions: z.array(atsSuggestionSchema),
   rewriteSuggestions: z.array(atsRewriteSuggestionSchema),
+  intelligence: atsIntelligenceSchema,
   summary: z.string(),
 });
 

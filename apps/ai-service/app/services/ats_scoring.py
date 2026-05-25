@@ -1,10 +1,12 @@
 from app.schemas.ats import AtsAnalysisResponse, AtsAnalyzeRequest
 from app.schemas.resume import StructuredResume
+from app.embeddings.semantic import semantic_similarity_score
 from app.services.ats.evidence import (
     build_keyword_evidence,
     matched_keywords,
     missing_keywords,
 )
+from app.services.ats.intelligence import build_intelligence
 from app.services.ats.job_profile import extract_job_profile
 from app.services.ats.recommendations import (
     build_rewrite_suggestions,
@@ -31,14 +33,29 @@ def analyze_resume_fit(
         normalized_resume,
         job_profile.requiredKeywords + job_profile.preferredKeywords,
     )
+    semantic_resume_job = semantic_similarity_score(resume_text, request.jobDescription)
     category_scores = build_score_breakdown(
         evidence,
         normalized_resume,
         normalized_job,
         job_profile,
         structured_resume,
+        semantic_resume_job,
     )
-    overall_score = weighted_score(category_scores)
+    intelligence = build_intelligence(
+        resume_text,
+        request.jobDescription,
+        normalized_resume,
+        job_profile,
+        evidence,
+        category_scores,
+        semantic_resume_job,
+    )
+    heuristic_score = weighted_score(category_scores)
+    overall_score = round(
+        heuristic_score * 0.72
+        + intelligence.compatibilityPrediction.probability * 0.28
+    )
 
     return AtsAnalysisResponse(
         resumeId=request.resumeId,
@@ -53,5 +70,6 @@ def analyze_resume_fit(
         risks=build_risks(category_scores, evidence, job_profile),
         suggestions=build_suggestions(category_scores, evidence, job_profile),
         rewriteSuggestions=build_rewrite_suggestions(evidence, job_profile),
+        intelligence=intelligence,
         summary=build_summary(overall_score, job_profile, evidence),
     )

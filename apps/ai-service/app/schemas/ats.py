@@ -77,6 +77,56 @@ class AtsRewriteSuggestion(BaseModel):
     after: str
 
 
+class AtsSemanticMatch(BaseModel):
+    resumeToJob: int = Field(ge=0, le=100)
+    titleAlignment: int = Field(ge=0, le=100)
+    requiredSkillCoverage: int = Field(ge=0, le=100)
+    embeddingModel: str
+    matchedConcepts: list[str]
+
+
+class AtsModelSignal(BaseModel):
+    label: str
+    impact: int = Field(ge=-100, le=100)
+    direction: Literal["positive", "negative"]
+
+
+class AtsCompatibilityPrediction(BaseModel):
+    modelVersion: str
+    modelType: str
+    probability: int = Field(ge=0, le=100)
+    confidence: Literal["low", "medium", "high"]
+    signals: list[AtsModelSignal]
+
+
+class AtsSkillGap(BaseModel):
+    skill: str
+    severity: Literal["critical", "important", "optional"]
+    currentEvidence: Literal["missing", "weak", "semantic"]
+    recommendation: str
+    learningFocus: str
+
+
+class AtsRetrievalCitation(BaseModel):
+    id: str
+    title: str
+    sourceType: Literal["recruiter_guideline", "resume_pattern", "domain_knowledge"]
+    relevance: int = Field(ge=0, le=100)
+
+
+class AtsGroundedSuggestion(BaseModel):
+    title: str
+    detail: str
+    citations: list[AtsRetrievalCitation]
+
+
+class AtsIntelligence(BaseModel):
+    semanticMatch: AtsSemanticMatch
+    compatibilityPrediction: AtsCompatibilityPrediction
+    skillGaps: list[AtsSkillGap]
+    recruiterGuidance: list[AtsGroundedSuggestion]
+
+
 class AtsAnalysisResponse(BaseModel):
     resumeId: str | None = None
     overallScore: int = Field(ge=0, le=100)
@@ -90,4 +140,5 @@ class AtsAnalysisResponse(BaseModel):
     risks: list[str]
     suggestions: list[AtsSuggestion]
     rewriteSuggestions: list[AtsRewriteSuggestion]
+    intelligence: AtsIntelligence
     summary: str

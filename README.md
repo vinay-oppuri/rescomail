@@ -60,6 +60,27 @@ usage in `usage_events`, and returns a scored package with extracted job
 requirements, exact/semantic keyword evidence, risk analysis, and rewrite
 suggestions.
 
+The intelligence pipeline now includes product-facing ML artifacts:
+
+- A real Sentence Transformers embedding layer using
+  `BAAI/bge-base-en-v1.5` by default for resume/job semantic similarity,
+  RAG retrieval, and shared concept extraction.
+- A trained cross-encoder reranker using
+  `cross-encoder/ms-marco-MiniLM-L12-v2` by default for deeper pairwise
+  resume-job relevance scoring.
+- A calibrated compatibility predictor loaded from
+  `apps/ai-service/app/models/artifacts/ats_compatibility_v1.json`.
+- Skill-gap analysis that ranks missing or weak requirements by severity.
+- Retrieval-grounded recruiter guidance from an internal knowledge base.
+
+The embedding model can be changed with `RESCOMAIL_EMBEDDING_MODEL`; the
+reranker can be changed with `RESCOMAIL_RERANKER_MODEL`. Production should keep
+`RESCOMAIL_ALLOW_HASHED_EMBEDDING_FALLBACK=0`; the fallback exists only for
+local development on machines where PyTorch/Sentence Transformers are not
+installed. Clear extension points remain for pgvector/Qdrant retrieval,
+MLflow-tracked trained ranking models, and async job ranking as the dataset
+grows.
+
 AI service code follows one layered structure:
 
 - `api` owns FastAPI routing and auth dependencies.
