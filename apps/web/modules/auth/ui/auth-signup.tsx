@@ -36,15 +36,18 @@ const AuthSignup = () => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const errorParam = searchParams.get("error");
     if (errorParam) {
-      setAuthError(
-        errorParam === "account_already_linked" || errorParam === "OAuthAccountNotLinked" || errorParam === "account_not_linked" || errorParam?.includes("linked")
-          ? "This email is already registered. Please sign in with your email and password."
-          : `An error occurred during authentication (${errorParam}). Please try again.`
-      );
+      setTimeout(() => {
+        setAuthError(
+          errorParam === "account_already_linked" || errorParam === "OAuthAccountNotLinked" || errorParam === "account_not_linked" || errorParam?.includes("linked")
+            ? "This email is already registered. Please sign in with your email and password."
+            : `An error occurred during authentication (${errorParam}). Please try again.`
+        );
+      }, 0);
     }
   }, [searchParams]);
 

@@ -41,11 +41,13 @@ const AuthLogin = () => {
   useEffect(() => {
     const errorParam = searchParams.get("error");
     if (errorParam) {
-      setAuthError(
-        errorParam === "account_already_linked" || errorParam === "OAuthAccountNotLinked" || errorParam === "account_not_linked" || errorParam?.includes("linked")
-          ? "This email is already registered with a different provider. Please sign in with your email and password."
-          : `An error occurred during authentication (${errorParam}). Please try again.`
-      );
+      setTimeout(() => {
+        setAuthError(
+          errorParam === "account_already_linked" || errorParam === "OAuthAccountNotLinked" || errorParam === "account_not_linked" || errorParam?.includes("linked")
+            ? "This email is already registered with a different provider. Please sign in with your email and password."
+            : `An error occurred during authentication (${errorParam}). Please try again.`
+        );
+      }, 0);
     }
   }, [searchParams]);
 

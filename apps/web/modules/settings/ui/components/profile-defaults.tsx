@@ -52,9 +52,9 @@ export function ProfileDefaults() {
     try {
       await EditPreferenceAction({
         targetRoles: targetRole ? [targetRole] : [],
-        targetSeniority: (seniority as any) || undefined,
-        workModes: workMode ? [workMode as any] : [],
-        employmentTypes: employmentType ? [employmentType as any] : [],
+        targetSeniority: (seniority as "intern" | "new_grad" | "junior" | "mid" | "senior" | "lead") || undefined,
+        workModes: workMode ? [workMode as "remote" | "hybrid" | "onsite"] : [],
+        employmentTypes: employmentType ? [employmentType as "internship" | "full_time" | "part_time" | "contract" | "freelance"] : [],
         preferredLocations: location ? [{ city: location }] : [],
       });
       setPrefsSaved(true);
