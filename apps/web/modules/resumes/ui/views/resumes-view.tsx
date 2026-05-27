@@ -50,8 +50,8 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-1">
-          <h1 className="text-xl md:text-2xl font-bold tracking-tight">AI Resumes</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-lg font-bold tracking-tight">AI Resumes</h1>
+          <p className="text-xs text-muted-foreground">
             Upload resumes, track parsing status, and prepare them for ATS
             analysis.
           </p>
@@ -80,8 +80,8 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
                 <FileText className="h-5 w-5 text-muted-foreground" />
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium">No resumes yet</p>
-                <p className="max-w-sm text-sm text-muted-foreground">
+                <p className="text-xs font-medium">No resumes yet</p>
+                <p className="max-w-sm text-xs text-muted-foreground">
                   Upload your first PDF resume to start parsing and analysis.
                 </p>
               </div>
@@ -95,7 +95,7 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
                 >
                   <div className="min-w-0 space-y-2">
                     <div className="flex min-w-0 flex-wrap items-center gap-2">
-                      <p className="truncate text-sm font-medium">
+                      <p className="truncate text-xs font-medium">
                         {resume.title}
                       </p>
                       <Badge variant={statusVariant(resume.status)}>

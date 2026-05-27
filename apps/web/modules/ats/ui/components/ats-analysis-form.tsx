@@ -23,11 +23,11 @@ const AtsAnalysisForm = () => {
     <form onSubmit={onSubmit} className="flex flex-col border-0 bg-muted/10 shadow-xl ring-1 ring-border/50 backdrop-blur-2xl transition-all duration-500">
       <div className="flex items-start justify-between gap-3 border-b border-border/40 bg-card/20 px-4 py-3">
         <div>
-          <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight text-foreground">
+          <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
             <Zap className="h-4 w-4 text-primary" />
             Analysis setup
           </h2>
-          <p className="mt-1.5 text-sm text-muted-foreground/80">
+          <p className="mt-1.5 text-xs text-muted-foreground/80">
             Provide the resume and target role to extract actionable intelligence.
           </p>
         </div>

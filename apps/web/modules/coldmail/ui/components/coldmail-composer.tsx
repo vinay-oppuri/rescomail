@@ -90,8 +90,8 @@ const ColdmailComposer = () => {
     <form onSubmit={onSubmit} className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm overflow-hidden">
       <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-5 py-4">
         <div>
-          <h2 className="text-base font-semibold tracking-tight text-foreground">Email Composer</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <h2 className="text-sm font-semibold tracking-tight text-foreground">Email Composer</h2>
+          <p className="mt-1 text-xs text-muted-foreground">
             Configure the parameters for your AI-generated outreach.
           </p>
         </div>
@@ -105,7 +105,7 @@ const ColdmailComposer = () => {
         
         {/* Section 1: Setup */}
         <div className="space-y-4">
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <h3 className="flex items-center gap-2 text-xs font-semibold text-foreground uppercase tracking-widest">
             <Settings2 className="h-4 w-4 text-primary" />
             Core Configuration
           </h3>
@@ -188,7 +188,7 @@ const ColdmailComposer = () => {
 
         {/* Section 2: Target */}
         <div className="space-y-4 pt-5 border-t border-foreground/5">
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <h3 className="flex items-center gap-2 text-xs font-semibold text-foreground uppercase tracking-widest">
             <Building2 className="h-4 w-4 text-primary" />
             Target Information
           </h3>
@@ -254,7 +254,7 @@ const ColdmailComposer = () => {
 
         {/* Section 3: Content */}
         <div className="space-y-4 pt-5 border-t border-foreground/5">
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <h3 className="flex items-center gap-2 text-xs font-semibold text-foreground uppercase tracking-widest">
             <FileText className="h-4 w-4 text-primary" />
             Content & Personalization
           </h3>
@@ -319,7 +319,7 @@ const ColdmailComposer = () => {
         <Button 
           type="submit" 
           disabled={!canGenerate || isGenerating}
-          className="mt-4 h-12 w-full rounded-none bg-linear-to-r from-primary to-primary/80 text-primary-foreground shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none font-medium text-base"
+          className="mt-4 h-12 w-full rounded-none bg-linear-to-r from-primary to-primary/80 text-primary-foreground shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none font-semibold text-sm"
         >
           {isGenerating ? (
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />

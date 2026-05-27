@@ -114,8 +114,8 @@ export default function SettingsClient({ user }: SettingsClientProps) {
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-8">
       {/* Page Header */}
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-xl font-bold tracking-tight">Settings</h1>
+        <p className="text-xs text-muted-foreground">
           Manage your profile and workspace preferences.
         </p>
       </div>
@@ -148,10 +148,10 @@ export default function SettingsClient({ user }: SettingsClientProps) {
             </div>
 
             <div className="space-y-1.5 min-w-0">
-              <p className="text-base font-semibold truncate">
+              <p className="text-sm font-semibold truncate">
                 {user.name || "Unknown User"}
               </p>
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Mail className="h-3.5 w-3.5 shrink-0" />
                 <span className="truncate">{user.email}</span>
               </div>

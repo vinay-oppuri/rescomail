@@ -52,7 +52,7 @@ const DashboardView = async () => {
             </div>
 
             {/* Minimalist Welcome Header */}
-            <div className="relative overflow-hidden rounded-none border border-border/50 bg-card/80 backdrop-blur-xl p-8 shadow-xl">
+            <div className="relative overflow-hidden rounded-none border border-border/50 bg-card/80 backdrop-blur-xl p-4 md:p-8 shadow-xl">
                 <div className="absolute -inset-0.5 bg-linear-to-br from-primary/10 to-blue-500/10 blur-xl opacity-50 -z-10" />
                 <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
@@ -60,20 +60,20 @@ const DashboardView = async () => {
                             <Sparkles className="h-4 w-4 text-primary animate-pulse" />
                             <span className="text-xs font-bold uppercase tracking-widest text-primary">AI Job Application Copilot</span>
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
+                        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
                             Welcome back, <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-500">{session.user.name || "User"}</span>
                         </h1>
                         <p className="text-muted-foreground text-sm max-w-xl leading-relaxed">
                             Optimize your application pipeline with AI tools. Scan your resumes against job descriptions, audit key phrases, and tailor your profile to land more interviews.
                         </p>
                     </div>
-                    <div className="flex flex-wrap gap-3 shrink-0">
-                        <Button asChild size="default" className="rounded-none h-11 px-5 shadow-lg shadow-primary/20 hover:scale-105 transition-all text-sm font-medium">
+                    <div className="flex flex-col md:flex-row gap-3 shrink-0">
+                        <Button asChild size="default" className="rounded-none h-9 md:h-11 px-3 md:px-5 shadow-lg shadow-primary/20 hover:scale-105 transition-all text-xs md:text-sm font-medium">
                             <Link href="/dashboard/resumes">
                                 <Upload className="mr-2 h-4 w-4" /> Upload Resume
                             </Link>
                         </Button>
-                        <Button asChild size="default" variant="outline" className="rounded-none h-11 px-5 border-border/50 hover:bg-muted transition-all text-sm font-medium bg-card/50 backdrop-blur-sm">
+                        <Button asChild size="default" variant="outline" className="rounded-none h-9 md:h-11 px-3 md:px-5 border-border/50 hover:bg-muted transition-all text-xs md:text-sm font-medium bg-card/50 backdrop-blur-sm">
                             <Link href="/dashboard/ats">
                                 <Sparkles className="mr-2 h-4 w-4 text-primary" /> Run ATS Scan
                             </Link>
@@ -95,7 +95,7 @@ const DashboardView = async () => {
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-1">
-                        <div className="text-4xl font-extrabold tracking-tight text-foreground">{resumesCount}</div>
+                        <div className="text-2xl font-extrabold tracking-tight text-foreground">{resumesCount}</div>
                         <p className="text-xs text-muted-foreground font-medium">
                             Stored profiles ready for AI matching
                         </p>
@@ -113,7 +113,7 @@ const DashboardView = async () => {
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-1">
-                        <div className="text-4xl font-extrabold tracking-tight text-foreground">{atsCount}</div>
+                        <div className="text-2xl font-extrabold tracking-tight text-foreground">{atsCount}</div>
                         <p className="text-xs text-muted-foreground font-medium">
                             Job descriptions compared and parsed
                         </p>
@@ -132,7 +132,7 @@ const DashboardView = async () => {
                     </CardHeader>
                     <CardContent className="space-y-1">
                         <div className="flex items-baseline gap-2">
-                            <div className={`text-4xl font-extrabold tracking-tight ${getScoreColor(averageAtsScore)}`}>
+                            <div className={`text-2xl font-extrabold tracking-tight ${getScoreColor(averageAtsScore)}`}>
                                 {averageAtsScore > 0 ? `${averageAtsScore}%` : "—"}
                             </div>
                             {averageAtsScore > 0 && (
@@ -154,7 +154,7 @@ const DashboardView = async () => {
                 <div className="md:col-span-3 space-y-5">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="text-xl font-bold tracking-tight text-foreground">Recent Scans</h2>
+                            <h2 className="text-lg font-bold tracking-tight text-foreground">Recent Scans</h2>
                             <p className="text-sm text-muted-foreground mt-0.5">Tailored comparisons and keyword checks</p>
                         </div>
                         {recentScans.length > 0 && (
@@ -199,7 +199,7 @@ const DashboardView = async () => {
                                         </div>
                                         <div className="flex items-center gap-5">
                                             <div className="text-right">
-                                                <span className={`text-xl font-extrabold tracking-tight ${getScoreColor(scan.overallScore)}`}>
+                                                <span className={`text-lg font-extrabold tracking-tight ${getScoreColor(scan.overallScore)}`}>
                                                     {scan.overallScore}%
                                                 </span>
                                             </div>
@@ -222,7 +222,7 @@ const DashboardView = async () => {
                             <div className="p-4 bg-muted mb-4 text-muted-foreground/50 rounded-none">
                                <Sparkles className="h-8 w-8" />
                             </div>
-                            <p className="text-base font-semibold text-foreground">No recent scans yet</p>
+                            <p className="text-sm font-semibold text-foreground">No recent scans yet</p>
                             <p className="text-sm text-muted-foreground mt-2 max-w-sm leading-relaxed">
                                 Upload your resume and scan against a job description to get started.
                             </p>
@@ -236,7 +236,7 @@ const DashboardView = async () => {
                 {/* Sidebar Tips & Recommendations (Span 2 Columns) */}
                 <div className="md:col-span-2 space-y-5">
                     <div>
-                        <h2 className="text-xl font-bold tracking-tight text-foreground">AI Insights</h2>
+                        <h2 className="text-lg font-bold tracking-tight text-foreground">AI Insights</h2>
                         <p className="text-sm text-muted-foreground mt-0.5">Pro tips to beat ATS algorithms</p>
                     </div>
 

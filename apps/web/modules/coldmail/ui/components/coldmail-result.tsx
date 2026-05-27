@@ -60,7 +60,7 @@ const ColdmailResult = () => {
   
           <div className="rounded-none border bg-card/10 shadow-sm overflow-hidden">
             <div className="flex items-center justify-between border-b bg-foreground px-4 py-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-background">
+              <div className="flex items-center gap-2 text-xs font-semibold text-background uppercase tracking-widest">
                 <Send className="h-4 w-4" />
                 <span>Initial Outreach</span>
               </div>
@@ -71,19 +71,19 @@ const ColdmailResult = () => {
               />
             </div>
             <div className="px-5 py-4 border-b">
-              <p className="text-sm font-semibold text-foreground">
+              <p className="text-xs font-semibold text-foreground">
                 <span className="text-muted-foreground font-medium mr-2">Subject:</span> 
                 {draft.subject}
               </p>
             </div>
-            <div className="px-5 py-5 whitespace-pre-wrap text-[15px] leading-relaxed text-foreground/90">
+            <div className="px-5 py-5 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
               {draft.body}
             </div>
           </div>
 
           <div className="rounded-none border bg-card/10 shadow-sm overflow-hidden">
             <div className="flex items-center justify-between border-b bg-foreground px-4 py-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-background">
+              <div className="flex items-center gap-2 text-xs font-semibold text-background uppercase tracking-widest">
                 <MessageSquareReply className="h-4 w-4" />
                 <span>Follow-up Sequence</span>
               </div>
@@ -94,13 +94,13 @@ const ColdmailResult = () => {
               />
             </div>
             <div className="px-5 py-4 border-b">
-              <p className="text-sm font-semibold text-foreground">
+              <p className="text-xs font-semibold text-foreground">
                 <span className="text-muted-foreground font-medium mr-2">Subject:</span> 
                 {draft.followUpSubject}
               </p>
             </div>
             <div className="px-5 py-5">
-              <div className="whitespace-pre-wrap text-[15px] leading-relaxed text-foreground/90">
+              <div className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
                 {draft.followUpBody}
               </div>
             </div>
@@ -111,7 +111,7 @@ const ColdmailResult = () => {
         <aside className="border-t bg-muted/5 p-6 lg:border-l lg:border-t-0 flex flex-col gap-5">
           <div className="flex items-center gap-2 text-foreground">
             <Sparkles className="h-4 w-4 text-primary" />
-            <h3 className="text-sm font-semibold tracking-tight">AI Personalization</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-widest">AI Personalization</h3>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
             The model identified these key insights to tailor your outreach.

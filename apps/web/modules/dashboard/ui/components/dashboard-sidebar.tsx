@@ -22,6 +22,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
+  useSidebar,
 } from "@repo/ui/components/sidebar";
 import { Button } from "@repo/ui/components/button";
 import Link from "next/link";
@@ -40,6 +41,7 @@ const navItems = [
 
 const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) => {
   const pathname = usePathname();
+  const { setOpenMobile, isMobile } = useSidebar();
 
   return (
     <Sidebar className="border-r border-border/50 bg-sidebar/80 backdrop-blur-xl rounded-none">
@@ -65,10 +67,13 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
             className="h-10 w-full justify-start gap-2 rounded-none transition-all shadow-md shadow-primary/10 hover:shadow-primary/20 hover:-translate-y-0.5"
             size="sm"
             asChild
+            onClick={() => {
+              if (isMobile) setOpenMobile(false);
+            }}
           >
             <Link href="/dashboard/applications">
               <Plus className="h-4 w-4" />
-              <span className="font-semibold">New Application</span>
+              <span className="text-xs font-semibold">New Application</span>
             </Link>
           </Button>
         </div>
@@ -90,6 +95,9 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
                         ? "bg-primary/10 text-primary border-l-2 border-primary font-semibold"
                         : "text-muted-foreground border-l-2 border-transparent hover:bg-muted/50 hover:text-foreground",
                     )}
+                    onClick={() => {
+                      if (isMobile) setOpenMobile(false);
+                    }}
                   >
                     <Link href={item.href} className="flex items-center gap-3">
                       <item.icon
@@ -100,7 +108,7 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
                             : "text-muted-foreground group-hover:text-foreground",
                         )}
                       />
-                      <span className={cn("text-sm", pathname === item.href ? "font-bold" : "font-medium")}>{item.name}</span>
+                      <span className={cn("text-xs", pathname === item.href ? "font-bold" : "font-medium")}>{item.name}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -116,11 +124,14 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              onClick={() => signOut()}
+              onClick={() => {
+                if (isMobile) setOpenMobile(false);
+                signOut();
+              }}
               className="h-10 w-full justify-start gap-3 rounded-none px-3 font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
             >
               <LogOut className="h-4 w-4" />
-              <span className="text-sm font-semibold">Sign Out</span>
+              <span className="text-xs font-semibold">Sign Out</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

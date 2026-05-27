@@ -100,8 +100,8 @@ const ResumeUploadPanel = () => {
   return (
     <div className="space-y-4 border bg-muted/10 p-5">
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold tracking-tight">Upload resume</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="text-base font-semibold tracking-tight">Upload resume</h2>
+        <p className="text-xs text-muted-foreground">
           Add a PDF resume and Rescomail will queue it for parsing.
         </p>
       </div>
@@ -159,7 +159,7 @@ const ResumeUploadPanel = () => {
           <FileUp className="h-5 w-5 text-muted-foreground" />
         </div>
         <div className="space-y-1">
-          <p className="text-sm font-medium">
+          <p className="text-xs font-medium">
             {file ? file.name : "Choose a PDF or drag it here"}
           </p>
           <p className="text-xs text-muted-foreground">

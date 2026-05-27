@@ -45,17 +45,17 @@ const ColdmailView = ({ emails, resumes }: ColdmailViewProps) => {
             </Badge>
             <Badge variant="outline">{parsedResumes} parsed resumes</Badge>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+          <h1 className="text-xl font-bold tracking-tight md:text-2xl">
             Cold email generator
           </h1>
-          <p className="text-sm leading-6 text-muted-foreground">
+          <p className="text-xs leading-6 text-muted-foreground">
             Turn a resume and target role into a personalized outreach email,
             subject line, and follow-up.
           </p>
         </div>
 
         <div className="w-full shrink-0 lg:w-72">
-          <Label className="mb-2 block text-sm font-medium text-muted-foreground">
+          <Label className="mb-2 block text-xs font-medium text-muted-foreground">
             Draft history
           </Label>
           <Select
@@ -111,8 +111,8 @@ const ColdmailView = ({ emails, resumes }: ColdmailViewProps) => {
           <section className="min-h-175 overflow-hidden rounded-none border border-foreground/5 bg-card/60 shadow-sm">
             <div className="flex items-center justify-between gap-3 border-b border-foreground/5 px-5 py-3">
               <div className="flex flex-col gap-1">
-                <h2 className="text-base font-semibold tracking-tight">Generated draft</h2>
-                <p className="text-sm text-muted-foreground">
+                <h2 className="text-sm font-semibold tracking-tight">Generated draft</h2>
+                <p className="text-xs text-muted-foreground">
                   Personalized outreach and follow-up
                 </p>
               </div>

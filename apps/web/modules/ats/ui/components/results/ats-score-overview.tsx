@@ -53,7 +53,7 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
           </svg>
           <div className="absolute flex flex-col items-center justify-center">
             <span className={cn(
-              "text-4xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-linear-to-br",
+              "text-3xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-linear-to-br",
               gradientClass
             )}>
               {score}
@@ -76,14 +76,14 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
           </Badge>
         </div>
         
-        <p className="text-lg font-medium leading-relaxed text-foreground/90">
+        <p className="text-sm font-medium leading-relaxed text-foreground/90">
           {analysis.summary}
         </p>
 
         <div className="grid gap-3 sm:grid-cols-2 mt-2">
           {Object.entries(analysis.categoryScores).map(([key, catScore]) => (
             <div key={key} className="group relative overflow-hidden rounded-none border bg-card/50 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-muted/30 hover:shadow-sm">
-              <div className="flex items-center justify-between text-sm font-semibold">
+              <div className="flex items-center justify-between text-xs font-semibold">
                 <span className="text-foreground/80 group-hover:text-foreground transition-colors">
                   {categoryLabels[key as keyof AtsAnalysisResponse["categoryScores"]]}
                 </span>

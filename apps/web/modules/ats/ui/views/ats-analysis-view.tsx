@@ -50,10 +50,10 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
             </Badge>
             <Badge variant="outline">{parsedResumes} parsed resumes</Badge>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+          <h1 className="text-xl font-bold tracking-tight md:text-2xl">
             Resume intelligence
           </h1>
-          <p className="text-sm leading-6 text-muted-foreground">
+          <p className="text-xs leading-6 text-muted-foreground">
             Score a resume against a live role, inspect model signals, and turn
             missing evidence into a focused rewrite plan.
           </p>

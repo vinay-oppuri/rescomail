@@ -28,17 +28,17 @@ const HomeView = () => {
                 <Sparkles className="h-3.5 w-3.5 animate-pulse" />
                 <span>AI-Powered Job Search Copilot</span>
               </div>
-              <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl leading-[1.1]">
+              <h1 className="mb-4 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl leading-[1.1]">
                 Land Your Dream Job with{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-500">
                   Rescomail
                 </span>
               </h1>
-              <p className="mb-8 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl">
+              <p className="mb-8 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl">
                 The ultimate AI assistant for your career. Optimize your resume for ATS, generate personalized cold emails, and track applications—all in one place.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <Button size="lg" className="w-full sm:w-auto h-12 px-6 text-sm shadow-lg shadow-primary/20 transition-all hover:scale-105 rounded-none" asChild>
+                <Button size="lg" className="w-[75%] sm:w-auto h-12 px-6 text-sm shadow-lg shadow-primary/20 transition-all hover:scale-105 rounded-none" asChild>
                   <Link href="/signup">
                     Get Started Free <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -46,7 +46,7 @@ const HomeView = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="w-full sm:w-auto h-12 px-6 text-sm border-border/50 hover:bg-muted/50 transition-all rounded-none"
+                  className="w-[65%] md:w-auto h-12 px-6 text-sm border-border/50 hover:bg-muted/50 transition-all rounded-none"
                   asChild
                 >
                   <Link href="#features">Explore Features</Link>
@@ -78,7 +78,7 @@ const HomeView = () => {
                           <Target className="h-6 w-6" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-foreground text-lg mb-1">Smart ATS Optimization</h3>
+                          <h3 className="font-semibold text-foreground text-base mb-1">Smart ATS Optimization</h3>
                           <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
                             Upload your resume and a job description. Our AI instantly analyzes keyword gaps and formatting issues to boost your match score.
                           </p>
@@ -93,7 +93,7 @@ const HomeView = () => {
                           <Mail className="h-6 w-6" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-foreground text-lg mb-1">1-Click Cold Emails</h3>
+                          <h3 className="font-semibold text-foreground text-base mb-1">1-Click Cold Emails</h3>
                           <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
                             Stop staring at a blank screen. Generate highly personalized outreach emails tailored perfectly to the hiring manager.
                           </p>
@@ -108,7 +108,7 @@ const HomeView = () => {
                           <Briefcase className="h-6 w-6" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-foreground text-lg mb-1">Kanban Job Tracker</h3>
+                          <h3 className="font-semibold text-foreground text-base mb-1">Kanban Job Tracker</h3>
                           <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
                             Organize your entire pipeline. Move applications from &apos;Saved&apos; to &apos;Offer&apos; and never lose track of a crucial follow-up.
                           </p>
@@ -125,10 +125,10 @@ const HomeView = () => {
       <section id="features" className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-            <h2 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 tracking-tight">
               Everything you need to succeed
             </h2>
-            <p className="text-base text-muted-foreground leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Powerful AI tools designed specifically to give you an edge in the competitive
               job market. Don&apos;t leave your next career move to chance.
             </p>
@@ -165,7 +165,7 @@ const HomeView = () => {
                 <div className={cn("w-12 h-12 rounded-none flex items-center justify-center mb-6 transition-transform group-hover:scale-110", feature.color)}>
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-bold mb-3">{feature.title}</h3>
+                <h3 className="text-base font-bold mb-3">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>
@@ -178,10 +178,10 @@ const HomeView = () => {
       <section id="pricing" className="py-16 md:py-24 bg-muted/30 border-y border-border/40">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 tracking-tight">
               Simple, transparent pricing
             </h2>
-            <p className="text-base text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Start for free today. Upgrade when you need more power for your job search.
             </p>
           </div>
@@ -224,9 +224,9 @@ const HomeView = () => {
                     Most Popular
                   </div>
                 )}
-                <h3 className="text-lg font-bold mb-2">{plan.name}</h3>
+                <h3 className="text-base font-bold mb-2">{plan.name}</h3>
                 <p className="text-xs text-muted-foreground mb-4">{plan.detail}</p>
-                <div className="mb-6 flex items-baseline text-3xl font-extrabold">
+                <div className="mb-6 flex items-baseline text-2xl font-extrabold">
                   {plan.price}
                   <span className="ml-1 text-xs font-medium text-muted-foreground">/{plan.period}</span>
                 </div>
@@ -251,10 +251,10 @@ const HomeView = () => {
       <section id="faq" className="py-16 md:py-24">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-4xl font-bold tracking-tight mb-4">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-base text-muted-foreground">Got questions? We&apos;ve got answers.</p>
+            <p className="text-sm text-muted-foreground">Got questions? We&apos;ve got answers.</p>
           </div>
 
           <div className="space-y-4">
@@ -273,7 +273,7 @@ const HomeView = () => {
               },
             ].map((faq) => (
               <div key={faq.q} className="rounded-none border border-border/50 bg-card p-6 transition-all hover:shadow-lg">
-                <h3 className="text-lg font-bold flex items-start gap-3">
+                <h3 className="text-base font-bold flex items-start gap-3">
                   <div className="mt-0.5 rounded-none bg-primary/10 p-1 shrink-0">
                      <CheckCircle className="h-4 w-4 text-primary" />
                   </div>
@@ -295,10 +295,10 @@ const HomeView = () => {
           <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-blue-500/5" />
           
           <div className="relative z-10 max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">
+            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-4">
               Ready to land your next role?
             </h2>
-            <p className="text-base text-muted-foreground mb-8 leading-relaxed max-w-xl mx-auto">
+            <p className="text-sm text-muted-foreground mb-8 leading-relaxed max-w-xl mx-auto">
               Join the growing community of professionals who use Rescomail to outsmart the ATS, track applications, and write perfect emails.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
