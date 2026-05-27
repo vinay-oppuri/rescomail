@@ -83,5 +83,11 @@ def _validate_file_url(file_url: str) -> None:
 
     allowed_hosts = _allowed_hosts()
 
-    if allowed_hosts and (parsed.hostname or "").lower() not in allowed_hosts:
-        raise ValueError("Resume file host is not allowed.")
+    if allowed_hosts:
+        hostname = (parsed.hostname or "").lower()
+        is_allowed = any(
+            hostname == allowed or hostname.endswith(f".{allowed}")
+            for allowed in allowed_hosts
+        )
+        if not is_allowed:
+            raise ValueError("Resume file host is not allowed.")
