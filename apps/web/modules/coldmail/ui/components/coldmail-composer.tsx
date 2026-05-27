@@ -87,7 +87,7 @@ const ColdmailComposer = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col rounded-none border border-foreground/5 bg-background shadow-sm overflow-hidden">
+    <form onSubmit={onSubmit} className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm overflow-hidden">
       <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-5 py-4">
         <div>
           <h2 className="text-base font-semibold tracking-tight text-foreground">Email Composer</h2>

@@ -21,13 +21,13 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
       : "from-rose-400 to-red-500";
 
   return (
-    <div className="relative grid gap-4 border-b p-4 md:grid-cols-[180px_1fr] overflow-hidden bg-gradient-to-br from-background to-muted/30">
+    <div className="relative grid gap-4 border-b p-4 md:grid-cols-[180px_1fr] overflow-hidden bg-linear-to-br from-background to-muted/30">
       
       {/* Decorative Background Glow */}
       <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-none bg-primary/5 blur-3xl" />
 
       {/* Score Ring */}
-      <div className="relative flex aspect-square w-full max-w-[160px] flex-col items-center justify-center self-center rounded-none border bg-background/50 p-4 shadow-sm backdrop-blur-xl transition-all duration-500 hover:shadow-md hover:border-primary/20">
+      <div className="relative flex aspect-square w-full max-w-[160px] flex-col items-center justify-center self-center rounded-none border bg-card/50 p-4 shadow-sm backdrop-blur-xl transition-all duration-500 hover:shadow-md hover:border-primary/20">
         <div className="relative flex h-24 w-24 items-center justify-center">
           <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
             <circle
@@ -53,7 +53,7 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
           </svg>
           <div className="absolute flex flex-col items-center justify-center">
             <span className={cn(
-              "text-4xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-br",
+              "text-4xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-linear-to-br",
               gradientClass
             )}>
               {score}
@@ -82,7 +82,7 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
 
         <div className="grid gap-3 sm:grid-cols-2 mt-2">
           {Object.entries(analysis.categoryScores).map(([key, catScore]) => (
-            <div key={key} className="group relative overflow-hidden rounded-none border bg-background/50 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-muted/30 hover:shadow-sm">
+            <div key={key} className="group relative overflow-hidden rounded-none border bg-card/50 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-muted/30 hover:shadow-sm">
               <div className="flex items-center justify-between text-sm font-semibold">
                 <span className="text-foreground/80 group-hover:text-foreground transition-colors">
                   {categoryLabels[key as keyof AtsAnalysisResponse["categoryScores"]]}

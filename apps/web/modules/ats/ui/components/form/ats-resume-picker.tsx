@@ -53,7 +53,7 @@ const AtsResumePicker = () => {
           onValueChange={setResumeId}
           disabled={resumes.length === 0}
         >
-          <SelectTrigger className="h-9! w-full bg-background! border-foreground/5!">
+          <SelectTrigger className="h-9! w-full bg-card! border-foreground/5!">
             <SelectValue placeholder="Select a resume" />
           </SelectTrigger>
 
@@ -76,7 +76,7 @@ const AtsResumePicker = () => {
       {selectedResume && (
         <div className="border border-foreground/5 bg-muted/20 text-xs text-muted-foreground">
           <div className="grid grid-cols-[36px_1fr_auto] items-center gap-3 p-3">
-            <div className="flex h-9 w-9 items-center justify-center border border-foreground/5! bg-background">
+            <div className="flex h-9 w-9 items-center justify-center border border-foreground/5! bg-card">
               <FileText className="h-4 w-4" />
             </div>
 

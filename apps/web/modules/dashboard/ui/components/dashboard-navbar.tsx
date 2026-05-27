@@ -8,12 +8,12 @@ import { DashboardUserProfile } from "./dashboard-user-profile";
 
 const DashboardNavbar = () => {
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <header className="sticky top-0 z-40 w-full border-none bg-background/80 backdrop-blur-md">
       <div className="flex h-16 items-center px-4 md:px-6 gap-4">
         <div className="flex items-center gap-2">
-          <SidebarTrigger className="hover:bg-muted" />
-          <div className="h-6 w-px bg-border mx-1 md:hidden" />
-          <div className="md:hidden flex h-8 w-8 items-center justify-center rounded-none bg-primary text-primary-foreground font-bold text-xs">
+          <SidebarTrigger className="hover:bg-muted/50 rounded-none transition-colors" />
+          <div className="h-6 w-px bg-border/50 mx-1 md:hidden" />
+          <div className="md:hidden flex h-7 w-7 items-center justify-center rounded-none bg-foreground text-background font-bold text-sm shadow-md">
             R
           </div>
         </div>
@@ -23,7 +23,7 @@ const DashboardNavbar = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
             <Input
               placeholder="Search applications..."
-              className="h-9 rounded-none border-border bg-muted/30 pl-9 transition-colors focus-visible:bg-muted/50 focus-visible:ring-1"
+              className="h-9 rounded-none border-border/50 bg-background/50 pl-9 text-sm transition-all focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-primary/50 shadow-sm"
             />
           </form>
         </div>
@@ -32,11 +32,11 @@ const DashboardNavbar = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-none hover:bg-muted group"
+            className="rounded-none hover:bg-muted/50 group transition-colors"
           >
-            <Bell className="h-5 w-5 transition-transform group-hover:rotate-12" />
+            <Bell className="h-4 w-4 text-muted-foreground transition-transform group-hover:rotate-12 group-hover:text-foreground" />
           </Button>
-          <div className="h-6 w-px bg-border mx-1 hidden sm:block" />
+          <div className="h-6 w-px bg-border/50 mx-1 hidden sm:block" />
           <DashboardUserProfile />
         </div>
       </div>

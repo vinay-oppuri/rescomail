@@ -121,7 +121,7 @@ export default function SettingsClient({ user }: SettingsClientProps) {
       </div>
 
       {/* ── Account Profile ────────────────────────────────────── */}
-      <section className="rounded-none border border-foreground/5 bg-card/70">
+      <section className="rounded-none border border-foreground/5 bg-card/20">
         <div className="border-b border-foreground/10 px-5 py-3.5">
           <h2 className="text-sm font-semibold">Account Profile</h2>
           <p className="mt-0.5 text-xs text-muted-foreground">
@@ -226,7 +226,7 @@ export default function SettingsClient({ user }: SettingsClientProps) {
       </section>
 
       {/* ── Profile Defaults ───────────────────────────────────── */}
-      <section className="rounded-none border border-foreground/5 bg-card/70">
+      <section className="rounded-none border border-foreground/5 bg-card/20">
         <div className="border-b border-foreground/10 px-5 py-3.5">
           <h2 className="text-sm font-semibold">Profile Defaults</h2>
           <p className="mt-0.5 text-xs text-muted-foreground">
@@ -327,7 +327,7 @@ export default function SettingsClient({ user }: SettingsClientProps) {
       </section>
 
       {/* ── Danger Zone ────────────────────────────────────────── */}
-      <section className="rounded-none border border-destructive/30 bg-card/70">
+      <section className="rounded-none border border-destructive/30 bg-destructive/10">
         <div className="border-b border-destructive/30 px-5 py-3.5">
           <h2 className="text-sm font-semibold text-destructive">Danger Zone</h2>
           <p className="mt-0.5 text-xs text-muted-foreground">

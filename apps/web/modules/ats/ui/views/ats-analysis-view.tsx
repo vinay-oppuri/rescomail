@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/select";
-import { Label } from "@repo/ui";
+import { Button, Label } from "@repo/ui";
 
 import type { AtsAnalysisHistoryItem } from "../../server/ats-history";
 import type { AtsResumeOption } from "../../server/ats-resumes";
@@ -77,7 +77,7 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
               }
             }}
           >
-            <SelectTrigger className="bg-background">
+            <SelectTrigger className="bg-card">
               <SelectValue placeholder="Select a past run..." />
             </SelectTrigger>
             <SelectContent>
@@ -113,7 +113,7 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
         {showForm ? (
           <AtsAnalysisForm />
         ) : (
-          <section className="min-h-175 overflow-hidden border bg-background">
+          <section className="min-h-175 overflow-hidden border bg-card">
             <div className="flex items-center justify-between gap-3 border-b px-5 py-3">
               <div>
                 <h2 className="text-sm font-semibold">Match report</h2>
@@ -129,14 +129,14 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
                 ) : null}
 
                 {/* Plus button to hide report and go back to form */}
-                <button
+                <Button
                   type="button"
+                  size="icon"
                   onClick={() => setShowForm(true)}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-input bg-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   title="New Analysis"
                 >
                   <Plus className="h-4 w-4" />
-                </button>
+                </Button>
               </div>
             </div>
 

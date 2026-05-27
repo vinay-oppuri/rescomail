@@ -26,10 +26,10 @@ const ColdmailResult = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-col gap-4 border-b bg-gradient-to-r from-muted/20 to-muted/5 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 border-b bg-card/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="bg-background shadow-sm rounded-none text-xs font-medium px-2.5 py-0.5">
+            <Badge variant="outline" className="bg-card/60 shadow-sm rounded-none text-xs font-medium px-2.5 py-0.5">
               <Sparkles className="mr-1.5 h-3 w-3 text-primary" />
               {draft.estimatedReadTimeSeconds}s estimated read time
             </Badge>
@@ -56,12 +56,12 @@ const ColdmailResult = () => {
       </div>
 
       <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_280px]">
-        <div className="min-w-0 p-6 flex flex-col gap-6 bg-background">
-          
-          <div className="rounded-none border bg-card shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between border-b bg-muted/20 px-4 py-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Send className="h-4 w-4 text-primary" />
+        <div className="min-w-0 p-6 flex flex-col gap-6">
+  
+          <div className="rounded-none border bg-card/10 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between border-b bg-foreground px-4 py-3">
+              <div className="flex items-center gap-2 text-sm font-semibold text-background">
+                <Send className="h-4 w-4" />
                 <span>Initial Outreach</span>
               </div>
               <CopyIconButton 
@@ -76,24 +76,15 @@ const ColdmailResult = () => {
                 {draft.subject}
               </p>
             </div>
-            <div className="px-5 py-5 relative group">
-              <div className="absolute right-4 top-4 opacity-0 transition-opacity group-hover:opacity-100">
-                <CopyIconButton 
-                  copied={copiedKey === "body"} 
-                  onClick={() => copyToClipboard("body", draft.body)} 
-                  label="Copy Body" 
-                />
-              </div>
-              <div className="whitespace-pre-wrap text-[15px] leading-relaxed text-foreground/90">
-                {draft.body}
-              </div>
+            <div className="px-5 py-5 whitespace-pre-wrap text-[15px] leading-relaxed text-foreground/90">
+              {draft.body}
             </div>
           </div>
 
-          <div className="rounded-none border bg-card shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between border-b bg-muted/20 px-4 py-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <MessageSquareReply className="h-4 w-4 text-primary" />
+          <div className="rounded-none border bg-card/10 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between border-b bg-foreground px-4 py-3">
+              <div className="flex items-center gap-2 text-sm font-semibold text-background">
+                <MessageSquareReply className="h-4 w-4" />
                 <span>Follow-up Sequence</span>
               </div>
               <CopyIconButton 
@@ -117,7 +108,7 @@ const ColdmailResult = () => {
           
         </div>
 
-        <aside className="border-t bg-muted/10 p-6 lg:border-l lg:border-t-0 flex flex-col gap-5">
+        <aside className="border-t bg-muted/5 p-6 lg:border-l lg:border-t-0 flex flex-col gap-5">
           <div className="flex items-center gap-2 text-foreground">
             <Sparkles className="h-4 w-4 text-primary" />
             <h3 className="text-sm font-semibold tracking-tight">AI Personalization</h3>
@@ -150,12 +141,11 @@ interface CopyButtonProps {
 const CopyButton = ({ copied, children, onClick }: CopyButtonProps) => (
   <Button 
     type="button" 
-    size="sm" 
-    variant="outline" 
+    size="sm"
     onClick={onClick}
-    className="h-8 rounded-none bg-background shadow-sm transition-all hover:bg-muted"
+    className="h-8 rounded-none"
   >
-    {copied ? <Check className="mr-1.5 h-3.5 w-3.5 text-green-500" /> : <Clipboard className="mr-1.5 h-3.5 w-3.5 text-muted-foreground" />}
+    {copied ? <Check className="mr-1.5 h-3.5 w-3.5 text-green-500" /> : <Clipboard className="mr-1.5 h-3.5 w-3.5 text-muted-background" />}
     {copied ? "Copied" : children}
   </Button>
 );
@@ -169,10 +159,10 @@ interface CopyIconButtonProps {
 const CopyIconButton = ({ copied, onClick, label }: CopyIconButtonProps) => (
   <Button 
     type="button" 
-    size="sm" 
-    variant="ghost" 
+    size="sm"
+    variant="ghost"
     onClick={onClick}
-    className="h-7 px-2 rounded-none text-xs text-muted-foreground hover:text-foreground"
+    className="h-7 px-2 text-background! hover:bg-background/10!"
     title={label}
   >
     {copied ? <Check className="mr-1.5 h-3 w-3 text-green-500" /> : <Clipboard className="mr-1.5 h-3 w-3" />}

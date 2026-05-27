@@ -61,11 +61,14 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
       <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
         <ResumeUploadPanel />
 
-        <div className="min-h-80 border bg-background">
-          <div className="border-b px-4 py-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold">Resume library</h2>
+        <div className="min-h-80 border bg-muted/10">
+          <div className="bg-foreground text-background border-b px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              <span className="text-sm font-semibold">Resume library</span>
+            </div>
             {resumes.length > 0 && (
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs">
                 {resumes.length} {resumes.length === 1 ? "resume" : "resumes"}
               </span>
             )}
@@ -73,7 +76,7 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
 
           {resumes.length === 0 ? (
             <div className="flex min-h-72 flex-col items-center justify-center gap-3 px-6 text-center">
-              <div className="flex h-10 w-10 items-center justify-center border bg-muted/40">
+              <div className="flex h-10 w-10 items-center justify-center border bg-muted/10">
                 <FileText className="h-5 w-5 text-muted-foreground" />
               </div>
               <div className="space-y-1">

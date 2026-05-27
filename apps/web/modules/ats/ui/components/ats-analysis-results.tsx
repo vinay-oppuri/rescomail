@@ -18,7 +18,7 @@ const AtsAnalysisResults = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-background">
       <AtsScoreOverview analysis={analysis} />
 
       <div className="grid gap-0 lg:grid-cols-2">

@@ -20,8 +20,8 @@ const AtsAnalysisForm = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col border-0 bg-background/60 shadow-xl ring-1 ring-border/50 backdrop-blur-2xl transition-all duration-500">
-      <div className="flex items-start justify-between gap-3 border-b border-border/40 bg-muted/20 px-4 py-3">
+    <form onSubmit={onSubmit} className="flex flex-col border-0 bg-muted/10 shadow-xl ring-1 ring-border/50 backdrop-blur-2xl transition-all duration-500">
+      <div className="flex items-start justify-between gap-3 border-b border-border/40 bg-card/20 px-4 py-3">
         <div>
           <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight text-foreground">
             <Zap className="h-4 w-4 text-primary" />
