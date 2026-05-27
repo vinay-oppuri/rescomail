@@ -3,12 +3,15 @@ import { coldEmails, db, resumes, usageEvents } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 import { ColdmailError } from "./coldmail-errors";
-
 import { runAiColdmailGeneration } from "./coldmail-service-client";
+import { checkUsageLimit } from "@/modules/dashboard/server/usage-limits";
 
 export const generateColdEmailForUser = async (
   input: ColdEmailGenerateInput & { userId: string },
 ): Promise<ColdEmailResponse> => {
+  // Pre-flight: enforce monthly credit limit before calling the AI service.
+  await checkUsageLimit(input.userId, "cold_email_generate");
+
   const resume = await db.query.resumes.findFirst({
     where: and(eq(resumes.id, input.resumeId), eq(resumes.userId, input.userId)),
   });

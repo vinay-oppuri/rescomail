@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -20,8 +21,9 @@ async def generate_coldmail_route(
         request.resumeId or "inline",
     )
 
+    loop = asyncio.get_event_loop()
     try:
-        return generate_coldmail(request)
+        return await loop.run_in_executor(None, generate_coldmail, request)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
     except Exception as error:

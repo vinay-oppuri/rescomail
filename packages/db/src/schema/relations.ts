@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 
+import { applications } from "./applications";
 import { atsAnalyses } from "./ats";
 import { user } from "./auth";
 import { subscriptions } from "./billing";
@@ -95,6 +96,21 @@ export const coldEmailsRelations = relations(coldEmails, ({ one }) => ({
   }),
   resume: one(resumes, {
     fields: [coldEmails.resumeId],
+    references: [resumes.id],
+  }),
+}));
+
+export const applicationsRelations = relations(applications, ({ one }) => ({
+  user: one(user, {
+    fields: [applications.userId],
+    references: [user.id],
+  }),
+  organization: one(organizations, {
+    fields: [applications.organizationId],
+    references: [organizations.id],
+  }),
+  resume: one(resumes, {
+    fields: [applications.resumeId],
     references: [resumes.id],
   }),
 }));

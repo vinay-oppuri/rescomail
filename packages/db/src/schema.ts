@@ -1,3 +1,4 @@
+export * from "./schema/applications";
 export * from "./schema/ats";
 export * from "./schema/auth";
 export * from "./schema/billing";

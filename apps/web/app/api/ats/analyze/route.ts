@@ -4,6 +4,7 @@ import { atsAnalyzeSchema } from "@repo/validations";
 
 import { runAtsAnalysisForUser } from "@/modules/ats/server/ats-analysis";
 import { AtsAnalysisError } from "@/modules/ats/server/ats-errors";
+import { UsageLimitError } from "@/modules/dashboard/server/usage-limits";
 
 const parseRequestJson = async (req: Request) => {
   try {
@@ -39,6 +40,13 @@ export async function POST(req: Request) {
 
     return NextResponse.json(analysis);
   } catch (error) {
+    if (error instanceof UsageLimitError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.statusCode },
+      );
+    }
+
     if (error instanceof AtsAnalysisError) {
       return NextResponse.json(
         { error: error.message },

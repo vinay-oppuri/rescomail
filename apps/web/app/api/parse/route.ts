@@ -71,6 +71,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Resume not found" }, { status: 404 });
     }
 
+    // Idempotency guard: if already parsed, return success without re-processing.
+    // This handles AI service retries after transient failures on the webhook callback.
+    if (resume.status === "parsed") {
+      return NextResponse.json({
+        success: true,
+        message: "Resume already parsed — skipping duplicate webhook.",
+        resumeId,
+      });
+    }
+
     if (
       resume.fileUrl !== fileUrl ||
       resume.fileKey !== fileKey ||

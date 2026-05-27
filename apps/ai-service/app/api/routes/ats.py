@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -17,8 +18,9 @@ async def analyze_ats_route(
 ):
     logger.info("Running ATS analysis for resume %s", request.resumeId or "inline")
 
+    loop = asyncio.get_event_loop()
     try:
-        return analyze_ats(request)
+        return await loop.run_in_executor(None, analyze_ats, request)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
     except Exception as error:

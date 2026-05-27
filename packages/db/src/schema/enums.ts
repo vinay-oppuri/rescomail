@@ -52,3 +52,12 @@ export const companyStageEnum = pgEnum("company_stage", [
   "enterprise",
   "open",
 ]);
+
+export const applicationStageEnum = pgEnum("application_stage", [
+  "saved",
+  "applied",
+  "phone_screen",
+  "interview",
+  "offer",
+  "rejected",
+]);

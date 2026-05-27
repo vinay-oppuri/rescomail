@@ -4,10 +4,14 @@ import { and, eq } from "drizzle-orm";
 
 import { AtsAnalysisError } from "./ats-errors";
 import { runAiAtsAnalysis } from "./ats-service-client";
+import { checkUsageLimit, UsageLimitError } from "@/modules/dashboard/server/usage-limits";
 
 export const runAtsAnalysisForUser = async (
   input: AtsAnalyzeInput & { userId: string },
 ): Promise<AtsAnalysisResponse> => {
+  // Pre-flight: enforce monthly credit limit before calling the AI service.
+  await checkUsageLimit(input.userId, "ats_analysis");
+
   const resume = await db.query.resumes.findFirst({
     where: and(eq(resumes.id, input.resumeId), eq(resumes.userId, input.userId)),
   });

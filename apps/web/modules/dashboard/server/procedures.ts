@@ -1,6 +1,8 @@
 import { db, resumes, atsAnalyses } from "@repo/db";
 import { count, eq, avg, desc } from "drizzle-orm";
 
+export { getMonthlyUsageSummary } from "./usage-limits";
+
 export const getResumesCount = async (userId: string): Promise<number> => {
   const result = await db
     .select({ count: count() })
@@ -44,3 +46,4 @@ export const getRecentScans = async (
     .orderBy(desc(atsAnalyses.createdAt))
     .limit(limit);
 };
+

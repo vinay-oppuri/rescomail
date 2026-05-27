@@ -86,8 +86,8 @@ const aiServiceHeaders = () => {
     "Content-Type": "application/json",
   };
 
-  if (serverEnv.RESUME_PARSER_API_KEY) {
-    headers.Authorization = `Bearer ${serverEnv.RESUME_PARSER_API_KEY}`;
+  if (serverEnv.AI_SERVICE_API_KEY) {
+    headers.Authorization = `Bearer ${serverEnv.AI_SERVICE_API_KEY}`;
   }
 
   return headers;

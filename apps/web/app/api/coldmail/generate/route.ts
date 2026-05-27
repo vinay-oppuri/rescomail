@@ -4,6 +4,7 @@ import { coldEmailGenerateSchema } from "@repo/validations";
 
 import { ColdmailError } from "@/modules/coldmail/server/coldmail-errors";
 import { generateColdEmailForUser } from "@/modules/coldmail/server/coldmail-generation";
+import { UsageLimitError } from "@/modules/dashboard/server/usage-limits";
 
 const parseRequestJson = async (req: Request) => {
   try {
@@ -39,6 +40,13 @@ export async function POST(req: Request) {
 
     return NextResponse.json(draft);
   } catch (error) {
+    if (error instanceof UsageLimitError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.statusCode },
+      );
+    }
+
     if (error instanceof ColdmailError) {
       return NextResponse.json(
         { error: error.message },

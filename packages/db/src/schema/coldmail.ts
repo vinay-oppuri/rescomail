@@ -13,19 +13,11 @@ import { user } from "./auth";
 import { organizations } from "./organizations";
 import { resumes } from "./resumes";
 
-export const coldEmails = pgTable(
-  "cold_emails",
-  {
+export const coldEmails = pgTable("cold_emails", {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    organizationId: uuid("organization_id").references(() => organizations.id, {
-      onDelete: "set null",
-    }),
-    resumeId: uuid("resume_id")
-      .notNull()
-      .references(() => resumes.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    organizationId: uuid("organization_id").references(() => organizations.id, {onDelete: "set null",}),
+    resumeId: uuid("resume_id").notNull().references(() => resumes.id, { onDelete: "cascade" }),
     jobTitle: text("job_title").notNull(),
     companyName: text("company_name").notNull(),
     companyWebsiteUrl: text("company_website_url").notNull(),
@@ -42,9 +34,7 @@ export const coldEmails = pgTable(
     previewText: text("preview_text").notNull(),
     body: text("body").notNull(),
     qualityScore: integer("quality_score").notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => ({
     userCreatedAtIdx: index("cold_emails_user_created_at_idx").on(

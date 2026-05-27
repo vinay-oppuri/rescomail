@@ -39,7 +39,7 @@ const navItems = [
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-const DashboardSidebar = () => {
+const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) => {
   const pathname = usePathname();
 
   return (
@@ -112,33 +112,7 @@ const DashboardSidebar = () => {
       </SidebarContent>
 
       <SidebarFooter className="p-6">
-        <div className="relative mb-4 overflow-hidden rounded-none border border-primary/10 bg-primary/5 p-4">
-          <div className="absolute top-0 right-0 p-2 opacity-5 group-hover:opacity-10 transition-opacity">
-            <Sparkles className="h-10 w-10 text-primary" />
-          </div>
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-[11px] font-bold text-primary uppercase tracking-wider">
-              AI Credits
-            </p>
-            <span className="rounded-none bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary">
-              75%
-            </span>
-          </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-none bg-primary/10">
-            <div className="h-full w-3/4 rounded-none bg-primary transition-all duration-1000 ease-out" />
-          </div>
-          <div className="flex justify-between items-center mt-3">
-            <p className="text-[10px] text-muted-foreground font-medium">
-              25 credits left
-            </p>
-            <Link
-              href="/dashboard/billing"
-              className="text-[10px] text-primary font-bold hover:underline underline-offset-4"
-            >
-              Upgrade
-            </Link>
-          </div>
-        </div>
+        {creditsSlot}
 
         <SidebarMenu>
           <SidebarMenuItem>

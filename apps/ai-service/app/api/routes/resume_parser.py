@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -17,8 +18,9 @@ async def parse_resume_route(
 ):
     logger.info("Parsing resume %s", request.resumeId)
 
+    loop = asyncio.get_event_loop()
     try:
-        return parse_resume(request)
+        return await loop.run_in_executor(None, parse_resume, request)
     except Exception as error:
         logger.exception("Resume parsing failed for %s", request.resumeId)
         raise HTTPException(status_code=500, detail=str(error)) from error

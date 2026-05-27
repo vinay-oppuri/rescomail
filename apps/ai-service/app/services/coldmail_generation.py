@@ -13,6 +13,7 @@ from app.schemas.resume import StructuredResume
 def generate_cold_email_draft(
     request: ColdEmailGenerateRequest,
     resume_text: str,
+    company_context: str = "",
     structured_resume: StructuredResume | None = None,
 ) -> ColdEmailResponse:
     generated = generate_gemini_json(
@@ -23,25 +24,27 @@ def generate_cold_email_draft(
 
     if generated:
         try:
-            return _validated_response(generated, request)
+            return _validated_response(generated, request, company_context)
         except ValidationError:
             pass
 
-    return _fallback_response(request, resume_text, structured_resume)
+    return _fallback_response(request, resume_text, structured_resume, company_context)
 
 
 def _validated_response(
     generated: dict,
     request: ColdEmailGenerateRequest,
+    company_context: str = "",
 ) -> ColdEmailResponse:
     response = ColdEmailResponse.model_validate(generated)
-    return response.model_copy(update={"resumeId": request.resumeId})
+    return response.model_copy(update={"resumeId": request.resumeId, "companyContext": company_context})
 
 
 def _fallback_response(
     request: ColdEmailGenerateRequest,
     resume_text: str,
     structured_resume: StructuredResume | None,
+    company_context: str = "",
 ) -> ColdEmailResponse:
     candidate_name = _candidate_name(structured_resume, resume_text)
     greeting = _greeting(request)
@@ -102,6 +105,7 @@ def _fallback_response(
         personalizationNotes=_personalization_notes(request, skills, highlight),
         qualityScore=quality_score,
         estimatedReadTimeSeconds=_read_time_seconds(body),
+        companyContext=company_context,
     )
 
 
