@@ -64,6 +64,22 @@ const serverEnvSchema = z
     }
   });
 
-export const serverEnv = serverEnvSchema.parse(process.env);
+export const serverEnv = serverEnvSchema.parse({
+  NODE_ENV: process.env.NODE_ENV,
+  DATABASE_URL: process.env.DATABASE_URL,
+  BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+  NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
+  BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
+  RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL,
+  UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+  RESUME_PARSER_WEBHOOK_URL: process.env.RESUME_PARSER_WEBHOOK_URL,
+  RESUME_PARSER_API_KEY: process.env.RESUME_PARSER_API_KEY,
+  AI_SERVICE_URL: process.env.AI_SERVICE_URL,
+  TAVILY_API_KEY: process.env.TAVILY_API_KEY,
+  AI_SERVICE_API_KEY: process.env.AI_SERVICE_API_KEY,
+});
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

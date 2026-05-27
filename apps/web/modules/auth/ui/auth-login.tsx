@@ -15,8 +15,8 @@ import {
 import { Input } from "@repo/ui/components/input";
 import { AlertCircle, ArrowRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { loginSchema, type LoginInput } from "@repo/validations";
 
@@ -36,6 +36,18 @@ const AuthLogin = () => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam) {
+      setAuthError(
+        errorParam === "account_already_linked" || errorParam === "OAuthAccountNotLinked" || errorParam === "account_not_linked" || errorParam?.includes("linked")
+          ? "This email is already registered with a different provider. Please sign in with your email and password."
+          : `An error occurred during authentication (${errorParam}). Please try again.`
+      );
+    }
+  }, [searchParams]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -77,6 +89,7 @@ const AuthLogin = () => {
       const response = await signIn.social({
         provider: "google",
         callbackURL: "/dashboard",
+        errorCallbackURL: "/login",
       });
 
       if (response.error) {
@@ -190,13 +203,13 @@ const AuthLogin = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full"
+              className="w-full border-foreground/5!"
               onClick={onGoogleSignIn}
               disabled={isPending}
             >
               Google
             </Button>
-            <Button type="button" variant="outline" className="w-full" disabled>
+            <Button type="button" variant="outline" className="w-full border-foreground/5!" disabled>
               GitHub
             </Button>
           </div>

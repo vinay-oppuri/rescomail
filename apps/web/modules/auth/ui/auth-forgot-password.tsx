@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { requestPasswordReset } from "@repo/auth/client";
+import { checkEmailExistsAction } from "../server/actions";
 import { Alert, AlertDescription, AlertTitle } from "@repo/ui/components/alert";
 import { Button } from "@repo/ui/components/button";
 import {
@@ -53,6 +54,13 @@ const AuthForgotPassword = () => {
     setAuthError(null);
 
     try {
+      const exists = await checkEmailExistsAction(values.email);
+      
+      if (!exists) {
+        setAuthError("No account found with that email address.");
+        return;
+      }
+
       const response = await requestPasswordReset({
         email: values.email,
         redirectTo: "/reset-password",

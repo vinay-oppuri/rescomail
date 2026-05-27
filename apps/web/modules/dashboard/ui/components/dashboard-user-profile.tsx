@@ -26,6 +26,8 @@ import {
 import { Calendar, Camera, LogOut, Mail, Shield, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { EditProfileActions } from "../../../settings/server/actions";
+import { Loader2 } from "lucide-react";
 
 type SessionData = ReturnType<typeof useSession>["data"];
 
@@ -117,6 +119,21 @@ const UserProfileDialog = ({
       .join("")
       .toUpperCase() || "U";
 
+  const [name, setName] = useState(user?.name || "");
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await EditProfileActions(name);
+      onOpenChange(false);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-130 rounded-none border-border/50 shadow-2xl bg-background/95 backdrop-blur-xl p-0 overflow-hidden">
@@ -182,7 +199,8 @@ const UserProfileDialog = ({
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="name"
-                    defaultValue={user?.name || ""}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="h-10 pl-10 rounded-none border-border/50 bg-background/50 focus-visible:ring-primary/50 font-medium text-sm transition-all"
                     placeholder="Enter your full name"
                   />
@@ -224,8 +242,12 @@ const UserProfileDialog = ({
                 Cancel
               </Button>
 
-              <Button onClick={() => onOpenChange(false)} className="rounded-none h-10 px-6 text-sm font-bold shadow-md shadow-primary/20 hover:scale-105 transition-all">
-                Save Changes
+              <Button 
+                onClick={handleSave} 
+                disabled={isSaving || name === user?.name}
+                className="rounded-none h-10 px-6 text-sm font-bold shadow-md shadow-primary/20 hover:scale-105 transition-all"
+              >
+                {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Save Changes"}
               </Button>
             </div>
           </div>

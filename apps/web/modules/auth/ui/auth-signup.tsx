@@ -15,8 +15,8 @@ import {
 import { Input } from "@repo/ui/components/input";
 import { AlertCircle, ArrowRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { signupSchema, type SignupInput } from "@repo/validations";
 
@@ -36,6 +36,17 @@ const AuthSignup = () => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam) {
+      setAuthError(
+        errorParam === "account_already_linked" || errorParam === "OAuthAccountNotLinked" || errorParam === "account_not_linked" || errorParam?.includes("linked")
+          ? "This email is already registered. Please sign in with your email and password."
+          : `An error occurred during authentication (${errorParam}). Please try again.`
+      );
+    }
+  }, [searchParams]);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -80,6 +91,7 @@ const AuthSignup = () => {
       const response = await signIn.social({
         provider: "google",
         callbackURL: "/dashboard",
+        errorCallbackURL: "/signup",
       });
 
       if (response.error) {
@@ -225,13 +237,13 @@ const AuthSignup = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full"
+              className="w-full border-foreground/5!"
               onClick={onGoogleSignIn}
               disabled={isPending}
             >
               Google
             </Button>
-            <Button type="button" variant="outline" className="w-full" disabled>
+            <Button type="button" variant="outline" className="w-full border-foreground/5!" disabled>
               GitHub
             </Button>
           </div>

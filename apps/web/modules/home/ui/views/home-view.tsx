@@ -7,28 +7,28 @@ import { cn } from "@repo/ui/lib/utils";
 const HomeView = () => {
   return (
     <main className="min-h-screen bg-background selection:bg-primary/20">
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/40 transition-all">
+      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-foreground/5 transition-all">
         <HomeNavbar />
       </div>
 
       {/* Split Hero Section */}
-      <section className="relative overflow-hidden min-h-[calc(100vh-4rem)] flex items-center">
+      <section className="relative overflow-hidden lg:min-h-[calc(100vh-4rem)] flex items-center">
         {/* Background Gradients */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full overflow-hidden -z-10 pointer-events-none">
           <div className="absolute top-[-40%] left-[-10%] w-[70%] h-[70%] rounded-none bg-primary/10 blur-[120px]" />
           <div className="absolute top-[20%] right-[-20%] w-[60%] h-[60%] rounded-none bg-blue-500/10 blur-[120px]" />
         </div>
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 w-full py-12 lg:py-0">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
             
             {/* Left Column: Title & Description */}
-            <div className="max-w-2xl">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-none border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary shadow-sm backdrop-blur-sm">
+            <div className="max-w-2xl min-h-[calc(100vh-4rem)] lg:min-h-0 flex flex-col justify-center py-12 lg:py-0">
+              <div className="mb-6 w-fit inline-flex items-center gap-2 rounded-none border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary shadow-sm backdrop-blur-sm">
                 <Sparkles className="h-3.5 w-3.5 animate-pulse" />
                 <span>AI-Powered Job Search Copilot</span>
               </div>
-              <h1 className="mb-4 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl leading-[1.1]">
+              <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl leading-[1.1]">
                 Land Your Dream Job with{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-500">
                   Rescomail
@@ -38,7 +38,7 @@ const HomeView = () => {
                 The ultimate AI assistant for your career. Optimize your resume for ATS, generate personalized cold emails, and track applications—all in one place.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <Button size="lg" className="w-[75%] sm:w-auto h-12 px-6 text-sm shadow-lg shadow-primary/20 transition-all hover:scale-105 rounded-none" asChild>
+                <Button size="lg" className="w-[75%] sm:w-auto h-10 md:h-12 px-6 text-sm shadow-lg shadow-primary/20 transition-all hover:scale-105 rounded-none" asChild>
                   <Link href="/signup">
                     Get Started Free <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -46,7 +46,7 @@ const HomeView = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="w-[65%] md:w-auto h-12 px-6 text-sm border-border/50 hover:bg-muted/50 transition-all rounded-none"
+                  className="w-[65%] md:w-auto h-10 md:h-12 px-6 text-sm border-border/50 hover:bg-muted/50 transition-all rounded-none"
                   asChild
                 >
                   <Link href="#features">Explore Features</Link>
@@ -66,7 +66,7 @@ const HomeView = () => {
             </div>
 
             {/* Right Column: Features Explanation / Visuals */}
-            <div className="relative lg:ml-auto w-full max-w-xl">
+            <div className="relative lg:ml-auto w-full max-w-xl pb-12 lg:pb-0">
                {/* Decorative background blur */}
                <div className="absolute -inset-0.5 bg-linear-to-br from-primary/30 to-blue-500/30 rounded-none blur-2xl opacity-50"></div>
                

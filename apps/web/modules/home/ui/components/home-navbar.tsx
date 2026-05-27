@@ -19,7 +19,7 @@ const HomeNavbar = () => {
   return (
     <nav className="mx-auto w-full max-w-6xl px-6 md:px-0 py-2">
       {/* Top bar */}
-      <div className="flex items-center justify-between py-3 md:py-5">
+      <div className="flex items-center justify-between py-3">
         <Link href="/" className="inline-flex items-center gap-2">
           <span className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center border bg-primary font-heading text-xs md:text-sm text-primary-foreground">
             R
