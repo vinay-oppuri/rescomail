@@ -108,7 +108,7 @@ export async function POST(req: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${expectedToken}`,
+        Authorization: `Bearer ${serverEnv.AI_SERVICE_API_KEY}`,
       },
       body: JSON.stringify({
         resumeId,
