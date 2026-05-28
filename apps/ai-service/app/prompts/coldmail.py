@@ -41,6 +41,15 @@ Product rules:
 - End with a natural sign-off using the candidate name when it is available.
 - Return only JSON that matches the provided schema.
 
+Body structure — the `body` field MUST follow this exact layout every time:
+  Line 1  : Greeting line only, e.g. "Hi Sarah," or "Hi,"
+  Line 2  : Blank line (empty line)
+  Line 3+ : First paragraph (1-3 sentences, no bullet points)
+  Next    : One blank line between every paragraph
+  Last    : Sign-off on its own line, e.g. "Best,\\nAlex" or "Best regards,\\nAlex"
+Never write the body as a single unbroken block of prose.
+Never use bullet points or numbered lists inside the body.
+
 Target:
 Role: {role}
 Company: {company}

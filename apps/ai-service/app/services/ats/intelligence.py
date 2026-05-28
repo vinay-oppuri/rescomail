@@ -1,33 +1,45 @@
+"""
+ats/intelligence.py
+-------------------
+Orchestrates the ATS intelligence layer.
+
+Coordinates:
+  - Semantic match scoring         (embedding + concept extraction)
+  - Compatibility prediction       (trained logistic model + cross-encoder)
+  - Skill-gap analysis             → ats/gaps.py
+  - RAG-grounded recruiter guidance → ats/guidance.py
+
+All heavy logic lives in dedicated sub-modules for easy debugging.
+"""
 import json
 import math
 from functools import lru_cache
 from pathlib import Path
 
+from app.embeddings.reranker import (
+    cross_encoder_relevance_score,
+    reranker_backend,
+    reranker_model_name,
+)
 from app.embeddings.semantic import (
     embedding_backend,
     embedding_model_name,
     semantic_similarity_score,
     shared_concepts,
 )
-from app.embeddings.reranker import (
-    cross_encoder_relevance_score,
-    reranker_backend,
-    reranker_model_name,
-)
 from app.schemas.ats import (
     AtsCompatibilityPrediction,
-    AtsGroundedSuggestion,
     AtsIntelligence,
     AtsJobProfile,
     AtsKeywordEvidence,
     AtsModelSignal,
-    AtsRetrievalCitation,
     AtsScoreBreakdown,
     AtsSemanticMatch,
     AtsSkillGap,
 )
+from app.services.ats.gaps import build_skill_gaps
+from app.services.ats.guidance import build_grounded_guidance
 from app.services.ats.helpers import display_keyword, max_years
-from app.services.ats.knowledge_base import KnowledgeDocument, retrieve_guidance
 from app.utils.text import normalize_keyword, tokenize
 
 MODEL_PATH = (
@@ -74,20 +86,24 @@ def build_intelligence(
         semantic_match,
         len(evidence),
     )
-    gaps = _skill_gaps(evidence, job_profile)
+    gaps = build_skill_gaps(evidence, job_profile)
 
     return AtsIntelligence(
         semanticMatch=semantic_match,
         compatibilityPrediction=prediction,
         skillGaps=gaps,
-        recruiterGuidance=_grounded_guidance(
+        recruiterGuidance=build_grounded_guidance(
             job_profile,
             gaps,
             category_scores,
-            semantic_match,
+            semantic_match.resumeToJob,
         ),
     )
 
+
+# ---------------------------------------------------------------------------
+# Semantic match
+# ---------------------------------------------------------------------------
 
 def _semantic_match(
     resume_text: str,
@@ -120,6 +136,10 @@ def _semantic_match(
     )
 
 
+# ---------------------------------------------------------------------------
+# Compatibility prediction
+# ---------------------------------------------------------------------------
+
 def _compatibility_prediction(
     resume_text: str,
     job_description: str,
@@ -130,10 +150,7 @@ def _compatibility_prediction(
     evidence_count: int,
 ) -> AtsCompatibilityPrediction:
     model = _load_prediction_model()
-    cross_encoder_relevance = cross_encoder_relevance_score(
-        job_description,
-        resume_text,
-    )
+    cross_encoder_relevance = cross_encoder_relevance_score(job_description, resume_text)
     features = {
         "keywordEvidence": category_scores.keywords / 100,
         "semanticMatch": semantic_match.resumeToJob / 100,
@@ -167,85 +184,6 @@ def _compatibility_prediction(
     )
 
 
-def _skill_gaps(
-    evidence: list[AtsKeywordEvidence],
-    job_profile: AtsJobProfile,
-) -> list[AtsSkillGap]:
-    required = {normalize_keyword(keyword) for keyword in job_profile.requiredKeywords}
-    gaps: list[AtsSkillGap] = []
-
-    for item in evidence:
-        normalized = normalize_keyword(item.keyword)
-        is_required = normalized in required
-
-        if item.status == "exact" and item.strength >= 70:
-            continue
-
-        if item.status == "semantic" and item.strength >= 78 and not is_required:
-            continue
-
-        severity = (
-            "critical"
-            if is_required and item.status == "missing"
-            else "important"
-            if is_required
-            else "optional"
-        )
-        current_evidence = (
-            "missing"
-            if item.status == "missing"
-            else "semantic"
-            if item.status == "semantic"
-            else "weak"
-        )
-
-        gaps.append(
-            AtsSkillGap(
-                skill=item.keyword,
-                severity=severity,
-                currentEvidence=current_evidence,
-                recommendation=_gap_recommendation(item.keyword, severity),
-                learningFocus=_learning_focus(item.keyword),
-            )
-        )
-
-        if len(gaps) >= 8:
-            break
-
-    return gaps
-
-
-def _grounded_guidance(
-    job_profile: AtsJobProfile,
-    gaps: list[AtsSkillGap],
-    category_scores: AtsScoreBreakdown,
-    semantic_match: AtsSemanticMatch,
-) -> list[AtsGroundedSuggestion]:
-    query = " ".join(
-        [
-            job_profile.title,
-            " ".join(job_profile.requiredKeywords),
-            " ".join(gap.skill for gap in gaps[:5]),
-            f"impact score {category_scores.impact}",
-            f"formatting score {category_scores.formatting}",
-            f"semantic score {semantic_match.resumeToJob}",
-        ]
-    )
-    retrieved = retrieve_guidance(query, limit=3)
-    suggestions: list[AtsGroundedSuggestion] = []
-
-    for document, relevance in retrieved:
-        suggestions.append(
-            AtsGroundedSuggestion(
-                title=_guidance_title(document),
-                detail=_guidance_detail(document, gaps, category_scores),
-                citations=[_citation(document, relevance)],
-            )
-        )
-
-    return suggestions
-
-
 def _model_signals(
     features: dict[str, float],
     weights: dict[str, float],
@@ -276,106 +214,9 @@ def _model_signals(
     return signals[:6]
 
 
-def _gap_recommendation(skill: str, severity: str) -> str:
-    if severity == "critical":
-        return (
-            f"Add a recent bullet or project that uses {skill} and ties it to a "
-            "measurable result."
-        )
-
-    if severity == "important":
-        return (
-            f"Make the existing {skill} evidence more explicit with the same language "
-            "used in the job description."
-        )
-
-    return f"Add {skill} to the skills section only if you can support it in experience."
-
-
-def _learning_focus(skill: str) -> str:
-    normalized = normalize_keyword(skill)
-
-    if any(term in normalized for term in {"model", "machine learning", "ml", "ai"}):
-        return "Show data, model choice, evaluation metric, and deployment context."
-
-    if any(term in normalized for term in {"cloud", "aws", "azure", "gcp", "kubernetes"}):
-        return "Show a deployed system, infrastructure ownership, and reliability impact."
-
-    if any(term in normalized for term in {"sql", "data", "analytics", "dashboard"}):
-        return "Show data source, analysis method, stakeholder decision, and outcome."
-
-    if any(term in normalized for term in {"react", "frontend", "ui", "ux"}):
-        return "Show user workflow, component ownership, accessibility, and performance."
-
-    return "Show where you used it, how deeply, and what changed because of it."
-
-
-def _guidance_title(document: KnowledgeDocument) -> str:
-    if document.id == "recruiter-screen-001":
-        return "Optimize the first recruiter scan"
-
-    if document.id == "resume-pattern-ml-001":
-        return "Turn ML work into evidence"
-
-    if document.id == "ats-formatting-001":
-        return "Protect parser quality"
-
-    if document.id == "domain-gap-001":
-        return "Close skill gaps with proof"
-
-    return document.title
-
-
-def _guidance_detail(
-    document: KnowledgeDocument,
-    gaps: list[AtsSkillGap],
-    category_scores: AtsScoreBreakdown,
-) -> str:
-    critical_gaps = [gap.skill for gap in gaps if gap.severity == "critical"]
-
-    if document.id == "recruiter-screen-001":
-        required = ", ".join(critical_gaps[:3]) or "the most important role skills"
-        return (
-            f"Put {required} near the top of the resume and attach each one to a "
-            "specific role, project, or result."
-        )
-
-    if document.id == "resume-pattern-ml-001":
-        return (
-            "For AI/ML roles, add bullets that name the dataset, model family, "
-            "evaluation metric, and production or experiment-tracking outcome."
-        )
-
-    if document.id == "ats-formatting-001":
-        return (
-            "Use standard headings and plain-text bullets so the parser can recover "
-            f"skills and experience consistently. Current formatting score: "
-            f"{category_scores.formatting}/100."
-        )
-
-    if document.id == "domain-gap-001":
-        target = critical_gaps[0] if critical_gaps else "the highest-value missing skill"
-        return (
-            f"Create proof for {target} through a project, certification, or adjacent "
-            "experience rather than only adding it to a keyword list."
-        )
-
-    return document.content
-
-
-def _citation(document: KnowledgeDocument, relevance: int) -> AtsRetrievalCitation:
-    return AtsRetrievalCitation(
-        id=document.id,
-        title=document.title,
-        sourceType=document.source_type,
-        relevance=relevance,
-    )
-
-
 def _average_strength(evidence: list[AtsKeywordEvidence]) -> int:
     if not evidence:
         return 70
-
     return round(sum(item.strength for item in evidence) / len(evidence))
 
 
@@ -415,10 +256,8 @@ def _prediction_confidence(
 
     if confidence_score >= 75:
         return "high"
-
     if confidence_score >= 50:
         return "medium"
-
     return "low"
 
 
