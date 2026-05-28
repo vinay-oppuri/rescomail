@@ -7,7 +7,7 @@ import { cn } from "@repo/ui/lib/utils";
 const HomeView = () => {
   return (
     <main className="min-h-screen bg-background selection:bg-primary/20">
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-foreground/5 transition-all">
+      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md transition-all">
         <HomeNavbar />
       </div>
 
@@ -23,8 +23,8 @@ const HomeView = () => {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
             
             {/* Left Column: Title & Description */}
-            <div className="max-w-2xl min-h-[calc(100vh-4rem)] lg:min-h-0 flex flex-col justify-center py-12 lg:py-0">
-              <div className="mb-6 w-fit inline-flex items-center gap-2 rounded-none border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary shadow-sm backdrop-blur-sm">
+            <div className="max-w-2xl min-h-[calc(100vh-4rem)] lg:min-h-0 flex flex-col justify-center pb-12 lg:py-0">
+              <div className="mb-6 w-fit inline-flex items-center gap-2 rounded-none border border-foreground/5 bg-primary/5 px-3 py-1 text-xs font-medium text-primary shadow-sm backdrop-blur-sm">
                 <Sparkles className="h-3.5 w-3.5 animate-pulse" />
                 <span>AI-Powered Job Search Copilot</span>
               </div>
@@ -46,7 +46,7 @@ const HomeView = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="w-[65%] md:w-auto h-10 md:h-12 px-6 text-sm border-border/50 hover:bg-muted/50 transition-all rounded-none"
+                  className="w-[65%] md:w-auto h-10 md:h-12 px-6 text-sm border-foreground/5!"
                   asChild
                 >
                   <Link href="#features">Explore Features</Link>

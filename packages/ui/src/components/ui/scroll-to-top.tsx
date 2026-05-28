@@ -39,9 +39,10 @@ export const ScrollToTop = () => {
                 size="icon"
                 className="
                     rounded-none w-12 h-12
-                    bg-background/80 backdrop-blur-md
-                    text-foreground 
-                    hover:bg-foreground/10
+                    bg-foreground/90! 
+                    text-background! 
+                    hover:bg-foreground!
+                    backdrop-blur-xs    
                     group
                 "
                 aria-label="Scroll to top"
