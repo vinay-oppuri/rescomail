@@ -1,6 +1,6 @@
 import { coldEmailResponseSchema } from "@repo/validations";
 import { coldEmails, db, resumes } from "@repo/db";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, isNotNull } from "drizzle-orm";
 
 export const getColdEmailHistoryForUser = async (userId: string) => {
   const rows = await db
@@ -25,7 +25,17 @@ export const getColdEmailHistoryForUser = async (userId: string) => {
     })
     .from(coldEmails)
     .innerJoin(resumes, eq(coldEmails.resumeId, resumes.id))
-    .where(eq(coldEmails.userId, userId))
+    .where(
+      and(
+        eq(coldEmails.userId, userId),
+        eq(coldEmails.status, "completed"),
+        isNotNull(coldEmails.draft),
+        isNotNull(coldEmails.subject),
+        isNotNull(coldEmails.previewText),
+        isNotNull(coldEmails.body),
+        isNotNull(coldEmails.qualityScore),
+      ),
+    )
     .orderBy(desc(coldEmails.createdAt))
     .limit(25);
 
@@ -44,10 +54,10 @@ export const getColdEmailHistoryForUser = async (userId: string) => {
       tone: row.tone,
       length: row.length,
       callToAction: row.callToAction,
-      subject: row.subject,
-      previewText: row.previewText,
-      body: row.body,
-      qualityScore: row.qualityScore,
+      subject: row.subject ?? "",
+      previewText: row.previewText ?? "",
+      body: row.body ?? "",
+      qualityScore: row.qualityScore ?? 0,
       draft: parsed.success
         ? {
             ...parsed.data,

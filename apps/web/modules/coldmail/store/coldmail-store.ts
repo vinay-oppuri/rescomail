@@ -7,13 +7,70 @@ import type {
   ColdEmailResponse,
   ColdEmailTone,
 } from "@repo/validations";
+import { coldEmailResponseSchema } from "@repo/validations";
 
 import type { ColdEmailHistoryItem } from "../server/coldmail-history";
 import type { ColdmailResumeOption } from "../server/coldmail-resumes";
+import { getApiErrorMessage, readApiJson, sleep } from "@/lib/api-client";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+const POLL_INTERVAL_MS = 3000;
+const MAX_POLL_TIME_MS = 10 * 60 * 1000;
+
+type ColdEmailProcessingResponse = {
+  status: "processing";
+  coldEmailId: string;
+};
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  Boolean(value) && typeof value === "object" && !Array.isArray(value);
+
+const isProcessingResponse = (
+  value: unknown,
+): value is ColdEmailProcessingResponse =>
+  isRecord(value) &&
+  value.status === "processing" &&
+  typeof value.coldEmailId === "string";
+
+const parseColdEmailResponse = (value: unknown): ColdEmailResponse => {
+  const parsed = coldEmailResponseSchema.safeParse(value);
+
+  if (!parsed.success) {
+    throw new Error("Cold email generation returned an invalid response.");
+  }
+
+  return parsed.data;
+};
+
+const pollColdEmail = async (coldEmailId: string) => {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < MAX_POLL_TIME_MS) {
+    await sleep(POLL_INTERVAL_MS);
+
+    const response = await fetch(`/api/coldmail/${coldEmailId}`);
+    const data = await readApiJson(response);
+
+    if (!response.ok && response.status !== 202) {
+      throw new Error(
+        getApiErrorMessage(data, "Error while processing cold email."),
+      );
+    }
+
+    if (isProcessingResponse(data)) {
+      continue;
+    }
+
+    return parseColdEmailResponse(data);
+  }
+
+  throw new Error(
+    "Cold email is still processing. Refresh history in a few minutes.",
+  );
+};
 
 const requestColdEmail = async (payload: ColdEmailGenerateInput) => {
   const response = await fetch("/api/coldmail/generate", {
@@ -21,17 +78,19 @@ const requestColdEmail = async (payload: ColdEmailGenerateInput) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  const data = (await response.json()) as ColdEmailResponse | { error?: string };
+  const data = await readApiJson(response);
 
   if (!response.ok) {
     throw new Error(
-      "error" in data && data.error
-        ? data.error
-        : "Unable to generate cold email.",
+      getApiErrorMessage(data, "Unable to trigger cold email generation."),
     );
   }
 
-  return data as ColdEmailResponse;
+  if (isProcessingResponse(data)) {
+    return pollColdEmail(data.coldEmailId);
+  }
+
+  return parseColdEmailResponse(data);
 };
 
 // ---------------------------------------------------------------------------
@@ -124,7 +183,12 @@ export const useColdmailStore = create<ColdmailStore>((set, get) => ({
       // Seed draft from the latest email if we don't have one yet
       const nextDraft = state.draft ?? emails[0]?.draft ?? null;
 
-      return { resumes, history: emails, resumeId: nextResumeId, draft: nextDraft };
+      return {
+        resumes,
+        history: emails,
+        resumeId: nextResumeId,
+        draft: nextDraft,
+      };
     });
   },
 
@@ -165,9 +229,9 @@ export const useColdmailStore = create<ColdmailStore>((set, get) => ({
     const hasParsedResume = selectedResume?.status === "parsed";
     const canGenerate = Boolean(
       resumeId &&
-        hasParsedResume &&
-        companyWebsiteUrl.trim() &&
-        jobDescription.trim().length >= 20,
+      hasParsedResume &&
+      companyWebsiteUrl.trim() &&
+      jobDescription.trim().length >= 20,
     );
 
     set({ error: null });

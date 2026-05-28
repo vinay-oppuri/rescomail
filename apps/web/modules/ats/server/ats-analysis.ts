@@ -1,28 +1,32 @@
-import type { AtsAnalysisResponse, AtsAnalyzeInput } from "@repo/validations";
-import { atsAnalyses, db, resumes, usageEvents } from "@repo/db";
+import { atsAnalyses, db, resumes } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 import { AtsAnalysisError } from "./ats-errors";
-import { runAiAtsAnalysis } from "./ats-service-client";
-import { checkUsageLimit, UsageLimitError } from "@/modules/dashboard/server/usage-limits";
+import { checkUsageLimit } from "@/modules/dashboard/server/usage-limits";
+import { atsAnalysisTask } from "@/trigger/ats-analysis";
+import type { AtsAnalyzeInput } from "@repo/validations";
 
 export const runAtsAnalysisForUser = async (
   input: AtsAnalyzeInput & { userId: string },
-): Promise<AtsAnalysisResponse> => {
-  // Pre-flight: enforce monthly credit limit before calling the AI service.
+) => {
+  // Pre-flight: enforce monthly credit limit before triggering the AI service.
   await checkUsageLimit(input.userId, "ats_analysis");
 
   const resume = await db.query.resumes.findFirst({
-    where: and(eq(resumes.id, input.resumeId), eq(resumes.userId, input.userId)),
+    where: and(
+      eq(resumes.id, input.resumeId),
+      eq(resumes.userId, input.userId),
+    ),
   });
 
   if (!resume) {
     throw new AtsAnalysisError("Resume not found.", 404);
   }
 
-  try {
-    const analysis = await runAiAtsAnalysis(input, resume);
+  let savedAnalysisId: string | null = null;
 
+  try {
+    // 1. Insert placeholder row in the DB
     const [savedAnalysis] = await db
       .insert(atsAnalyses)
       .values({
@@ -33,27 +37,31 @@ export const runAtsAnalysisForUser = async (
         companyName: input.companyName,
         jobDescription: input.jobDescription,
         targetKeywords: input.targetKeywords,
-        analysis,
-        overallScore: analysis.overallScore,
-        verdict: analysis.verdict,
+        status: "processing",
       })
       .returning({ id: atsAnalyses.id });
 
-    await db.insert(usageEvents).values({
-      userId: input.userId,
-      organizationId: resume.organizationId,
-      type: "ats_analysis",
-      metadata: {
-        resumeId: resume.id,
-        jobTitle: input.jobTitle,
-        companyName: input.companyName,
-        overallScore: analysis.overallScore,
-      },
-    });
+    if (!savedAnalysis) {
+      throw new Error("Failed to save ATS analysis record.");
+    }
 
+    savedAnalysisId = savedAnalysis.id;
+
+    // 2. Queue the job in Trigger.dev
+    await atsAnalysisTask.trigger(
+      {
+        analysisId: savedAnalysis.id,
+        userId: input.userId,
+      },
+      {
+        idempotencyKey: `ats-analysis:${savedAnalysis.id}`,
+      },
+    );
+
+    // 3. Return the jobId so the frontend can poll it
     return {
-      ...analysis,
-      analysisId: savedAnalysis?.id,
+      analysisId: savedAnalysis.id,
+      status: "processing",
     };
   } catch (error) {
     if (error instanceof AtsAnalysisError) {
@@ -61,7 +69,22 @@ export const runAtsAnalysisForUser = async (
     }
 
     const message =
-      error instanceof Error ? error.message : "Unknown ATS analysis error";
+      error instanceof Error ? error.message : "Unknown ATS trigger error";
+
+    if (savedAnalysisId) {
+      await db
+        .update(atsAnalyses)
+        .set({
+          status: "failed",
+          error: message,
+        })
+        .where(
+          and(
+            eq(atsAnalyses.id, savedAnalysisId),
+            eq(atsAnalyses.userId, input.userId),
+          ),
+        );
+    }
 
     throw new AtsAnalysisError(message, 502);
   }

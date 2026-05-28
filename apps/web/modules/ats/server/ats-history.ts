@@ -1,6 +1,6 @@
 import { atsAnalysisResponseSchema } from "@repo/validations";
 import { atsAnalyses, db, resumes } from "@repo/db";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, isNotNull } from "drizzle-orm";
 
 export const getAtsAnalysisHistoryForUser = async (userId: string) => {
   const rows = await db
@@ -17,7 +17,15 @@ export const getAtsAnalysisHistoryForUser = async (userId: string) => {
     })
     .from(atsAnalyses)
     .innerJoin(resumes, eq(atsAnalyses.resumeId, resumes.id))
-    .where(eq(atsAnalyses.userId, userId))
+    .where(
+      and(
+        eq(atsAnalyses.userId, userId),
+        eq(atsAnalyses.status, "completed"),
+        isNotNull(atsAnalyses.analysis),
+        isNotNull(atsAnalyses.overallScore),
+        isNotNull(atsAnalyses.verdict),
+      ),
+    )
     .orderBy(desc(atsAnalyses.createdAt))
     .limit(20);
 
@@ -30,8 +38,8 @@ export const getAtsAnalysisHistoryForUser = async (userId: string) => {
       resumeTitle: row.resumeTitle,
       jobTitle: row.jobTitle,
       companyName: row.companyName,
-      overallScore: row.overallScore,
-      verdict: row.verdict,
+      overallScore: row.overallScore ?? 0,
+      verdict: row.verdict ?? "needs_work",
       analysis: parsed.success
         ? {
             ...parsed.data,

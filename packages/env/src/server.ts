@@ -8,11 +8,6 @@ const optionalNonEmptyString = z.preprocess(
   z.string().trim().min(1).optional(),
 );
 
-const optionalUrl = z.preprocess(
-  emptyStringToUndefined,
-  z.string().url().optional(),
-);
-
 const requiredSecret = z
   .string()
   .trim()
@@ -35,8 +30,6 @@ const serverEnvSchema = z
     RESEND_API_KEY: optionalNonEmptyString,
     RESEND_FROM_EMAIL: optionalNonEmptyString,
     UPLOADTHING_TOKEN: optionalNonEmptyString,
-    RESUME_PARSER_WEBHOOK_URL: optionalUrl,
-    RESUME_PARSER_API_KEY: optionalNonEmptyString,
     AI_SERVICE_URL: z.string().url().default("http://localhost:8000"),
     TAVILY_API_KEY: optionalNonEmptyString,
     AI_SERVICE_API_KEY: optionalNonEmptyString,
@@ -53,15 +46,6 @@ const serverEnvSchema = z
           "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be configured together.",
       });
     }
-
-    if (env.RESUME_PARSER_WEBHOOK_URL && !env.RESUME_PARSER_API_KEY) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["RESUME_PARSER_API_KEY"],
-        message:
-          "RESUME_PARSER_API_KEY is required when RESUME_PARSER_WEBHOOK_URL is configured.",
-      });
-    }
   });
 
 export const serverEnv = serverEnvSchema.parse({
@@ -75,8 +59,6 @@ export const serverEnv = serverEnvSchema.parse({
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL,
   UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
-  RESUME_PARSER_WEBHOOK_URL: process.env.RESUME_PARSER_WEBHOOK_URL,
-  RESUME_PARSER_API_KEY: process.env.RESUME_PARSER_API_KEY,
   AI_SERVICE_URL: process.env.AI_SERVICE_URL,
   TAVILY_API_KEY: process.env.TAVILY_API_KEY,
   AI_SERVICE_API_KEY: process.env.AI_SERVICE_API_KEY,

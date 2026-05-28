@@ -1,8 +1,20 @@
 "use client";
 
 import type { FormEvent } from "react";
-import type { ColdEmailCallToAction, ColdEmailLength, ColdEmailTone } from "@repo/validations";
-import { AlertTriangle, ArrowRight, Loader2, Send, Sparkles, Building2, Settings2, FileText } from "lucide-react";
+import type {
+  ColdEmailCallToAction,
+  ColdEmailLength,
+  ColdEmailTone,
+} from "@repo/validations";
+import {
+  AlertTriangle,
+  ArrowRight,
+  Loader2,
+  Sparkles,
+  Building2,
+  Settings2,
+  FileText,
+} from "lucide-react";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
@@ -77,9 +89,9 @@ const ColdmailComposer = () => {
   const hasParsedResume = selectedResume?.status === "parsed";
   const canGenerate = Boolean(
     resumeId &&
-      hasParsedResume &&
-      companyWebsiteUrl.trim() &&
-      jobDescription.trim().length >= 20,
+    hasParsedResume &&
+    companyWebsiteUrl.trim() &&
+    jobDescription.trim().length >= 20,
   );
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -87,22 +99,29 @@ const ColdmailComposer = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm overflow-hidden">
+    <form
+      onSubmit={onSubmit}
+      className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm overflow-hidden"
+    >
       <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-5 py-4">
         <div>
-          <h2 className="text-sm font-semibold tracking-tight text-foreground">Email Composer</h2>
+          <h2 className="text-sm font-semibold tracking-tight text-foreground">
+            Email Composer
+          </h2>
           <p className="mt-1 text-xs text-muted-foreground">
             Configure the parameters for your AI-generated outreach.
           </p>
         </div>
-        <Badge variant="secondary" className="shrink-0 gap-1.5 rounded-none shadow-sm">
+        <Badge
+          variant="secondary"
+          className="shrink-0 gap-1.5 rounded-none shadow-sm"
+        >
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           AI Draft
         </Badge>
       </div>
 
       <div className="flex flex-col gap-6 p-5 sm:p-6">
-        
         {/* Section 1: Setup */}
         <div className="space-y-4">
           <h3 className="flex items-center gap-2 text-xs font-semibold text-foreground uppercase tracking-widest">
@@ -113,7 +132,10 @@ const ColdmailComposer = () => {
             <div className="space-y-2">
               <Label htmlFor="resume">Resume Source</Label>
               <Select value={resumeId} onValueChange={setResumeId}>
-                <SelectTrigger id="resume" className="w-full rounded-none bg-muted/20! border-foreground/5!">
+                <SelectTrigger
+                  id="resume"
+                  className="w-full rounded-none bg-muted/20! border-foreground/5!"
+                >
                   <SelectValue placeholder="Select parsed resume" />
                 </SelectTrigger>
                 <SelectContent className="rounded-none">
@@ -135,7 +157,8 @@ const ColdmailComposer = () => {
                 {selectedResume
                   ? selectedResume.status === "parsed"
                     ? selectedResume.fileName
-                    : selectedResume.parsingError ?? "Resume is not parsed yet."
+                    : (selectedResume.parsingError ??
+                      "Resume is not parsed yet.")
                   : `${parsedCount} parsed resumes available`}
               </p>
             </div>
@@ -147,13 +170,20 @@ const ColdmailComposer = () => {
                   value={tone}
                   onValueChange={(value) => setTone(value as ColdEmailTone)}
                 >
-                  <SelectTrigger id="tone" className="w-full rounded-none bg-muted/20! border-foreground/5!">
+                  <SelectTrigger
+                    id="tone"
+                    className="w-full rounded-none bg-muted/20! border-foreground/5!"
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-none">
                     <SelectGroup>
                       {toneOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value} className="rounded-none">
+                        <SelectItem
+                          key={option.value}
+                          value={option.value}
+                          className="rounded-none"
+                        >
                           {option.label}
                         </SelectItem>
                       ))}
@@ -168,13 +198,20 @@ const ColdmailComposer = () => {
                   value={length}
                   onValueChange={(value) => setLength(value as ColdEmailLength)}
                 >
-                  <SelectTrigger id="length" className="w-full rounded-none bg-muted/20! border-foreground/5!">
+                  <SelectTrigger
+                    id="length"
+                    className="w-full rounded-none bg-muted/20! border-foreground/5!"
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-none">
                     <SelectGroup>
                       {lengthOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value} className="rounded-none">
+                        <SelectItem
+                          key={option.value}
+                          value={option.value}
+                          className="rounded-none"
+                        >
                           {option.label}
                         </SelectItem>
                       ))}
@@ -192,7 +229,7 @@ const ColdmailComposer = () => {
             <Building2 className="h-4 w-4 text-primary" />
             Target Information
           </h3>
-          
+
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="job-title">Role Title</Label>
@@ -258,7 +295,7 @@ const ColdmailComposer = () => {
             <FileText className="h-4 w-4 text-primary" />
             Content & Personalization
           </h3>
-          
+
           <div className="grid gap-4 sm:grid-cols-[1fr_220px]">
             <div className="space-y-2">
               <Label htmlFor="job-description">Job Description</Label>
@@ -279,13 +316,20 @@ const ColdmailComposer = () => {
                   setCallToAction(value as ColdEmailCallToAction)
                 }
               >
-                <SelectTrigger id="cta" className="w-full rounded-none bg-muted/20! border-foreground/5!">
+                <SelectTrigger
+                  id="cta"
+                  className="w-full rounded-none bg-muted/20! border-foreground/5!"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="rounded-none">
                   <SelectGroup>
                     {callToActionOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="rounded-none">
+                      <SelectItem
+                        key={option.value}
+                        value={option.value}
+                        className="rounded-none"
+                      >
                         {option.label}
                       </SelectItem>
                     ))}
@@ -316,8 +360,8 @@ const ColdmailComposer = () => {
           </div>
         ) : null}
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           disabled={!canGenerate || isGenerating}
           className="mt-4 h-12 w-full rounded-none bg-linear-to-r from-primary to-primary/80 text-primary-foreground shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none font-semibold text-sm"
         >
@@ -326,7 +370,9 @@ const ColdmailComposer = () => {
           ) : (
             <Sparkles className="mr-2 h-5 w-5" />
           )}
-          {isGenerating ? "Drafting your email..." : "Generate Professional Draft"}
+          {isGenerating
+            ? "Drafting your email..."
+            : "Generate Professional Draft"}
           {!isGenerating ? <ArrowRight className="ml-2 h-5 w-5" /> : null}
         </Button>
       </div>

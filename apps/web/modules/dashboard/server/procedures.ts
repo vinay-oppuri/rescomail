@@ -1,5 +1,5 @@
 import { db, resumes, atsAnalyses } from "@repo/db";
-import { count, eq, avg, desc } from "drizzle-orm";
+import { and, avg, count, desc, eq, isNotNull } from "drizzle-orm";
 
 export { getMonthlyUsageSummary } from "./usage-limits";
 
@@ -15,7 +15,9 @@ export const getAtsAnalysesCount = async (userId: string): Promise<number> => {
   const result = await db
     .select({ count: count() })
     .from(atsAnalyses)
-    .where(eq(atsAnalyses.userId, userId));
+    .where(
+      and(eq(atsAnalyses.userId, userId), eq(atsAnalyses.status, "completed")),
+    );
   return result[0]?.count || 0;
 };
 
@@ -23,16 +25,19 @@ export const getAverageAtsScore = async (userId: string): Promise<number> => {
   const result = await db
     .select({ avg: avg(atsAnalyses.overallScore) })
     .from(atsAnalyses)
-    .where(eq(atsAnalyses.userId, userId));
+    .where(
+      and(
+        eq(atsAnalyses.userId, userId),
+        eq(atsAnalyses.status, "completed"),
+        isNotNull(atsAnalyses.overallScore),
+      ),
+    );
   const average = result[0]?.avg ? parseFloat(result[0].avg) : 0;
   return Math.round(average);
 };
 
-export const getRecentScans = async (
-  userId: string,
-  limit = 5
-) => {
-  return await db
+export const getRecentScans = async (userId: string, limit = 5) => {
+  const rows = await db
     .select({
       id: atsAnalyses.id,
       jobTitle: atsAnalyses.jobTitle,
@@ -42,8 +47,20 @@ export const getRecentScans = async (
       createdAt: atsAnalyses.createdAt,
     })
     .from(atsAnalyses)
-    .where(eq(atsAnalyses.userId, userId))
+    .where(
+      and(
+        eq(atsAnalyses.userId, userId),
+        eq(atsAnalyses.status, "completed"),
+        isNotNull(atsAnalyses.overallScore),
+        isNotNull(atsAnalyses.verdict),
+      ),
+    )
     .orderBy(desc(atsAnalyses.createdAt))
     .limit(limit);
-};
 
+  return rows.map((row) => ({
+    ...row,
+    overallScore: row.overallScore ?? 0,
+    verdict: row.verdict ?? "needs_work",
+  }));
+};

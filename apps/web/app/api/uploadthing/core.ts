@@ -3,8 +3,11 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { resumeUploadSchema } from "@repo/validations";
 
-import { createResumeUpload } from "@/modules/resumes/server/resumes";
-import { triggerResumeParsing } from "@/modules/resumes/server/resume-parsing";
+import {
+  createResumeUpload,
+  markResumeParsingFailed,
+} from "@/modules/resumes/server/resumes";
+import { parseResumeTask } from "@/trigger/parse-resume";
 
 const f = createUploadthing();
 
@@ -38,7 +41,6 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       try {
-        console.log("Upload completed, starting onUploadComplete handler...");
         const resume = await createResumeUpload({
           userId: metadata.userId,
           title: metadata.title,
@@ -49,29 +51,42 @@ export const ourFileRouter = {
           mimeType: file.type,
         });
 
-        console.log("Database record created:", resume.id);
+        try {
+          await parseResumeTask.trigger(
+            {
+              resumeId: resume.id,
+              userId: metadata.userId,
+              fileUrl: resume.fileUrl,
+              fileName: resume.fileName,
+            },
+            {
+              idempotencyKey: `parse-resume:${resume.id}`,
+            },
+          );
+        } catch (error) {
+          const reason =
+            error instanceof Error
+              ? error.message
+              : "Unable to queue resume parsing.";
 
-        const parsing = await triggerResumeParsing({
-          resumeId: resume.id,
-          userId: metadata.userId,
-          fileUrl: resume.fileUrl,
-          fileKey: resume.fileKey,
-          fileName: resume.fileName,
-          mimeType: resume.mimeType,
-        });
+          await markResumeParsingFailed(resume.id, metadata.userId, reason);
 
-        console.log("Resume parsing triggered, status:", parsing.status);
+          return {
+            resumeId: resume.id,
+            title: resume.title,
+            status: "parse_failed",
+            parsingTriggered: false,
+          };
+        }
 
         return {
           resumeId: resume.id,
           title: resume.title,
-          status: parsing.status,
-          parsingTriggered: parsing.triggered,
+          status: "processing",
+          parsingTriggered: true,
         };
       } catch (error) {
-        console.error("=========================================");
-        console.error("ERROR IN ONUPLOADCOMPLETE CALLBACK:", error);
-        console.error("=========================================");
+        console.error("Resume upload completion failed:", error);
         throw error;
       }
     }),

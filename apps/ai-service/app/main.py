@@ -27,16 +27,9 @@ def _assert_required_env() -> None:
             "GEMINI_API_KEY — required for Gemini LLM (the only supported provider)"
         )
 
-    if not os.getenv("RESUME_PARSER_API_KEY", "").strip():
-        logger.warning(
-            "RESUME_PARSER_API_KEY is not set. "
-            "The parse webhook callback from this service to the web app will be unauthenticated."
-        )
-
     if not os.getenv("AI_SERVICE_API_KEY", "").strip():
-        logger.warning(
-            "AI_SERVICE_API_KEY is not set. "
-            "Inbound requests from the web app will not be authenticated."
+        missing.append(
+            "AI_SERVICE_API_KEY - required to authenticate inbound web app requests"
         )
 
     if missing:
@@ -49,6 +42,17 @@ def _assert_required_env() -> None:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     _assert_required_env()
+    
+    # Precompile Pydantic schemas to avoid thread concurrency mega-cache errors
+    try:
+        from app.schemas.ats import AtsAnalyzeRequest, AtsAnalysisResponse
+        from app.schemas.resume import StructuredResume
+        AtsAnalyzeRequest.model_json_schema()
+        AtsAnalysisResponse.model_json_schema()
+        StructuredResume.model_json_schema()
+    except Exception as e:
+        logger.warning(f"Failed to precompile models: {e}")
+
     logger.info("Rescomail AI service started (Gemini provider: %s)", os.getenv("GEMINI_MODEL", "gemini-2.5-flash"))
     yield
     logger.info("Rescomail AI service shutting down.")

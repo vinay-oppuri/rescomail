@@ -1,5 +1,5 @@
 import { db, usageEvents } from "@repo/db";
-import { and, count, eq, gte, sql } from "drizzle-orm";
+import { and, eq, gte, sql } from "drizzle-orm";
 
 /**
  * Free-plan credit limits per calendar month.

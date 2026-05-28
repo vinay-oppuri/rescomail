@@ -1,9 +1,13 @@
 import { create } from "zustand";
 import type { FormEvent } from "react";
-import type { AtsAnalysisResponse } from "@repo/validations";
+import {
+  atsAnalysisResponseSchema,
+  type AtsAnalysisResponse,
+} from "@repo/validations";
 
 import type { AtsAnalysisHistoryItem } from "../server/ats-history";
 import type { AtsResumeOption } from "../server/ats-resumes";
+import { getApiErrorMessage, readApiJson, sleep } from "@/lib/api-client";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -15,6 +19,59 @@ const parseKeywords = (value: string) =>
     .map((kw) => kw.trim())
     .filter(Boolean)
     .slice(0, 80);
+
+const POLL_INTERVAL_MS = 3000;
+const MAX_POLL_TIME_MS = 10 * 60 * 1000;
+
+type AtsProcessingResponse = {
+  status: "processing";
+  analysisId: string;
+};
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  Boolean(value) && typeof value === "object" && !Array.isArray(value);
+
+const isProcessingResponse = (value: unknown): value is AtsProcessingResponse =>
+  isRecord(value) &&
+  value.status === "processing" &&
+  typeof value.analysisId === "string";
+
+const parseAnalysisResponse = (value: unknown): AtsAnalysisResponse => {
+  const parsed = atsAnalysisResponseSchema.safeParse(value);
+
+  if (!parsed.success) {
+    throw new Error("ATS analysis returned an invalid response.");
+  }
+
+  return parsed.data;
+};
+
+const pollAnalysis = async (analysisId: string) => {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < MAX_POLL_TIME_MS) {
+    await sleep(POLL_INTERVAL_MS);
+
+    const response = await fetch(`/api/ats/${analysisId}`);
+    const data = await readApiJson(response);
+
+    if (!response.ok && response.status !== 202) {
+      throw new Error(
+        getApiErrorMessage(data, "Error while processing ATS analysis."),
+      );
+    }
+
+    if (isProcessingResponse(data)) {
+      continue;
+    }
+
+    return parseAnalysisResponse(data);
+  }
+
+  throw new Error(
+    "ATS analysis is still processing. Refresh history in a few minutes.",
+  );
+};
 
 const requestAnalysis = async (payload: {
   resumeId: string;
@@ -28,15 +85,19 @@ const requestAnalysis = async (payload: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  const data = (await response.json()) as AtsAnalysisResponse | { error?: string };
+  const data = await readApiJson(response);
 
   if (!response.ok) {
     throw new Error(
-      "error" in data && data.error ? data.error : "Unable to run ATS analysis.",
+      getApiErrorMessage(data, "Unable to trigger ATS analysis."),
     );
   }
 
-  return data as AtsAnalysisResponse;
+  if (isProcessingResponse(data)) {
+    return pollAnalysis(data.analysisId);
+  }
+
+  return parseAnalysisResponse(data);
 };
 
 // ---------------------------------------------------------------------------
@@ -69,7 +130,10 @@ interface AtsStore {
    * Called once on view mount (and on server-data refresh).
    * Updates resumes + history from the server while preserving form fields.
    */
-  initStore: (analyses: AtsAnalysisHistoryItem[], resumes: AtsResumeOption[]) => void;
+  initStore: (
+    analyses: AtsAnalysisHistoryItem[],
+    resumes: AtsResumeOption[],
+  ) => void;
 
   setResumeId: (value: string) => void;
   setJobTitle: (value: string) => void;
@@ -133,9 +197,7 @@ export const useAtsStore = create<AtsStore>((set, get) => ({
       resumes,
     } = get();
 
-    const canAnalyze = Boolean(
-      resumeId && jobDescription.trim().length >= 20,
-    );
+    const canAnalyze = Boolean(resumeId && jobDescription.trim().length >= 20);
 
     set({ error: null, analysis: null });
 

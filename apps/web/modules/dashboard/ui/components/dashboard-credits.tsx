@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
-import { getMonthlyUsageSummary, FREE_PLAN_LIMITS } from "../../server/usage-limits";
+import {
+  getMonthlyUsageSummary,
+  FREE_PLAN_LIMITS,
+} from "../../server/usage-limits";
 
 interface Props {
   userId: string;
@@ -19,7 +22,6 @@ const DashboardCredits = async ({ userId }: Props) => {
   // Show the "tighter" credit as the primary bar.
   const primaryUsed = Math.max(atsUsed, coldEmailUsed);
   const primaryLimit = primaryUsed === atsUsed ? atsLimit : emailLimit;
-  const primaryLabel = primaryUsed === atsUsed ? "ATS" : "Emails";
 
   const pct = Math.min(100, Math.round((primaryUsed / primaryLimit) * 100));
   const isExhausted = primaryUsed >= primaryLimit;

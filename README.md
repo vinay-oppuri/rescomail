@@ -52,12 +52,10 @@ pnpm install-deps
 pnpm dev
 ```
 
-For the local upload → parse → webhook flow, ensure these are set in `.env`:
+For the local upload -> Trigger.dev -> AI service flow, ensure these are set in `.env`:
 
 ```sh
-RESUME_PARSER_WEBHOOK_URL=http://localhost:3000/api/parse
 AI_SERVICE_URL=http://localhost:8000
-RESUME_PARSER_API_KEY=<same-long-token-in-web-and-ai-service>
 AI_SERVICE_API_KEY=<same-long-token-in-web-and-ai-service>
 ```
 
@@ -73,16 +71,16 @@ Every variable in that file is required unless marked optional.
 ### AI service → Render
 
 Copy `apps/ai-service/.env.ai.example` into Render → Environment → Environment Variables.
-`GEMINI_API_KEY` is the only hard requirement; the service refuses to start without it.
+`GEMINI_API_KEY` and `AI_SERVICE_API_KEY` are required; the service refuses to
+start without them.
 
 ### Shared secrets
 
 Two secrets must match across both deployments:
 
-| Secret | Web app variable | AI service variable |
-|---|---|---|
-| Inbound auth (web → AI) | `AI_SERVICE_API_KEY` | `AI_SERVICE_API_KEY` |
-| Webhook auth (AI → web) | `RESUME_PARSER_API_KEY` | `RESUME_PARSER_API_KEY` |
+| Secret                   | Web app variable     | AI service variable  |
+| ------------------------ | -------------------- | -------------------- |
+| Inbound auth (web -> AI) | `AI_SERVICE_API_KEY` | `AI_SERVICE_API_KEY` |
 
 Generate each with: `openssl rand -hex 32`
 
@@ -92,11 +90,11 @@ Generate each with: `openssl rand -hex 32`
 
 ### Endpoints
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/health` | Health check |
-| `POST` | `/parse` | PDF resume extraction and structuring |
-| `POST` | `/ats/analyze` | ATS scoring against a job description |
+| Method | Path                 | Description                            |
+| ------ | -------------------- | -------------------------------------- |
+| `GET`  | `/health`            | Health check                           |
+| `POST` | `/parse`             | PDF resume extraction and structuring  |
+| `POST` | `/ats/analyze`       | ATS scoring against a job description  |
 | `POST` | `/coldmail/generate` | Cold email generation from resume + JD |
 
 All endpoints except `/health` require the `AI_SERVICE_API_KEY` bearer token.
@@ -141,16 +139,16 @@ request once with `gemini-1.5-flash`. This is logged as a `WARNING` in Render lo
 
 Quality score (0–98) is computed server-side from input richness — not by the LLM:
 
-| Input | Points |
-|---|---|
-| Base | 62 |
-| Job title provided | +8 |
-| Company name provided | +8 |
-| Recipient name or role | +4 |
-| Company context (scraped or manual) | +6 |
-| Personal note | +5 |
-| Skills found in resume | +4 |
-| Structured (parsed) resume | +5 |
+| Input                               | Points |
+| ----------------------------------- | ------ |
+| Base                                | 62     |
+| Job title provided                  | +8     |
+| Company name provided               | +8     |
+| Recipient name or role              | +4     |
+| Company context (scraped or manual) | +6     |
+| Personal note                       | +5     |
+| Skills found in resume              | +4     |
+| Structured (parsed) resume          | +5     |
 
 ### Company context (Tavily)
 
@@ -212,8 +210,8 @@ pnpm --filter @repo/db db:generate
 
 - **Never commit `.env` files.** Use the `.example` files as templates only.
 - Rotate any credential that was ever placed in a local example file.
-- Both `AI_SERVICE_API_KEY` and `RESUME_PARSER_API_KEY` must be long random secrets
-  (≥ 32 chars) and must match across both deployments.
+- `AI_SERVICE_API_KEY` must be a long random secret (>= 32 chars) and must match
+  across both deployments.
 - Configure `RESUME_FILE_ALLOWED_HOSTS` in production to restrict the AI service
   from downloading files from arbitrary hosts (SSRF protection).
 - Replace placeholder privacy/terms pages with reviewed legal copy before public launch.

@@ -64,12 +64,23 @@ export const runAiColdmailGeneration = async (
       headers: aiServiceHeaders(),
       body: JSON.stringify(buildAiColdmailPayload(input, resume)),
       signal: controller.signal,
+    }).catch((err: unknown) => {
+      if (err instanceof Error && err.name === "AbortError") {
+        throw new ColdmailError("AI service request timed out.", 504);
+      }
+      throw err;
     });
+
     const data = await readJsonResponse(response);
 
     if (!response.ok) {
-      const detail =
+      let detail =
         isRecord(data) && "detail" in data ? data.detail : "Unknown AI error";
+
+      // Do not leak internal Python errors (500) to the client
+      if (response.status >= 500) {
+        detail = "Internal AI service error";
+      }
 
       throw new ColdmailError(
         `Cold email generation failed: ${String(detail)}`,

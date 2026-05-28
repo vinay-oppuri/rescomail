@@ -38,6 +38,21 @@ export const createResumeUpload = async (input: CreateResumeUploadInput) => {
   return resume;
 };
 
+export const markResumeParsingFailed = async (
+  resumeId: string,
+  userId: string,
+  reason: string,
+) => {
+  await db
+    .update(resumes)
+    .set({
+      status: "parse_failed",
+      parsingError: reason,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId)));
+};
+
 export const getResumesForUser = async (userId: string) => {
   return db.query.resumes.findMany({
     where: eq(resumes.userId, userId),
