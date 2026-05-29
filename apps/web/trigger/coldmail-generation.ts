@@ -1,5 +1,5 @@
 import { logger, task } from "@trigger.dev/sdk/v3";
-import { coldEmails, db, resumes, usageEvents } from "@repo/db";
+import { coldEmails, db, resumes, usageEvents, userPreferences } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 import { ColdmailError } from "@/modules/coldmail/server/coldmail-errors";
@@ -67,6 +67,10 @@ export const coldmailGenerationTask = task({
       );
     }
 
+    const prefs = await db.query.userPreferences.findFirst({
+      where: eq(userPreferences.userId, userId),
+    });
+
     const draft = await runAiColdmailGeneration(
       {
         resumeId: resume.id,
@@ -83,6 +87,7 @@ export const coldmailGenerationTask = task({
         callToAction: emailRecord.callToAction as ColdEmailCallToAction,
       },
       resume,
+      prefs?.geminiApiKey ?? undefined
     );
 
     await db.transaction(async (tx) => {

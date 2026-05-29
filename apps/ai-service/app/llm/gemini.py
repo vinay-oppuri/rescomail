@@ -43,8 +43,9 @@ def generate_gemini_json(
     *,
     model: str | None = None,
     temperature: float = 0.1,
+    api_key: str | None = None,
 ) -> dict | None:
-    api_key = _get_api_key()
+    resolved_api_key = api_key or _get_api_key()
     primary_model = model or os.getenv(_GEMINI_MODEL_ENV, _DEFAULT_MODEL)
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
@@ -55,7 +56,7 @@ def generate_gemini_json(
         },
     }
 
-    response = _call_gemini(api_key, primary_model, payload)
+    response = _call_gemini(resolved_api_key, primary_model, payload)
 
     # If the primary model is overloaded / rate-limited, fall back to gemini-1.5-flash
     # so the request can still be served rather than failing outright.
@@ -67,7 +68,7 @@ def generate_gemini_json(
             response.status_code,
             _FALLBACK_MODEL,
         )
-        response = _call_gemini(api_key, _FALLBACK_MODEL, payload)
+        response = _call_gemini(resolved_api_key, _FALLBACK_MODEL, payload)
 
     if response.status_code != 200:
         logger.error(

@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class ParseRequest(BaseModel):
+    geminiApiKey: str | None = None
     resumeId: str
     fileUrl: str
     fileName: str

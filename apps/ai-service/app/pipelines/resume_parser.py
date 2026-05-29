@@ -9,4 +9,4 @@ def parse_resume(request: ParseRequest) -> StructuredResume:
     raw_text = extract_text_from_url(request.fileUrl)
     cleaned_text = clean_resume_text(raw_text)
     preprocessed = preprocess_resume_text(cleaned_text, request.fileName)
-    return structure_resume(preprocessed)
+    return structure_resume(preprocessed, api_key=request.geminiApiKey)

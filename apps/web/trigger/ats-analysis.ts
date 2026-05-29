@@ -1,5 +1,5 @@
 import { logger, task } from "@trigger.dev/sdk/v3";
-import { atsAnalyses, db, resumes, usageEvents } from "@repo/db";
+import { atsAnalyses, db, resumes, usageEvents, userPreferences } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 import { AtsAnalysisError } from "@/modules/ats/server/ats-errors";
@@ -70,6 +70,10 @@ export const atsAnalysisTask = task({
       );
     }
 
+    const prefs = await db.query.userPreferences.findFirst({
+      where: eq(userPreferences.userId, userId),
+    });
+
     const analysis = await runAiAtsAnalysis(
       {
         resumeId: resume.id,
@@ -79,6 +83,7 @@ export const atsAnalysisTask = task({
         targetKeywords: getTargetKeywords(analysisRecord.targetKeywords),
       },
       resume,
+      prefs?.geminiApiKey ?? undefined
     );
 
     await db.transaction(async (tx) => {

@@ -26,7 +26,7 @@ import {
 } from "@repo/ui/components/sidebar";
 import { Button } from "@repo/ui/components/button";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@repo/ui/lib/utils";
 import { signOut } from "@repo/auth/client";
 
@@ -41,7 +41,14 @@ const navItems = [
 
 const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) => {
   const pathname = usePathname();
+  const router = useRouter()
   const { setOpenMobile, isMobile } = useSidebar();
+
+  const onSignOut = async() => {
+    if (isMobile) setOpenMobile(false);
+    await signOut();
+    router.push('/login')
+  }
 
   return (
     <Sidebar className="border-r border-border/50 bg-sidebar/80 backdrop-blur-xl rounded-none">
@@ -124,10 +131,7 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              onClick={() => {
-                if (isMobile) setOpenMobile(false);
-                signOut();
-              }}
+              onClick={() => onSignOut()}
               className="h-10 w-full justify-start gap-3 rounded-none px-3 font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
             >
               <LogOut className="h-4 w-4" />

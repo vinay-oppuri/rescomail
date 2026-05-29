@@ -1,5 +1,5 @@
 import { logger, task } from "@trigger.dev/sdk/v3";
-import { db, resumes } from "@repo/db";
+import { db, resumes, userPreferences } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 import { serverEnv } from "@repo/env/server";
 
@@ -86,6 +86,10 @@ export const parseResumeTask = task({
     const timeout = setTimeout(() => controller.abort(), AI_SERVICE_TIMEOUT_MS);
 
     try {
+      const prefs = await db.query.userPreferences.findFirst({
+        where: eq(userPreferences.userId, userId),
+      });
+
       const response = await fetch(`${serverEnv.AI_SERVICE_URL}/parse`, {
         method: "POST",
         headers: aiServiceHeaders(),
@@ -93,6 +97,7 @@ export const parseResumeTask = task({
           resumeId,
           fileUrl,
           fileName,
+          geminiApiKey: prefs?.geminiApiKey ?? undefined,
         }),
         signal: controller.signal,
       }).catch((error: unknown) => {

@@ -52,6 +52,7 @@ def generate_cold_email_draft(
         build_cold_email_prompt(request, resume_text),
         GEMINI_COLD_EMAIL_SCHEMA,
         temperature=0.35,
+        api_key=request.geminiApiKey,
     )
 
     if generated:

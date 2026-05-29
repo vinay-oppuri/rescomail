@@ -6,6 +6,7 @@ from .resume import StructuredResume
 
 
 class AtsAnalyzeRequest(BaseModel):
+    geminiApiKey: str | None = None
     resumeId: str | None = None
     fileUrl: str | None = None
     fileName: str | None = None

@@ -20,6 +20,7 @@ export type AiColdmailInput = ColdEmailGenerateInput & {
 export const buildAiColdmailPayload = (
   input: AiColdmailInput,
   resume: typeof resumes.$inferSelect,
+  geminiApiKey?: string
 ) => {
   const payload: Record<string, unknown> = {
     resumeId: input.resumeId,
@@ -35,6 +36,10 @@ export const buildAiColdmailPayload = (
     length: input.length,
     callToAction: input.callToAction,
   };
+
+  if (geminiApiKey) {
+    payload.geminiApiKey = geminiApiKey;
+  }
 
   if (isRecord(resume.parsedJson)) {
     payload.structuredResume = resume.parsedJson;
@@ -54,6 +59,7 @@ export const buildAiColdmailPayload = (
 export const runAiColdmailGeneration = async (
   input: AiColdmailInput,
   resume: typeof resumes.$inferSelect,
+  geminiApiKey?: string
 ): Promise<ColdEmailResponse> => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), AI_SERVICE_TIMEOUT_MS);
@@ -62,7 +68,7 @@ export const runAiColdmailGeneration = async (
     const response = await fetch(`${serverEnv.AI_SERVICE_URL}/coldmail/generate`, {
       method: "POST",
       headers: aiServiceHeaders(),
-      body: JSON.stringify(buildAiColdmailPayload(input, resume)),
+      body: JSON.stringify(buildAiColdmailPayload(input, resume, geminiApiKey)),
       signal: controller.signal,
     }).catch((err: unknown) => {
       if (err instanceof Error && err.name === "AbortError") {

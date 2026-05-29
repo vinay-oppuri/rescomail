@@ -4,10 +4,11 @@ from app.prompts.resume_parser import build_resume_parser_prompt
 from app.schemas.resume import StructuredResume
 
 
-def structure_resume(preprocessed: dict) -> StructuredResume:
+def structure_resume(preprocessed: dict, api_key: str | None = None) -> StructuredResume:
     generated = generate_gemini_json(
         build_resume_parser_prompt(preprocessed),
         GEMINI_STRUCTURED_RESUME_SCHEMA,
+        api_key=api_key,
     )
     return StructuredResume.model_validate(generated or _fallback_resume(preprocessed))
 

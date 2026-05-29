@@ -3,6 +3,7 @@
 import { AccountDetails } from "./account-details";
 import { ProfileDefaults } from "./profile-defaults";
 import { DangerActions } from "./danger-actions";
+import { ApiKeys } from "./api-keys";
 
 interface SettingsClientProps {
   user: {
@@ -29,6 +30,7 @@ export default function SettingsClient({ user }: SettingsClientProps) {
 
       <AccountDetails user={user} />
       <ProfileDefaults />
+      <ApiKeys />
       <DangerActions />
     </div>
   );

@@ -24,6 +24,7 @@ export const EditPreferenceAction = async (data: {
   workModes?: ("remote" | "hybrid" | "onsite")[];
   employmentTypes?: ("internship" | "full_time" | "part_time" | "contract" | "freelance")[];
   preferredLocations?: { city?: string; state?: string; country?: string; remote?: boolean }[];
+  geminiApiKey?: string;
 }) => {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -31,6 +32,15 @@ export const EditPreferenceAction = async (data: {
 
   if (!session) {
     throw new Error("Unauthorized");
+  }
+
+  if (data.geminiApiKey) {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${data.geminiApiKey}`
+    );
+    if (!response.ok) {
+      return { error: "Invalid Gemini API Key. Please provide a valid key." };
+    }
   }
 
   const existingPrefs = await db.query.userPreferences.findFirst({
@@ -52,6 +62,8 @@ export const EditPreferenceAction = async (data: {
       ...data,
     });
   }
+
+  return { success: true };
 };
 
 export const DelectAccountAction = async () => {

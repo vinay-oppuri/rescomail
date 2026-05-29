@@ -50,13 +50,19 @@ export function ProfileDefaults() {
   const handleSavePrefs = async () => {
     setIsSavingPrefs(true);
     try {
-      await EditPreferenceAction({
+      const result = await EditPreferenceAction({
         targetRoles: targetRole ? [targetRole] : [],
         targetSeniority: (seniority as "intern" | "new_grad" | "junior" | "mid" | "senior" | "lead") || undefined,
         workModes: workMode ? [workMode as "remote" | "hybrid" | "onsite"] : [],
         employmentTypes: employmentType ? [employmentType as "internship" | "full_time" | "part_time" | "contract" | "freelance"] : [],
         preferredLocations: location ? [{ city: location }] : [],
       });
+
+      if (result?.error) {
+        console.error(result.error);
+        return;
+      }
+
       setPrefsSaved(true);
       setTimeout(() => setPrefsSaved(false), 2500);
     } catch (error) {

@@ -1,4 +1,4 @@
-import { db, usageEvents } from "@repo/db";
+import { db, usageEvents, userPreferences } from "@repo/db";
 import { and, eq, gte, sql } from "drizzle-orm";
 
 /**
@@ -6,8 +6,8 @@ import { and, eq, gte, sql } from "drizzle-orm";
  * Update these when paid plans are introduced.
  */
 export const FREE_PLAN_LIMITS = {
-  ats_analysis: 10,
-  cold_email_generate: 10,
+  ats_analysis: 2,
+  cold_email_generate: 2,
   resume_upload: 50,
   resume_parse: 50,
   application_create: 100,
@@ -41,6 +41,15 @@ export const checkUsageLimit = async (
   eventType: UsageEventType,
   limitOverride?: number,
 ): Promise<void> => {
+  const prefs = await db.query.userPreferences.findFirst({
+    where: eq(userPreferences.userId, userId),
+  });
+
+  // If the user provided their own API key, bypass limits
+  if (prefs?.geminiApiKey) {
+    return;
+  }
+
   const limit = limitOverride ?? FREE_PLAN_LIMITS[eventType];
 
   // Start of the current calendar month in UTC.

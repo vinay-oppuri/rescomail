@@ -11,6 +11,7 @@ ColdEmailCallToAction = Literal["conversation", "referral", "interview", "feedba
 
 
 class ColdEmailGenerateRequest(BaseModel):
+    geminiApiKey: str | None = None
     resumeId: str | None = None
     fileUrl: str | None = None
     fileName: str | None = None
