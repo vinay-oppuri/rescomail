@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@repo/ui/lib/utils";
@@ -16,9 +16,69 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
-  title: "Rescomail",
-  description: "AI job application copilot for resumes, cold emails, and tracking.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || 
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+  ),
+  title: {
+    default: "Rescomail | AI Job Search Copilot",
+    template: "%s | Rescomail",
+  },
+  description: "Land your dream job with AI-powered resume optimization, ATS analysis, and perfectly tailored cold emails.",
+  keywords: [
+    "resume builder",
+    "ATS optimization",
+    "cold emails",
+    "job search",
+    "AI career coach",
+    "resume parser",
+  ],
+  authors: [{ name: "Rescomail Team" }],
+  creator: "Rescomail",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    title: "Rescomail | AI Job Search Copilot",
+    description: "Optimize your resume for ATS, generate personalized cold emails, and track applications—all in one place.",
+    siteName: "Rescomail",
+    images: [
+      {
+        url: "/og-image.jpg", // Ensure this exists in public/
+        width: 1200,
+        height: 630,
+        alt: "Rescomail Dashboard Preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rescomail | AI Job Search Copilot",
+    description: "Optimize your resume for ATS, generate personalized cold emails, and track applications.",
+    images: ["/og-image.jpg"],
+    creator: "@rescomail",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({

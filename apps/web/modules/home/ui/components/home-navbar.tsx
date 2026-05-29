@@ -9,9 +9,9 @@ import { useState } from "react";
 const HomeNavbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Features", path: "#features" },
-    { name: "Pricing", path: "#pricing" },
-    { name: "About", path: "#about" },
+    { name: "Docs", path: "/docs" },
+    { name: "Features", path: "/#features" },
+    { name: "Pricing", path: "/#pricing" },
   ];
 
   const [mobileOpen, setMobileOpen] = useState(false);
