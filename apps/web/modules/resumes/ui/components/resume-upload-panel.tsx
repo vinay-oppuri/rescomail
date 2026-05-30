@@ -98,13 +98,19 @@ const ResumeUploadPanel = () => {
   };
 
   return (
-    <div className="space-y-4 border bg-muted/10 p-5">
-      <div className="space-y-1">
-        <h2 className="text-base font-semibold tracking-tight">Upload resume</h2>
-        <p className="text-xs text-muted-foreground">
-          Add a PDF resume and Rescomail will queue it for parsing.
-        </p>
+    <div className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm overflow-hidden">
+      <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
+        <div>
+          <h2 className="text-sm font-semibold tracking-tight text-foreground">
+            Upload Resume
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Add a PDF resume and Rescomail will queue it for parsing.
+          </p>
+        </div>
       </div>
+
+      <div className="flex flex-col gap-6 p-3 sm:p-6">
 
       {error ? (
         <Alert variant="destructive">
@@ -130,16 +136,17 @@ const ResumeUploadPanel = () => {
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           disabled={isUploading}
+          className="rounded-none bg-muted/20! border-foreground/5!"
         />
       </div>
 
       <button
         type="button"
         className={cn(
-          "flex min-h-44 w-full flex-col items-center justify-center gap-3 border border-dashed px-4 py-8 text-center transition-colors",
+          "flex min-h-44 w-full flex-col items-center justify-center gap-3 border border-dashed border-foreground/10 px-4 py-8 text-center transition-colors rounded-none bg-muted/10!",
           isDragging
-            ? "border-primary bg-primary/5"
-            : "border-border hover:border-primary/40 hover:bg-muted/40",
+            ? "border-primary bg-primary/5!"
+            : "hover:border-primary/40 hover:bg-muted/40!",
           isUploading && "pointer-events-none opacity-70",
         )}
         onClick={() => inputRef.current?.click()}
@@ -155,7 +162,7 @@ const ResumeUploadPanel = () => {
         }}
         disabled={isUploading}
       >
-        <div className="flex h-10 w-10 items-center justify-center border bg-card">
+        <div className="flex h-10 w-10 items-center justify-center border border-foreground/5 bg-card rounded-none">
           <FileUp className="h-5 w-5 text-muted-foreground" />
         </div>
         <div className="space-y-1">
@@ -208,13 +215,13 @@ const ResumeUploadPanel = () => {
 
       <Button
         type="button"
-        className="h-10 w-full"
+        className="mt-2 h-11 w-full font-semibold text-xs md:text-sm rounded-none"
         onClick={uploadResume}
         disabled={isUploading || !file}
       >
         {isUploading ? (
           <>
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             Uploading
           </>
         ) : (
@@ -222,6 +229,7 @@ const ResumeUploadPanel = () => {
         )}
       </Button>
     </div>
+  </div>
   );
 };
 

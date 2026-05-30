@@ -7,7 +7,6 @@ import {
   Mail,
   Settings,
   Plus,
-  LogOut,
   Target,
 } from "lucide-react";
 
@@ -26,9 +25,8 @@ import {
 } from "@repo/ui/components/sidebar";
 import { Button } from "@repo/ui/components/button";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { cn } from "@repo/ui/lib/utils";
-import { signOut } from "@repo/auth/client";
 
 const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -41,14 +39,7 @@ const navItems = [
 
 const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) => {
   const pathname = usePathname();
-  const router = useRouter()
   const { setOpenMobile, isMobile } = useSidebar();
-
-  const onSignOut = async() => {
-    if (isMobile) setOpenMobile(false);
-    await signOut();
-    router.push('/login')
-  }
 
   return (
     <Sidebar className="border-r border-border/50 bg-sidebar/80 backdrop-blur-xl rounded-none">
@@ -127,18 +118,6 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
 
       <SidebarFooter className="p-6 space-y-4">
         {creditsSlot}
-
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={() => onSignOut()}
-              className="h-10 w-full justify-start gap-3 rounded-none px-3 font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="text-xs font-semibold">Sign Out</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );

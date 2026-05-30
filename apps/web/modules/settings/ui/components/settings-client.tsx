@@ -14,23 +14,28 @@ interface SettingsClientProps {
     createdAt: Date;
     emailVerified: boolean;
   };
+  geminiApiKey?: string | null;
 }
 
-export default function SettingsClient({ user }: SettingsClientProps) {
+export default function SettingsClient({ user, geminiApiKey }: SettingsClientProps) {
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">
       {/* Page Header */}
-      <div className="space-y-1">
-        <h1 className="text-xl font-bold tracking-tight">Settings</h1>
-        <p className="text-xs text-muted-foreground">
-          Manage your profile and workspace preferences.
-        </p>
+      <div className="flex flex-col gap-4 border-b border-border/50 pb-6">
+        <div className="space-y-2 max-w-3xl">
+          <h1 className="text-xl font-bold tracking-tight md:text-2xl">Settings</h1>
+          <p className="text-xs leading-6 text-muted-foreground">
+            Manage your profile and workspace preferences.
+          </p>
+        </div>
       </div>
 
-      <AccountDetails user={user} />
+      <div className="flex flex-col md:flex-row gap-6 w-full">
+        <AccountDetails user={user} />
+        <ApiKeys geminiApiKey={geminiApiKey} />
+      </div>
       <ProfileDefaults />
-      <ApiKeys />
       <DangerActions />
     </div>
   );

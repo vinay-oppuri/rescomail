@@ -44,7 +44,7 @@ const DashboardView = async () => {
     };
 
     return (
-        <div className="flex flex-col gap-8 max-w-6xl mx-auto w-full relative">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8 relative">
             {/* Ambient Background Glow (Subtle) */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] overflow-hidden -z-10 pointer-events-none opacity-40">
                 <div className="absolute top-[-20%] left-[10%] w-[50%] h-[50%] rounded-none bg-primary/10 blur-[100px]" />

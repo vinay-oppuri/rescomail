@@ -101,7 +101,6 @@ export const metadata: Metadata = {
   creator: "Rescomail",
   publisher: "Rescomail",
   category: "technology",
-  manifest: "/manifest.webmanifest",
   alternates: {
     canonical: "/",
   },

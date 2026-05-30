@@ -24,7 +24,7 @@ export const EditPreferenceAction = async (data: {
   workModes?: ("remote" | "hybrid" | "onsite")[];
   employmentTypes?: ("internship" | "full_time" | "part_time" | "contract" | "freelance")[];
   preferredLocations?: { city?: string; state?: string; country?: string; remote?: boolean }[];
-  geminiApiKey?: string;
+  geminiApiKey?: string | null;
 }) => {
   const session = await auth.api.getSession({
     headers: await headers(),

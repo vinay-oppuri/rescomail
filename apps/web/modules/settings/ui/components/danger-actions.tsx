@@ -12,23 +12,27 @@ export function DangerActions() {
     router.push("/");
   };
   return (
-    <section className="rounded-none border border-destructive/30 bg-destructive/10">
-      <div className="border-b border-destructive/30 px-5 py-3.5">
-        <h2 className="text-sm font-semibold text-destructive">Danger Zone</h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">
-          Irreversible actions — proceed with caution.
-        </p>
+    <section className="flex flex-col rounded-none border border-destructive/20 bg-destructive/5 shadow-sm overflow-hidden">
+      <div className="flex items-start justify-between gap-3 border-b border-destructive/20 bg-destructive/10 px-3 md:px-5 py-3 md:py-4">
+        <div>
+          <h2 className="text-sm font-semibold tracking-tight text-destructive">
+            Danger Zone
+          </h2>
+          <p className="mt-1 text-xs text-destructive/80">
+            Irreversible actions — proceed with caution.
+          </p>
+        </div>
       </div>
-      <div className="flex items-center justify-between px-5 py-4">
+      <div className="flex items-center justify-between p-3 sm:p-6">
         <div>
           <p className="text-sm font-medium">Delete Account</p>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="mt-1 text-xs text-muted-foreground">
             Permanently delete your account and all associated data.
           </p>
         </div>
         <ConfirmDialog
           trigger={
-            <Button variant="destructive" size="sm">
+            <Button variant="destructive" size="sm" className="rounded-none h-9">
               Delete Account
             </Button>
           }

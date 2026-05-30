@@ -36,8 +36,8 @@ const ColdmailView = ({ emails, resumes }: ColdmailViewProps) => {
   const parsedResumes = resumes.filter((r) => r.status === "parsed").length;
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
-      <div className="flex flex-col gap-4 border-b border-foreground/5 pb-5 lg:flex-row lg:items-end lg:justify-start lg:gap-12">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">
+      <div className="flex flex-col gap-4 border-b border-border/50 pb-6 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
         <div className="max-w-3xl space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="outline" className="gap-1">
@@ -105,7 +105,7 @@ const ColdmailView = ({ emails, resumes }: ColdmailViewProps) => {
         </div>
       </div>
 
-      <div className="flex w-full flex-col gap-5">
+      <div className="flex w-full flex-col gap-6">
         {showComposer ? (
           <ColdmailComposer />
         ) : (

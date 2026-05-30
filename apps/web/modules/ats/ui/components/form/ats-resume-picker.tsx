@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/select";
+import { Label } from "@repo/ui/components/label";
 import { FileText } from "lucide-react";
 
 import { useAtsStore } from "../../../store/ats-store";
@@ -40,38 +41,35 @@ const AtsResumePicker = () => {
 
   return (
     <>
-      <label className="grid gap-2 text-sm">
-        <span className="flex items-center justify-between gap-3">
-          <span className="font-medium">Resume</span>
-          <span className="text-xs text-muted-foreground">
-            {resumes.length} available
-          </span>
-        </span>
-
+      <div className="space-y-2">
+        <Label htmlFor="resume">Select Resume</Label>
         <Select
           value={resumeId}
           onValueChange={setResumeId}
           disabled={resumes.length === 0}
         >
-          <SelectTrigger className="h-9! w-full bg-card! border-foreground/5!">
+          <SelectTrigger id="resume" className="w-full rounded-none bg-muted/20! border-foreground/5!">
             <SelectValue placeholder="Select a resume" />
           </SelectTrigger>
 
-          <SelectContent>
+          <SelectContent className="rounded-none">
             {resumes.length === 0 ? (
-              <SelectItem value="empty" disabled>
+              <SelectItem value="empty" disabled className="rounded-none">
                 No resumes uploaded
               </SelectItem>
             ) : (
               resumes.map((resume) => (
-                <SelectItem key={resume.id} value={resume.id}>
+                <SelectItem key={resume.id} value={resume.id} className="rounded-none">
                   {resume.title}
                 </SelectItem>
               ))
             )}
           </SelectContent>
         </Select>
-      </label>
+        <p className="text-xs text-muted-foreground">
+          {resumes.length} available
+        </p>
+      </div>
 
       {selectedResume && (
         <div className="border border-foreground/5 bg-muted/20 text-xs text-muted-foreground">

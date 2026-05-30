@@ -47,11 +47,11 @@ const formatFileSize = (bytes: number) => {
 
 const ResumesView = ({ resumes }: ResumesViewProps) => {
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-lg font-bold tracking-tight">AI Resumes</h1>
-          <p className="text-xs text-muted-foreground">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">
+      <div className="flex flex-col gap-4 border-b border-border/50 pb-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="space-y-2 max-w-3xl">
+          <h1 className="text-xl font-bold tracking-tight md:text-2xl">AI Resumes</h1>
+          <p className="text-xs leading-6 text-muted-foreground">
             Upload resumes, track parsing status, and prepare them for ATS
             analysis.
           </p>

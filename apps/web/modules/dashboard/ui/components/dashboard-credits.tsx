@@ -33,6 +33,9 @@ const DashboardCredits = async ({ userId }: Props) => {
   const pct = hasApiKey ? 0 : Math.min(100, Math.round((primaryUsed / primaryLimit) * 100));
   const isExhausted = hasApiKey ? false : primaryUsed >= primaryLimit;
 
+  const displayAtsUsed = hasApiKey ? '∞' : Math.min(atsUsed, atsLimit);
+  const displayEmailUsed = hasApiKey ? '∞' : Math.min(coldEmailUsed, emailLimit);
+
   return (
     <div className="relative mb-4 overflow-hidden rounded-none border border-primary/10 bg-primary/5 p-4">
       <div className="absolute top-0 right-0 p-2 opacity-5">
@@ -66,16 +69,23 @@ const DashboardCredits = async ({ userId }: Props) => {
         </div>
       )}
 
-      <div className="mt-3 space-y-1">
+      <div className="mt-3 space-y-2">
         <div className="flex justify-between items-center">
           <p className="text-[10px] text-muted-foreground font-medium">
-            ATS: {hasApiKey ? '∞' : `${atsUsed}/${atsLimit}`}
+            ATS: {displayAtsUsed}{!hasApiKey && `/${atsLimit}`}
           </p>
           <p className="text-[10px] text-muted-foreground font-medium">
-            Emails: {hasApiKey ? '∞' : `${coldEmailUsed}/${emailLimit}`}
+            Emails: {displayEmailUsed}{!hasApiKey && `/${emailLimit}`}
           </p>
         </div>
-        <div className="flex justify-end gap-2">
+
+        {isExhausted && !hasApiKey && (
+          <p className="text-[9px] text-destructive font-semibold leading-tight bg-destructive/10 p-1.5 border border-destructive/20 text-center">
+            Limit reached. Please add your personal API key for more.
+          </p>
+        )}
+
+        <div className="flex justify-end gap-2 pt-1">
           {!hasApiKey && (
             <Link
               href="/dashboard/settings"

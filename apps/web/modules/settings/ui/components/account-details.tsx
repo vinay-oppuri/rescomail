@@ -53,15 +53,19 @@ export function AccountDetails({ user }: AccountDetailsProps) {
   };
 
   return (
-    <section className="rounded-none border border-foreground/5 bg-card/20">
-      <div className="border-b border-foreground/10 px-5 py-3.5">
-        <h2 className="text-sm font-semibold">Account Profile</h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">
-          Your personal information and account details.
-        </p>
+    <section className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm overflow-hidden w-full">
+      <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
+        <div>
+          <h2 className="text-sm font-semibold tracking-tight text-foreground">
+            Account Profile
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Your personal information and account details.
+          </p>
+        </div>
       </div>
 
-      <div className="p-5 space-y-6">
+      <div className="flex flex-col gap-6 p-3 sm:p-6">
         {/* Avatar row */}
         <div className="flex items-center gap-5">
           <div className="relative shrink-0">
@@ -112,7 +116,7 @@ export function AccountDetails({ user }: AccountDetailsProps) {
               <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 id="full-name"
-                className="h-9 pl-8 border border-foreground/10"
+                className="h-9 pl-8 rounded-none bg-muted/20! border-foreground/5!"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your full name"
@@ -122,18 +126,15 @@ export function AccountDetails({ user }: AccountDetailsProps) {
 
           <div className="space-y-2">
             <Label htmlFor="email-display">Email Address</Label>
-            <div className="flex h-9 items-center gap-2.5 border border-foreground/5 bg-muted/40 px-2.5 text-sm text-muted-foreground">
+            <div className="flex h-9 items-center gap-2.5 rounded-none bg-muted/20! border border-foreground/5! px-2.5 text-sm text-muted-foreground">
               <Mail className="h-4 w-4 shrink-0" />
               <span className="truncate">{user.email}</span>
             </div>
-            <p className="text-[11px] text-muted-foreground">
-              Email cannot be changed.
-            </p>
           </div>
 
           <div className="space-y-2">
             <Label>Account Status</Label>
-            <div className="flex h-9 items-center gap-2.5 border border-foreground/10 px-2.5 text-sm">
+            <div className="flex h-9 items-center gap-2.5 rounded-none bg-muted/20! border border-foreground/5! px-2.5 text-xs">
               <Shield className="h-4 w-4 text-green-500 shrink-0" />
               <span className="font-medium">Active &amp; Secure</span>
             </div>
@@ -141,16 +142,17 @@ export function AccountDetails({ user }: AccountDetailsProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-2 border-t border-foreground/10 px-5 py-3.5">
+      <div className="flex items-center justify-end gap-3 border-t border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
         <Button
           size="sm"
+          className="rounded-none h-9"
           onClick={handleSaveProfile}
           disabled={isSavingProfile || name === user.name}
         >
           {isSavingProfile ? (
-            <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : profileSaved ? (
-            <Check className="mr-2 h-3.5 w-3.5 text-green-400" />
+            <Check className="mr-2 h-4 w-4 text-green-400" />
           ) : null}
           {profileSaved ? "Saved!" : "Save Profile"}
         </Button>

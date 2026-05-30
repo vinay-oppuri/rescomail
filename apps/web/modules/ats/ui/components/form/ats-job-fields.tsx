@@ -23,57 +23,54 @@ const AtsJobFields = () => {
 
   return (
     <>
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
-        <Label className="grid gap-2 text-sm">
-          <span className="font-medium">Target role</span>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="job-title">Target Role</Label>
           <Input
+            id="job-title"
             value={jobTitle}
             onChange={(event) => setJobTitle(event.target.value)}
-            className={fieldClassName}
+            className="rounded-none bg-muted/20! border-foreground/5!"
             placeholder="Machine learning engineer"
           />
-        </Label>
+        </div>
 
-        <Label className="grid gap-2 text-sm">
-          <span className="font-medium">Company</span>
+        <div className="space-y-2">
+          <Label htmlFor="company-name">Company</Label>
           <Input
+            id="company-name"
             value={companyName}
             onChange={(event) => setCompanyName(event.target.value)}
-            className={fieldClassName}
+            className="rounded-none bg-muted/20! border-foreground/5!"
             placeholder="Acme AI"
           />
-        </Label>
+        </div>
       </div>
 
-      <Label className="grid gap-2 text-sm">
-        <span className="flex items-center justify-between gap-3">
-          <span className="font-medium">Job description</span>
-          <span className="text-xs text-muted-foreground">
-            {jobWordCount} words
-          </span>
-        </span>
-
+      <div className="space-y-2 mt-4">
+        <Label htmlFor="job-description">Job Description</Label>
         <Textarea
+          id="job-description"
           value={jobDescription}
           onChange={(event) => setJobDescription(event.target.value)}
-          className={`min-h-32 max-h-32 md:min-h-64 md:max-h-64 ${fieldClassName}`}
+          className="h-24 md:h-48 resize-y rounded-none bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin"
           placeholder="Paste the role description here..."
         />
-      </Label>
+        <p className="text-xs text-muted-foreground">
+          {jobWordCount} words
+        </p>
+      </div>
 
-      <Label className="grid gap-2 text-sm">
-        <span className="flex items-center justify-between gap-3">
-          <span className="font-medium">Priority keywords</span>
-          <span className="text-xs text-muted-foreground">Optional</span>
-        </span>
-
+      <div className="space-y-2 mt-4">
+        <Label htmlFor="priority-keywords">Priority Keywords (Optional)</Label>
         <Textarea
+          id="priority-keywords"
           value={keywordText}
           onChange={(event) => setKeywordText(event.target.value)}
-          className={`min-h-12 max-h-12 md:min-h-20 md:max-h-20 ${fieldClassName}`}
+          className="h-16 resize-y rounded-none bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin"
           placeholder="Python, FastAPI, SQL"
         />
-      </Label>
+      </div>
     </>
   );
 };

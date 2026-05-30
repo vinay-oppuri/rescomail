@@ -1,17 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { EditPreferenceAction } from "../../server/actions";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
-import { Check, Loader2, Key } from "lucide-react";
+import { Check, Loader2, Key, Eye, EyeOff, Trash2 } from "lucide-react";
+import { ConfirmDialog } from "@repo/ui/components/confirm-dialog";
 
-export function ApiKeys() {
+export function ApiKeys({ geminiApiKey }: { geminiApiKey?: string | null }) {
+  const router = useRouter();
   const [apiKey, setApiKey] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showKey, setShowKey] = useState(false);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -27,6 +31,7 @@ export function ApiKeys() {
       }
 
       setSaved(true);
+      router.refresh();
       setTimeout(() => setSaved(false), 2500);
     } catch (error) {
       if (error instanceof Error) {
@@ -39,16 +44,29 @@ export function ApiKeys() {
     }
   };
 
+  const handleDelete = async () => {
+    const result = await EditPreferenceAction({ geminiApiKey: null });
+    if (result?.error) {
+      throw new Error(result.error);
+    }
+    setApiKey("");
+    router.refresh();
+  };
+
   return (
-    <section className="rounded-none border border-foreground/5 bg-card/20">
-      <div className="border-b border-foreground/10 px-5 py-3.5">
-        <h2 className="text-sm font-semibold">Custom API Keys</h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">
-          Provide your own Gemini API key to unlock unlimited AI credits.
-        </p>
+    <section className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm overflow-hidden">
+      <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
+        <div>
+          <h2 className="text-sm font-semibold tracking-tight text-foreground">
+            Custom API Keys
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Provide your own Gemini API key to unlock unlimited AI credits.
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-5 p-5 sm:grid-cols-1">
+      <div className="flex flex-col gap-6 p-3 sm:p-6">
         <div className="space-y-2">
           <Label htmlFor="gemini-api-key">Gemini API Key</Label>
           <div className="relative">
@@ -56,7 +74,7 @@ export function ApiKeys() {
             <Input
               id="gemini-api-key"
               type="password"
-              className="h-9 pl-8 border border-foreground/10"
+              className="h-9 pl-8 rounded-none bg-muted/20! border-foreground/5!"
               placeholder="AIza..."
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
@@ -73,16 +91,51 @@ export function ApiKeys() {
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-2 border-t border-foreground/5 px-5 py-3.5">
-        <Button size="sm" onClick={handleSave} disabled={isSaving || !apiKey}>
+      <div className="flex items-center justify-end gap-3 px-3 md:px-5 py-3 md:py-4">
+        <Button size="sm" className="rounded-none h-9" onClick={handleSave} disabled={isSaving || !apiKey}>
           {isSaving ? (
-            <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : saved ? (
-            <Check className="mr-2 h-3.5 w-3.5 text-green-400" />
+            <Check className="mr-2 h-4 w-4 text-green-400" />
           ) : null}
           {saved ? "Saved!" : "Save API Key"}
         </Button>
       </div>
+
+      {geminiApiKey && (
+        <div className="border-t border-foreground/5 p-3 sm:p-6 space-y-4">
+          <h3 className="text-xs font-medium">Saved API Keys</h3>
+          <div className="flex items-center justify-between border border-foreground/10 bg-background px-3 py-1 gap-4">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <Key className="h-4 w-4 text-muted-foreground shrink-0" />
+              <div className="font-mono text-xs break-all">
+                {showKey ? geminiApiKey : `${geminiApiKey.substring(0, 4)}${"•".repeat(16)}`}
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => setShowKey(!showKey)}
+              >
+                {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </Button>
+              <ConfirmDialog
+                title="Remove API Key"
+                description="Are you sure you want to remove your saved Gemini API key? You will lose access to unlimited AI features."
+                confirmText="Remove Key"
+                onConfirm={handleDelete}
+                trigger={
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                }
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
