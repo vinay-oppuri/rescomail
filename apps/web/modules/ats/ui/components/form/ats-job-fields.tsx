@@ -56,7 +56,7 @@ const AtsJobFields = () => {
         <Textarea
           value={jobDescription}
           onChange={(event) => setJobDescription(event.target.value)}
-          className={`min-h-64 ${fieldClassName}`}
+          className={`min-h-32 max-h-32 md:min-h-64 md:max-h-64 ${fieldClassName}`}
           placeholder="Paste the role description here..."
         />
       </Label>
@@ -70,7 +70,7 @@ const AtsJobFields = () => {
         <Textarea
           value={keywordText}
           onChange={(event) => setKeywordText(event.target.value)}
-          className={`min-h-20 ${fieldClassName}`}
+          className={`min-h-12 max-h-12 md:min-h-20 md:max-h-20 ${fieldClassName}`}
           placeholder="Python, FastAPI, SQL"
         />
       </Label>

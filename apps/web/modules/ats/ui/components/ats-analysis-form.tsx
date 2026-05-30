@@ -21,7 +21,7 @@ const AtsAnalysisForm = () => {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col border-0 bg-muted/10 shadow-xl ring-1 ring-border/50 backdrop-blur-2xl transition-all duration-500">
-      <div className="flex items-start justify-between gap-3 border-b border-border/40 bg-card/20 px-4 py-3">
+      <div className="flex items-start justify-between gap-3 border-b border-border/40 bg-card/20 px-3 md:px-4 py-3">
         <div>
           <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground">
             <Zap className="h-4 w-4 text-primary" />
@@ -36,10 +36,10 @@ const AtsAnalysisForm = () => {
         </Badge>
       </div>
 
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4 p-3 md:p-6">
         <AtsResumePicker />
         
-        <div className="h-px w-full bg-border/40 m-4 mx-auto" />
+        <div className="h-px w-full bg-border/40 m-2.5 md:m-4 mx-auto" />
 
         <AtsJobFields />
 
@@ -53,7 +53,7 @@ const AtsAnalysisForm = () => {
         <Button 
           type="submit" 
           disabled={!canAnalyze || isAnalyzing}
-          className="group relative mt-2 h-12 w-full overflow-hidden rounded-none bg-primary text-primary-foreground shadow-md transition-all hover:shadow-lg disabled:opacity-50"
+          className="group relative mt-2 h-11 w-full overflow-hidden rounded-none bg-primary text-primary-foreground shadow-md transition-all hover:shadow-lg disabled:opacity-50"
         >
           <div className="absolute inset-0 flex h-full w-full justify-center transform-[skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:transform-[skew(-12deg)_translateX(100%)]">
             <div className="relative h-full w-8 bg-white/20" />

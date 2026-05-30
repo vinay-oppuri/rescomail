@@ -104,7 +104,7 @@ const ColdmailComposer = () => {
       onSubmit={onSubmit}
       className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm overflow-hidden"
     >
-      <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-5 py-4">
+      <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
         <div>
           <h2 className="text-sm font-semibold tracking-tight text-foreground">
             Email Composer
@@ -122,7 +122,7 @@ const ColdmailComposer = () => {
         </Badge>
       </div>
 
-      <div className="flex flex-col gap-6 p-5 sm:p-6">
+      <div className="flex flex-col gap-6 p-3 sm:p-6">
         {/* Section 1: Setup */}
         <div className="space-y-4">
           <h3 className="flex items-center gap-2 text-xs font-semibold text-foreground uppercase tracking-widest">
@@ -305,7 +305,7 @@ const ColdmailComposer = () => {
                 value={jobDescription}
                 onChange={(event) => setJobDescription(event.target.value)}
                 placeholder="Paste the target role or recruiter post"
-                className="min-h-48 max-h-48 resize-y rounded-none bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin"
+                className="h-24 md:h-48 resize-y rounded-none bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin"
               />
               <p className="text-xs text-muted-foreground">
                 Add at least 20 characters so the AI has enough role context.
@@ -354,7 +354,7 @@ const ColdmailComposer = () => {
                 value={personalNote}
                 onChange={(event) => setPersonalNote(event.target.value)}
                 placeholder="Add any specific angle, personal connection, or context to include in the draft..."
-                className="min-h-24 resize-y rounded-none bg-muted/20! border-foreground/5!"
+                className="h-16 md:h-24 resize-y rounded-none bg-muted/20! border-foreground/5!"
               />
             </div>
           </div>
@@ -370,7 +370,7 @@ const ColdmailComposer = () => {
         <Button
           type="submit"
           disabled={!canGenerate || isGenerating}
-          className="mt-4 h-12 w-full rounded-none bg-linear-to-r from-primary to-primary/80 text-primary-foreground shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none font-semibold text-sm"
+          className="mt-4 h-11 w-full font-semibold text-xs md:text-sm"
         >
           {isGenerating ? (
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
