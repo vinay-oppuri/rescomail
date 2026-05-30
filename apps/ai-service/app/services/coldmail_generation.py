@@ -49,7 +49,7 @@ def generate_cold_email_draft(
     structured_resume: StructuredResume | None = None,
 ) -> ColdEmailResponse:
     generated = generate_gemini_json(
-        build_cold_email_prompt(request, resume_text),
+        build_cold_email_prompt(request, resume_text, company_context=company_context),
         GEMINI_COLD_EMAIL_SCHEMA,
         temperature=0.35,
         api_key=request.geminiApiKey,

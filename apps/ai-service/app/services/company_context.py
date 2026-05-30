@@ -3,96 +3,163 @@ import re
 import logging
 import requests
 
+from app.embeddings.semantic import semantic_search_scores
+
 logger = logging.getLogger("rescomail.ai-service.company_context")
 
-TAVILY_EXTRACT_ENDPOINT = "https://api.tavily.com/extract"
+TAVILY_SEARCH_ENDPOINT = "https://api.tavily.com/search"
 TAVILY_TIMEOUT_MS = 20_000
 MAX_COMPANY_CONTEXT_LENGTH = 2000
 
 
-def get_company_context_from_website(
-    company_website_url: str, company_name: str, job_title: str
+def get_rag_company_context(
+    company_name: str,
+    job_title: str,
+    job_description: str = "",
+    company_website_url: str = "",
 ) -> str:
     api_key = os.getenv("TAVILY_API_KEY")
     if not api_key:
         logger.warning(
-            "Company context scraping SKIPPED — TAVILY_API_KEY is not configured. "
+            "Company context RAG SKIPPED — TAVILY_API_KEY is not configured. "
             "Set it in your env to enable website-based context enrichment."
         )
         return ""
 
+    if not company_name and not company_website_url:
+        return ""
+
+    target_name = company_name or company_website_url
     logger.info(
-        "Scraping company context from '%s' for '%s' (%s) …",
-        company_website_url,
-        company_name or "unknown company",
+        "RAG scraping company context for '%s' (Role: %s) …",
+        target_name,
         job_title or "unknown role",
     )
 
-    query = " ".join(
-        filter(
-            bool,
-            [
-                company_name,
-                job_title,
-                "company overview products mission customers values hiring team recent launches",
-            ],
-        )
-    )
+    query = f"{target_name} recent news blog products mission {job_title}".strip()
+    
+    payload = {
+        "query": query,
+        "search_depth": "advanced",
+        "include_answer": False,
+        "include_images": False,
+        "include_raw_content": True,
+        "max_results": 5,
+    }
+    if company_website_url:
+        from urllib.parse import urlparse
+        parsed = urlparse(company_website_url)
+        domain = parsed.hostname or company_website_url
+        if domain.startswith("www."):
+            domain = domain[4:]
+        payload["include_domains"] = [domain]
 
+    data = {}
     try:
         response = requests.post(
-            TAVILY_EXTRACT_ENDPOINT,
+            TAVILY_SEARCH_ENDPOINT,
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
             },
-            json={
-                "urls": company_website_url,
-                "query": query,
-                "chunks_per_source": 5,
-                "extract_depth": "basic",
-                "format": "text",
-                "include_images": False,
-                "include_favicon": False,
-                "timeout": 12,
-                "include_usage": True,
-            },
+            json=payload,
             timeout=TAVILY_TIMEOUT_MS / 1000.0,
         )
         response.raise_for_status()
         data = response.json()
     except Exception as exc:
-        logger.error(
-            "Company context scraping FAILED for '%s': %s",
-            company_website_url,
-            exc,
-        )
-        return ""
+        logger.error("Company context search FAILED for '%s': %s", target_name, exc)
 
-    raw_content = ""
+    # Aggregate text
+    raw_text_blocks = []
     for result in data.get("results", []):
-        if isinstance(result.get("raw_content"), str):
-            raw_content += result["raw_content"] + "\n\n"
+        content = result.get("raw_content") or result.get("content")
+        if isinstance(content, str) and content.strip():
+            raw_text_blocks.append(content.strip())
+            
+    # Fallback to Extract API if search returned nothing but we have a URL
+    if not raw_text_blocks and company_website_url:
+        logger.info("Search returned nothing. Falling back to extract for %s", company_website_url)
+        try:
+            extract_response = requests.post(
+                "https://api.tavily.com/extract",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                json={"urls": company_website_url},
+                timeout=TAVILY_TIMEOUT_MS / 1000.0,
+            )
+            extract_response.raise_for_status()
+            extract_data = extract_response.json()
+            for res in extract_data.get("results", []):
+                content = res.get("raw_content")
+                if isinstance(content, str) and content.strip():
+                    raw_text_blocks.append(content.strip())
+        except Exception as exc:
+            logger.error("Fallback extract FAILED for '%s': %s", company_website_url, exc)
 
-    normalized = _normalize_extracted_text(raw_content)
-    if not normalized:
-        logger.warning(
-            "Company context scraping returned no usable text for '%s'.",
-            company_website_url,
-        )
+
+    
+    if not raw_text_blocks:
+        logger.warning("No usable text returned from Tavily Search for '%s'.", target_name)
+        return ""
+    
+    full_text = "\n\n".join(raw_text_blocks)
+    normalized_text = _normalize_extracted_text(full_text)
+    
+    chunks = _chunk_text(normalized_text, chunk_size=500)
+    
+    if not chunks:
         return ""
 
-    context = (
-        f"Company website: {company_website_url}\n"
-        f"Extracted company context: {normalized}"
-    )
+    # Perform RAG retrieval
+    rag_query = f"{job_title} {job_description}".strip()
+    if not rag_query:
+        rag_query = f"{company_name} news and context"
+        
+    scores = semantic_search_scores(rag_query, chunks)
+    
+    ranked = list(zip(chunks, scores))
+    ranked.sort(key=lambda item: -item[1])
+    
+    # Take top 3 chunks
+    top_chunks = [chunk for chunk, score in ranked[:3]]
+    
+    context = "\n\n".join(top_chunks)
     result_text = _clamp_text(context, MAX_COMPANY_CONTEXT_LENGTH)
+    
+    prefix = ""
+    if company_website_url:
+        prefix = f"Company website: {company_website_url}\n"
+    elif company_name:
+        prefix = f"Company: {company_name}\n"
+        
+    final_result = f"{prefix}Extracted company context:\n{result_text}"
+
     logger.info(
-        "Company context scraped successfully from '%s' — %d chars extracted.",
-        company_website_url,
-        len(result_text),
+        "Company context RAG completed successfully for '%s' — extracted top chunks.",
+        target_name,
     )
-    return result_text
+    return final_result
+
+
+def _chunk_text(text: str, chunk_size: int = 500) -> list[str]:
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
+    chunks = []
+    current_chunk = ""
+    
+    for line in lines:
+        if len(current_chunk) + len(line) > chunk_size and current_chunk:
+            chunks.append(current_chunk.strip())
+            current_chunk = line + " "
+        else:
+            current_chunk += line + " "
+            
+    if current_chunk.strip():
+        chunks.append(current_chunk.strip())
+        
+    return chunks
 
 
 def _normalize_extracted_text(value: str) -> str:
@@ -107,3 +174,8 @@ def _clamp_text(value: str, max_length: int) -> str:
         return value
     return f"{value[:max_length - 3].strip()}..."
 
+
+def get_company_context_from_website(
+    company_website_url: str, company_name: str, job_title: str
+) -> str:
+    return get_rag_company_context(company_name, job_title, "", company_website_url)

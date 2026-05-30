@@ -18,6 +18,7 @@ CTA_GUIDANCE = {
 def build_cold_email_prompt(
     request: ColdEmailGenerateRequest,
     resume_text: str,
+    company_context: str = "",
 ) -> str:
     role = request.jobTitle or "the target role"
     company = request.companyName or "the company"
@@ -30,7 +31,8 @@ email from a candidate to a recruiter, hiring manager, founder, or team lead.
 
 Product rules:
 - Write in first person as the candidate.
-- Use only evidence from the resume, job description, and provided context.
+- Use ONLY evidence from the resume, job description, and provided company context.
+- NEVER invent the company's core business or product. If the context says it's a pet services company, do not assume it's a standard SaaS or e-commerce platform. Ground your hooks entirely in the provided company context.
 - Do not invent employers, metrics, achievements, referrals, or personal ties.
 - Avoid generic openers like "I hope this email finds you well".
 - Keep the email specific, respectful, and easy to skim.
@@ -56,7 +58,7 @@ Company: {company}
 Company website: {request.companyWebsiteUrl or "Unknown"}
 Recipient name: {request.recipientName or "Unknown"}
 Recipient role: {request.recipientRole or "Unknown"}
-Company context from website: {request.companyContext or "None provided"}
+Company context from website: {company_context or request.companyContext or "None provided"}
 Candidate note: {request.personalNote or "None provided"}
 
 Job description:

@@ -5,6 +5,7 @@ import { Badge } from "@repo/ui/components/badge";
 import {
   BrainCircuit,
   Plus,
+  Trash2,
 } from "lucide-react";
 
 import {
@@ -14,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/select";
+import { ConfirmDialog } from "@repo/ui/components/confirm-dialog";
 import { Button, Label } from "@repo/ui";
 
 import type { AtsAnalysisHistoryItem } from "../../server/ats-history";
@@ -132,11 +134,38 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
                 <Button
                   type="button"
                   size="icon"
+                  variant="outline"
                   onClick={() => setShowForm(true)}
                   title="New Analysis"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
+
+                {analysis?.analysisId && (
+                  <ConfirmDialog
+                    title="Delete Analysis"
+                    description="Are you sure you want to delete this analysis? This action cannot be undone."
+                    confirmText="Delete"
+                    onConfirm={async () => {
+                      const { deleteAtsAnalysisAction } = await import("../../server/actions");
+                      const res = await deleteAtsAnalysisAction(analysis.analysisId!);
+                      if (res.success) {
+                        setShowForm(true);
+                      } else {
+                        throw new Error(res.error || "Failed to delete.");
+                      }
+                    }}
+                    trigger={
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        title="Delete Analysis"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    }
+                  />
+                )}
               </div>
             </div>
 

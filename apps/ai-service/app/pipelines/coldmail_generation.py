@@ -10,14 +10,17 @@ def generate_coldmail(request: ColdEmailGenerateRequest) -> ColdEmailResponse:
     resume_text = _resolve_resume_text(request)
     structured_resume = request.structuredResume
 
-    # Resolve company context without mutating the inbound request object.
+    # Resolve company context using RAG retrieval without mutating the inbound request object.
     company_context = request.companyContext or ""
-    if not company_context and request.companyWebsiteUrl:
-        from app.services.company_context import get_company_context_from_website
-        company_context = get_company_context_from_website(
-            request.companyWebsiteUrl,
-            request.companyName,
-            request.jobTitle,
+    if not company_context and (request.companyName or request.companyWebsiteUrl):
+        from app.services.company_context import get_rag_company_context
+        
+        job_description = request.jobDescription or request.jobTitle or ""
+        company_context = get_rag_company_context(
+            company_name=request.companyName,
+            job_title=request.jobTitle,
+            job_description=job_description,
+            company_website_url=request.companyWebsiteUrl,
         )
 
     return generate_cold_email_draft(

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Badge } from "@repo/ui/components/badge";
-import { Plus, Sparkles } from "lucide-react";
+import { Plus, Sparkles, Trash2 } from "lucide-react";
 
 import {
   Select,
@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/select";
+import { ConfirmDialog } from "@repo/ui/components/confirm-dialog";
 
 import type { ColdEmailHistoryItem } from "../../server/coldmail-history";
 import type { ColdmailResumeOption } from "../../server/coldmail-resumes";
@@ -128,6 +129,32 @@ const ColdmailView = ({ emails, resumes }: ColdmailViewProps) => {
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
+
+                {draft?.coldEmailId && (
+                  <ConfirmDialog
+                    title="Delete Draft"
+                    description="Are you sure you want to delete this draft? This action cannot be undone."
+                    confirmText="Delete"
+                    onConfirm={async () => {
+                      const { deleteColdmailAction } = await import("../../server/actions");
+                      const res = await deleteColdmailAction(draft.coldEmailId!);
+                      if (res.success) {
+                        setShowComposer(true);
+                      } else {
+                        throw new Error(res.error || "Failed to delete.");
+                      }
+                    }}
+                    trigger={
+                      <Button
+                        variant="destructive"
+                        className="inline-flex h-8 w-8 items-center"
+                        title="Delete Draft"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    }
+                  />
+                )}
               </div>
             </div>
 
