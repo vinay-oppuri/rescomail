@@ -239,7 +239,7 @@ export const useColdmailStore = create<ColdmailStore>((set, get) => ({
     if (!canGenerate) {
       set({
         error:
-          "Choose a parsed resume, add the company website, and add a job description.",
+          "Choose a parsed resume, add the company website, and add a job description with at least 20 characters.",
       });
       return false;
     }

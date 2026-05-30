@@ -8,6 +8,11 @@ const optionalNonEmptyString = z.preprocess(
   z.string().trim().min(1).optional(),
 );
 
+const optionalUrl = z.preprocess(
+  emptyStringToUndefined,
+  z.string().trim().url().optional(),
+);
+
 const requiredSecret = z
   .string()
   .trim()
@@ -31,6 +36,7 @@ const serverEnvSchema = z
     RESEND_FROM_EMAIL: optionalNonEmptyString,
     UPLOADTHING_TOKEN: optionalNonEmptyString,
     AI_SERVICE_URL: z.string().url().default("http://localhost:8000"),
+    AI_SERVICE_GRPC_URL: optionalUrl,
     TAVILY_API_KEY: optionalNonEmptyString,
     AI_SERVICE_API_KEY: optionalNonEmptyString,
   })
@@ -60,6 +66,7 @@ export const serverEnv = serverEnvSchema.parse({
   RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL,
   UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
   AI_SERVICE_URL: process.env.AI_SERVICE_URL,
+  AI_SERVICE_GRPC_URL: process.env.AI_SERVICE_GRPC_URL,
   TAVILY_API_KEY: process.env.TAVILY_API_KEY,
   AI_SERVICE_API_KEY: process.env.AI_SERVICE_API_KEY,
 });

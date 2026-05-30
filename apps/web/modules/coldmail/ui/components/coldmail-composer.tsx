@@ -87,11 +87,12 @@ const ColdmailComposer = () => {
   const selectedResume = resumes.find((r) => r.id === resumeId);
   const parsedCount = resumes.filter((r) => r.status === "parsed").length;
   const hasParsedResume = selectedResume?.status === "parsed";
+  const jobDescriptionLength = jobDescription.trim().length;
   const canGenerate = Boolean(
     resumeId &&
     hasParsedResume &&
     companyWebsiteUrl.trim() &&
-    jobDescription.trim().length >= 20,
+    jobDescriptionLength >= 20,
   );
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -304,8 +305,14 @@ const ColdmailComposer = () => {
                 value={jobDescription}
                 onChange={(event) => setJobDescription(event.target.value)}
                 placeholder="Paste the target role or recruiter post"
-                className="min-h-48 resize-y rounded-none bg-muted/20! border-foreground/5! leading-relaxed"
+                className="min-h-48 max-h-48 resize-y rounded-none bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin"
               />
+              <p className="text-xs text-muted-foreground">
+                Add at least 20 characters so the AI has enough role context.
+                {jobDescriptionLength > 0
+                  ? ` Current: ${jobDescriptionLength}.`
+                  : ""}
+              </p>
             </div>
 
             <div className="space-y-2">

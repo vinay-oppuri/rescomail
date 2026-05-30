@@ -16,6 +16,55 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+const siteUrl = (
+  process.env.NEXT_PUBLIC_APP_URL || "https://rescomail.vinayweb.in"
+).replace(/\/$/, "");
+
+const productDescription =
+  "Rescomail helps job seekers optimize resumes for ATS, generate personalized cold emails, and track job applications from one AI-powered workspace.";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "Rescomail",
+      url: siteUrl,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      name: "Rescomail",
+      url: siteUrl,
+      description: productDescription,
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${siteUrl}/#software`,
+      name: "Rescomail",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      url: siteUrl,
+      description: productDescription,
+      featureList: [
+        "ATS resume optimization",
+        "AI cold email generation",
+        "Application tracking",
+        "Resume parsing",
+      ],
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+      },
+    },
+  ],
+};
+
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
@@ -26,46 +75,62 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || 
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
-  ),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Rescomail | AI Job Search Copilot",
+    default: "Rescomail | AI Resume Optimizer & Cold Email Generator",
     template: "%s | Rescomail",
   },
-  description: "Land your dream job with AI-powered resume optimization, ATS analysis, and perfectly tailored cold emails.",
+  applicationName: "Rescomail",
+  appleWebApp: {
+    title: "Rescomail",
+    capable: true,
+    statusBarStyle: "default",
+  },
+  description: productDescription,
   keywords: [
-    "resume builder",
+    "AI resume optimizer",
     "ATS optimization",
-    "cold emails",
-    "job search",
+    "ATS resume checker",
+    "cold email generator",
+    "job application tracker",
+    "AI job search copilot",
     "AI career coach",
     "resume parser",
   ],
   authors: [{ name: "Rescomail Team" }],
   creator: "Rescomail",
+  publisher: "Rescomail",
+  category: "technology",
+  manifest: "/manifest.webmanifest",
+  alternates: {
+    canonical: "/",
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "/",
-    title: "Rescomail | AI Job Search Copilot",
-    description: "Optimize your resume for ATS, generate personalized cold emails, and track applications—all in one place.",
+    title: "Rescomail | AI Resume Optimizer & Cold Email Generator",
+    description: productDescription,
     siteName: "Rescomail",
     images: [
       {
-        url: "/og-image.jpg", // Ensure this exists in public/
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Rescomail Dashboard Preview",
+        alt: "Rescomail AI job search workspace",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rescomail | AI Job Search Copilot",
-    description: "Optimize your resume for ATS, generate personalized cold emails, and track applications.",
-    images: ["/og-image.jpg"],
+    title: "Rescomail | AI Resume Optimizer & Cold Email Generator",
+    description: productDescription,
+    images: ["/opengraph-image"],
     creator: "@rescomail",
   },
   robots: {
@@ -93,10 +158,16 @@ export default function RootLayout({
       className={cn(
         "h-full antialiased",
         geistSans.variable,
-        jetbrainsMono.variable
+        jetbrainsMono.variable,
       )}
     >
       <body className="min-h-full flex flex-col text-sm md:text-base">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData),
+          }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -112,4 +183,3 @@ export default function RootLayout({
     </html>
   );
 }
-

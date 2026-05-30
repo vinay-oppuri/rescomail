@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { SidebarInset, SidebarProvider } from "@repo/ui/components/sidebar";
 import { auth } from "@repo/auth";
 import { headers } from "next/headers";
@@ -11,6 +12,13 @@ import DashboardCredits from "@/modules/dashboard/ui/components/dashboard-credit
 interface Props {
   children: React.ReactNode;
 }
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const Layout = async ({ children }: Props) => {
   const session = await auth.api.getSession({
@@ -26,7 +34,11 @@ const Layout = async ({ children }: Props) => {
       <SidebarProvider>
         <DashboardSidebar
           creditsSlot={
-            <Suspense fallback={<div className="h-24 rounded-none bg-primary/5 animate-pulse" />}>
+            <Suspense
+              fallback={
+                <div className="h-24 rounded-none bg-primary/5 animate-pulse" />
+              }
+            >
               <DashboardCredits userId={session.user.id} />
             </Suspense>
           }
