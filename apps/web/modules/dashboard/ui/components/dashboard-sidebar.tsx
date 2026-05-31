@@ -27,6 +27,7 @@ import { Button } from "@repo/ui/components/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@repo/ui/lib/utils";
+import { ThemeToggle } from "@/modules/home/ui/components/home-navbar";
 
 const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -42,7 +43,7 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
   const { setOpenMobile, isMobile } = useSidebar();
 
   return (
-    <Sidebar className="border-r border-border/50 bg-sidebar/80 backdrop-blur-xl rounded-none">
+    <Sidebar className="font-mono border-r border-border/50 bg-sidebar/80 backdrop-blur-xl rounded-none">
       <SidebarHeader className="h-16 border-b border-border/50 px-6 flex flex-row items-center gap-3">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="flex h-9 w-9 items-center justify-center rounded-none bg-foreground text-background font-bold shadow-md transition-all group-hover:scale-105">
@@ -116,8 +117,22 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-6 space-y-4">
-        {creditsSlot}
+      <SidebarFooter className="p-4 gap-4">
+        <div>{creditsSlot}</div>
+        <div className="rounded-none border border-border/50 bg-muted/30 p-2 shadow-sm transition-colors hover:bg-muted/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 px-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-background/40 shadow-sm border border-border/50">
+                <Settings className="h-4 w-4 text-foreground" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-semibold text-foreground">Theme</span>
+                <span className="text-[10px] text-muted-foreground">Appearance</span>
+              </div>
+            </div>
+            <ThemeToggle />
+          </div>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

@@ -5,6 +5,7 @@ import { LogIn, Menu, Moon, Sun, X } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useState } from "react";
+import AuthDialog from "@/modules/auth/ui/auth-dialog";
 
 const HomeNavbar = () => {
   const navLinks = [
@@ -44,11 +45,7 @@ const HomeNavbar = () => {
 
         {/* Desktop actions */}
         <div className="hidden md:flex items-center gap-3">
-          <Button asChild className="gap-2 px-3 text-sm bg-foreground! text-background!">
-            <Link href="/login">
-              <LogIn className="h-4 w-4" /> Login
-            </Link>
-          </Button>
+          <AuthDialog />
           <ThemeToggle />
         </div>
 
@@ -84,11 +81,9 @@ const HomeNavbar = () => {
               {link.name}
             </Link>
           ))}
-          <Button asChild className="gap-2 mt-2 w-full text-sm">
-            <Link href="/login" onClick={() => setMobileOpen(false)}>
-              <LogIn className="h-4 w-4" /> Login
-            </Link>
-          </Button>
+          <div className="mt-2 flex w-full [&_button]:w-full">
+            <AuthDialog />
+          </div>
         </div>
       )}
     </nav>
@@ -114,3 +109,4 @@ const ThemeToggle = ({ iconClassName }: { iconClassName?: string }) => {
     </Button>
   );
 };
+export { ThemeToggle };

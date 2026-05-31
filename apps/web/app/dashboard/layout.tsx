@@ -4,10 +4,13 @@ import { SidebarInset, SidebarProvider } from "@repo/ui/components/sidebar";
 import { auth } from "@repo/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { db, userPreferences } from "@repo/db";
+import { eq } from "drizzle-orm";
 
 import DashboardNavbar from "@/modules/dashboard/ui/components/dashboard-navbar";
 import DashboardSidebar from "@/modules/dashboard/ui/components/dashboard-sidebar";
 import DashboardCredits from "@/modules/dashboard/ui/components/dashboard-credits";
+import ApiKeyPromptDialog from "@/modules/dashboard/ui/components/api-key-dialog";
 
 interface Props {
   children: React.ReactNode;
@@ -29,8 +32,15 @@ const Layout = async ({ children }: Props) => {
     redirect("/login");
   }
 
+  const existingPrefs = await db.query.userPreferences.findFirst({
+    where: eq(userPreferences.userId, session.user.id),
+  });
+  
+  const hasApiKey = !!existingPrefs?.geminiApiKey;
+
   return (
     <div className="min-h-screen w-full bg-background font-sans antialiased">
+      <ApiKeyPromptDialog hasApiKey={hasApiKey} />
       <SidebarProvider>
         <DashboardSidebar
           creditsSlot={
