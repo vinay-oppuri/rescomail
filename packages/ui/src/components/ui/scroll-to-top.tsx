@@ -38,7 +38,7 @@ export const ScrollToTop = () => {
                 onClick={scrollToTop}
                 size="icon"
                 className="
-                    rounded-none w-12 h-12
+                    w-12 h-12
                     bg-foreground/90! 
                     text-background! 
                     hover:bg-foreground!

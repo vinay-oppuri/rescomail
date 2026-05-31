@@ -37,7 +37,7 @@ const ColdmailResult = () => {
           <div className="flex items-center gap-3">
             <Badge
               variant="outline"
-              className="bg-card/60 shadow-sm rounded-none text-xs font-medium px-2.5 py-0.5"
+              className="bg-card/60 shadow-sm text-xs font-medium px-2.5 py-0.5 rounded-md"
             >
               <Sparkles className="mr-1.5 h-3 w-3 text-primary" />
               {draft.estimatedReadTimeSeconds}s estimated read time
@@ -66,7 +66,7 @@ const ColdmailResult = () => {
 
       <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_280px]">
         <div className="min-w-0 p-6 flex flex-col gap-6">
-          <div className="rounded-none border bg-card/10 shadow-sm overflow-hidden">
+          <div className="border bg-card/10 shadow-sm overflow-hidden rounded-xl">
             <div className="flex items-center justify-between border-b bg-foreground px-4 py-3">
               <div className="flex items-center gap-2 text-xs font-semibold text-background uppercase tracking-widest">
                 <Send className="h-4 w-4" />
@@ -91,7 +91,7 @@ const ColdmailResult = () => {
             </div>
           </div>
 
-          <div className="rounded-none border bg-card/10 shadow-sm overflow-hidden">
+          <div className="border bg-card/10 shadow-sm overflow-hidden rounded-xl">
             <div className="flex items-center justify-between border-b bg-foreground px-4 py-3">
               <div className="flex items-center gap-2 text-xs font-semibold text-background uppercase tracking-widest">
                 <MessageSquareReply className="h-4 w-4" />
@@ -133,9 +133,9 @@ const ColdmailResult = () => {
             {draft.personalizationNotes.map((note, idx) => (
               <div
                 key={idx}
-                className="relative rounded-none border bg-background p-4 shadow-sm transition-all hover:shadow-md"
+                className="relative border bg-background p-4 shadow-sm transition-all hover:shadow-md rounded-md"
               >
-                <div className="absolute -left-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-none bg-primary text-[9px] font-bold text-primary-foreground shadow-sm">
+                <div className="absolute -left-1.5 -top-1.5 flex h-4 w-4 items-center justify-center bg-primary text-[9px] font-bold text-primary-foreground shadow-sm">
                   {idx + 1}
                 </div>
                 <p className="text-xs leading-relaxed text-foreground/80">
@@ -161,7 +161,7 @@ const CopyButton = ({ copied, children, onClick }: CopyButtonProps) => (
     type="button"
     size="sm"
     onClick={onClick}
-    className="h-8 rounded-none"
+    className="h-8 "
   >
     {copied ? (
       <Check className="mr-1.5 h-3.5 w-3.5 text-green-500" />

@@ -58,7 +58,7 @@ const DashboardUserProfile = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-64 rounded-none border-foreground/5 shadow-xl bg-card/80 backdrop-blur-md p-2">
+      <DropdownMenuContent align="end" className="w-64 border-foreground/5 shadow-xl bg-card/80 backdrop-blur-md p-2">
         <div className="flex items-center justify-start gap-3 p-2">
           <Avatar className="h-10 w-10 border border-primary/20 bg-primary/10">
             <AvatarImage
@@ -78,7 +78,7 @@ const DashboardUserProfile = () => {
         </div>
 
         <div className="px-1 py-1">
-          <div className="flex items-center justify-between rounded-none bg-secondary/50 px-3 py-2 text-sm font-medium border border-border/50">
+          <div className="flex items-center justify-between bg-secondary/50 px-3 py-2 text-sm font-medium border border-border/50">
             <div className="flex items-center gap-2 text-foreground">
               <Sparkles className="h-4 w-4" />
               <span>Pro Plan</span>
@@ -89,22 +89,22 @@ const DashboardUserProfile = () => {
 
         <div className="px-1 py-1 space-y-0.5">
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => router.push("/dashboard/settings")} className="cursor-pointer gap-3 py-2.5 rounded-none">
+            <DropdownMenuItem onClick={() => router.push("/dashboard/settings")} className="cursor-pointer gap-3 py-2.5 ">
               <User className="h-4 w-4 text-muted-foreground" />
               <span className="text-xs font-medium">Profile</span>
             </DropdownMenuItem>
             
-            <DropdownMenuItem onClick={() => router.push("/dashboard")} className="cursor-pointer gap-3 py-2.5 rounded-none">
+            <DropdownMenuItem onClick={() => router.push("/dashboard")} className="cursor-pointer gap-3 py-2.5 ">
               <Monitor className="h-4 w-4 text-muted-foreground" />
               <span className="text-xs font-medium">Dashboard</span>
             </DropdownMenuItem>
             
-            <DropdownMenuItem onClick={() => router.push("/dashboard/billing")} className="cursor-pointer gap-3 py-2.5 rounded-none">
+            <DropdownMenuItem onClick={() => router.push("/dashboard/billing")} className="cursor-pointer gap-3 py-2.5 ">
               <CreditCard className="h-4 w-4 text-muted-foreground" />
               <span className="text-xs font-medium">Billing & Plans</span>
             </DropdownMenuItem>
             
-            <DropdownMenuItem onClick={() => router.push("/dashboard/settings")} className="cursor-pointer gap-3 py-2.5 rounded-none">
+            <DropdownMenuItem onClick={() => router.push("/dashboard/settings")} className="cursor-pointer gap-3 py-2.5 ">
               <Settings className="h-4 w-4 text-muted-foreground" />
               <span className="text-xs font-medium">Settings</span>
             </DropdownMenuItem>
@@ -114,7 +114,7 @@ const DashboardUserProfile = () => {
         <DropdownMenuSeparator className="bg-border/50 mx-1" />
         
         <div className="px-1 py-1">
-          <DropdownMenuItem onClick={onSignOut} className="cursor-pointer gap-3 py-2.5 rounded-none text-destructive focus:bg-destructive/10 focus:text-destructive">
+          <DropdownMenuItem onClick={onSignOut} className="cursor-pointer gap-3 py-2.5 text-destructive focus:bg-destructive/10 focus:text-destructive">
             <LogOut className="h-4 w-4" /> 
             <span className="text-xs font-medium">Log out</span>
           </DropdownMenuItem>

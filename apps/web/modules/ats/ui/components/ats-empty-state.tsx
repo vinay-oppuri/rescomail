@@ -9,7 +9,7 @@ const AtsEmptyState = ({ hasResumes }: AtsEmptyStateProps) => {
 
   return (
     <div className="flex min-h-[640px] flex-col items-center justify-center gap-5 px-6 text-center">
-      <div className="flex h-12 w-12 items-center justify-center border bg-muted/40">
+      <div className="flex h-12 w-12 items-center justify-center border bg-muted/40 rounded-md">
         <Icon className="h-5 w-5 text-muted-foreground" />
       </div>
       <div className="space-y-1">
@@ -28,7 +28,7 @@ const AtsEmptyState = ({ hasResumes }: AtsEmptyStateProps) => {
           { icon: BrainCircuit, label: "Model fit" },
           { icon: ListChecks, label: "Rewrite plan" },
         ].map((item) => (
-          <div key={item.label} className="border bg-muted/20 p-3">
+          <div key={item.label} className="border bg-muted/20 p-3 rounded-md">
             <item.icon className="h-4 w-4 text-muted-foreground" />
             <p className="mt-3 text-xs font-medium">{item.label}</p>
           </div>

@@ -43,7 +43,7 @@ export default function NotFound() {
           <Button
             variant="default"
             size="lg"
-            className="h-12 gap-2 rounded-none text-base"
+            className="h-12 gap-2 text-base"
             onClick={() => router.back()}
           >
             <ArrowLeft className="h-4 w-4" />
@@ -52,7 +52,7 @@ export default function NotFound() {
           <Button
             variant="outline"
             size="lg"
-            className="h-12 gap-2 rounded-none text-base"
+            className="h-12 gap-2 text-base"
             asChild
           >
             <Link href="/">

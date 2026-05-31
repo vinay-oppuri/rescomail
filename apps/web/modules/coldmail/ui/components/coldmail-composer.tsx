@@ -102,7 +102,7 @@ const ColdmailComposer = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm overflow-hidden"
+      className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-xl"
     >
       <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
         <div>
@@ -115,7 +115,7 @@ const ColdmailComposer = () => {
         </div>
         <Badge
           variant="secondary"
-          className="shrink-0 gap-1.5 rounded-none shadow-sm"
+          className="shrink-0 gap-1.5 shadow-sm"
         >
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           AI Draft
@@ -135,18 +135,18 @@ const ColdmailComposer = () => {
               <Select value={resumeId} onValueChange={setResumeId}>
                 <SelectTrigger
                   id="resume"
-                  className="w-full rounded-none bg-muted/20! border-foreground/5!"
+                  className="w-full bg-muted/20! border-foreground/5! rounded-md"
                 >
                   <SelectValue placeholder="Select parsed resume" />
                 </SelectTrigger>
-                <SelectContent className="rounded-none">
+                <SelectContent className="">
                   <SelectGroup>
                     {resumes.map((resume) => (
                       <SelectItem
                         key={resume.id}
                         value={resume.id}
                         disabled={resume.status !== "parsed"}
-                        className="rounded-none"
+                        className=""
                       >
                         {resume.title}
                       </SelectItem>
@@ -173,17 +173,17 @@ const ColdmailComposer = () => {
                 >
                   <SelectTrigger
                     id="tone"
-                    className="w-full rounded-none bg-muted/20! border-foreground/5!"
+                    className="w-full bg-muted/20! border-foreground/5! rounded-md"
                   >
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-none">
+                  <SelectContent className="">
                     <SelectGroup>
                       {toneOptions.map((option) => (
                         <SelectItem
                           key={option.value}
                           value={option.value}
-                          className="rounded-none"
+                          className=""
                         >
                           {option.label}
                         </SelectItem>
@@ -201,17 +201,17 @@ const ColdmailComposer = () => {
                 >
                   <SelectTrigger
                     id="length"
-                    className="w-full rounded-none bg-muted/20! border-foreground/5!"
+                    className="w-full bg-muted/20! border-foreground/5! rounded-md"
                   >
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-none">
+                  <SelectContent className="">
                     <SelectGroup>
                       {lengthOptions.map((option) => (
                         <SelectItem
                           key={option.value}
                           value={option.value}
-                          className="rounded-none"
+                          className=""
                         >
                           {option.label}
                         </SelectItem>
@@ -239,7 +239,7 @@ const ColdmailComposer = () => {
                 value={jobTitle}
                 onChange={(event) => setJobTitle(event.target.value)}
                 placeholder="e.g. Product Engineer"
-                className="rounded-none bg-muted/20! border-foreground/5!"
+                className="bg-muted/20! border-foreground/5! rounded-md"
               />
             </div>
 
@@ -250,7 +250,7 @@ const ColdmailComposer = () => {
                 value={companyName}
                 onChange={(event) => setCompanyName(event.target.value)}
                 placeholder="e.g. Acme Corp"
-                className="rounded-none bg-muted/20! border-foreground/5!"
+                className="bg-muted/20! border-foreground/5! rounded-md"
               />
             </div>
 
@@ -262,7 +262,7 @@ const ColdmailComposer = () => {
                 onChange={(event) => setCompanyWebsiteUrl(event.target.value)}
                 placeholder="https://acme.com"
                 inputMode="url"
-                className="rounded-none bg-muted/20! border-foreground/5!"
+                className="bg-muted/20! border-foreground/5! rounded-md"
               />
             </div>
 
@@ -273,7 +273,7 @@ const ColdmailComposer = () => {
                 value={recipientName}
                 onChange={(event) => setRecipientName(event.target.value)}
                 placeholder="e.g. Alex Morgan"
-                className="rounded-none bg-muted/20! border-foreground/5!"
+                className="bg-muted/20! border-foreground/5! rounded-md"
               />
             </div>
 
@@ -284,7 +284,7 @@ const ColdmailComposer = () => {
                 value={recipientRole}
                 onChange={(event) => setRecipientRole(event.target.value)}
                 placeholder="e.g. Recruiting Lead"
-                className="rounded-none bg-muted/20! border-foreground/5!"
+                className="bg-muted/20! border-foreground/5! rounded-md"
               />
             </div>
           </div>
@@ -305,7 +305,7 @@ const ColdmailComposer = () => {
                 value={jobDescription}
                 onChange={(event) => setJobDescription(event.target.value)}
                 placeholder="Paste the target role or recruiter post"
-                className="h-24 md:h-48 resize-y rounded-none bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin"
+                className="h-24 md:h-48 resize-y bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin rounded-md"
               />
               <p className="text-xs text-muted-foreground">
                 Add at least 20 characters so the AI has enough role context.
@@ -325,17 +325,17 @@ const ColdmailComposer = () => {
               >
                 <SelectTrigger
                   id="cta"
-                  className="w-full rounded-none bg-muted/20! border-foreground/5!"
+                  className="w-full bg-muted/20! border-foreground/5! rounded-md"
                 >
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="rounded-none">
+                <SelectContent className="">
                   <SelectGroup>
                     {callToActionOptions.map((option) => (
                       <SelectItem
                         key={option.value}
                         value={option.value}
-                        className="rounded-none"
+                        className=""
                       >
                         {option.label}
                       </SelectItem>
@@ -354,14 +354,14 @@ const ColdmailComposer = () => {
                 value={personalNote}
                 onChange={(event) => setPersonalNote(event.target.value)}
                 placeholder="Add any specific angle, personal connection, or context to include in the draft..."
-                className="h-16 md:h-24 resize-y rounded-none bg-muted/20! border-foreground/5!"
+                className="h-16 md:h-24 resize-y bg-muted/20! border-foreground/5! rounded-md"
               />
             </div>
           </div>
         </div>
 
         {error ? (
-          <div className="mt-2 flex gap-3 rounded-none border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive shadow-sm">
+          <div className="mt-2 flex gap-3 border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive shadow-sm rounded-md">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <p className="leading-relaxed">{error}</p>
           </div>

@@ -10,8 +10,8 @@ const HomeView = () => {
       <section className="relative overflow-hidden lg:min-h-[calc(100vh-4rem)] flex items-center">
         {/* Background Gradients */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full overflow-hidden -z-10 pointer-events-none">
-          <div className="absolute top-[-40%] left-[-10%] w-[70%] h-[70%] rounded-none bg-primary/10 blur-[120px]" />
-          <div className="absolute top-[20%] right-[-20%] w-[60%] h-[60%] rounded-none bg-blue-500/10 blur-[120px]" />
+          <div className="absolute top-[-40%] left-[-10%] w-[70%] h-[70%] bg-primary/10 blur-[120px]" />
+          <div className="absolute top-[20%] right-[-20%] w-[60%] h-[60%] bg-blue-500/10 blur-[120px]" />
         </div>
 
         <div className="mx-auto max-w-7xl px-6 lg:px-8 w-full">
@@ -19,7 +19,7 @@ const HomeView = () => {
             
             {/* Left Column: Title & Description */}
             <div className="max-w-2xl min-h-[calc(100vh-4rem)] lg:min-h-0 flex flex-col justify-center pb-12 lg:py-0">
-              <div className="mb-6 w-fit inline-flex items-center gap-2 rounded-none border border-foreground/5 bg-primary/5 px-3 py-1 text-xs font-medium text-primary shadow-sm backdrop-blur-sm">
+              <div className="mb-6 w-fit inline-flex items-center gap-2 rounded-full border border-foreground/5 bg-primary/5 px-3 py-1 text-xs font-medium text-primary shadow-sm backdrop-blur-sm">
                 <Sparkles className="h-3.5 w-3.5 animate-pulse" />
                 <span>AI-Powered Job Search Copilot</span>
               </div>
@@ -33,7 +33,7 @@ const HomeView = () => {
                 The ultimate AI assistant for your career. Optimize your resume for ATS, generate personalized cold emails, and track applications—all in one place.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <Button size="lg" className="w-[75%] sm:w-auto h-10 md:h-12 px-6 text-sm shadow-lg shadow-primary/20 transition-all hover:scale-105 rounded-none" asChild>
+                <Button size="lg" className="w-[75%] sm:w-auto h-10 md:h-12 px-6 text-sm shadow-lg shadow-primary/20 transition-all hover:scale-105 " asChild>
                   <Link href="/signup">
                     Get Started Free <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -51,7 +51,7 @@ const HomeView = () => {
               <div className="mt-8 flex items-center gap-3 text-xs text-muted-foreground">
                 <div className="flex -space-x-2">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-8 w-8 rounded-none border-2 border-background bg-muted flex items-center justify-center overflow-hidden">
+                    <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-muted flex items-center justify-center overflow-hidden">
                        <div className="w-full h-full bg-linear-to-br from-primary/40 to-blue-500/40" />
                     </div>
                   ))}
@@ -63,13 +63,13 @@ const HomeView = () => {
             {/* Right Column: Features Explanation / Visuals */}
             <div className="relative lg:ml-auto w-full max-w-xl pb-12 lg:pb-0">
                {/* Decorative background blur */}
-               <div className="absolute -inset-0.5 bg-linear-to-br from-primary/30 to-blue-500/30 rounded-none blur-2xl opacity-50"></div>
+               <div className="absolute -inset-0.5 bg-linear-to-br from-primary/30 to-blue-500/30 blur-2xl opacity-50"></div>
                
                <div className="relative flex flex-col gap-4">
                   {/* Feature Card 1 */}
-                  <div className="group relative rounded-none border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-primary/10">
+                  <div className="group relative rounded-xl border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-primary/10">
                      <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-none bg-primary/10 text-primary shadow-inner">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary shadow-inner">
                           <Target className="h-6 w-6" />
                         </div>
                         <div>
@@ -82,9 +82,9 @@ const HomeView = () => {
                   </div>
 
                   {/* Feature Card 2 */}
-                  <div className="group relative rounded-none border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/10 ml-0 sm:ml-8">
+                  <div className="group relative rounded-xl border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/10 ml-0 sm:ml-8">
                      <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-none bg-blue-500/10 text-blue-500 shadow-inner">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-blue-500/10 text-blue-500 shadow-inner">
                           <Mail className="h-6 w-6" />
                         </div>
                         <div>
@@ -97,9 +97,9 @@ const HomeView = () => {
                   </div>
 
                   {/* Feature Card 3 */}
-                  <div className="group relative rounded-none border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-purple-500/10">
+                  <div className="group relative rounded-xl border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-purple-500/10">
                      <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-none bg-purple-500/10 text-purple-500 shadow-inner">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-purple-500/10 text-purple-500 shadow-inner">
                           <Briefcase className="h-6 w-6" />
                         </div>
                         <div>
@@ -155,9 +155,9 @@ const HomeView = () => {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="group relative rounded-none border border-border/50 bg-card p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1"
+                className="group relative rounded-xl border border-border/50 bg-card p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1"
               >
-                <div className={cn("w-12 h-12 rounded-none flex items-center justify-center mb-6 transition-transform group-hover:scale-110", feature.color)}>
+                <div className={cn("w-12 h-12 flex rounded-md items-center justify-center mb-6 transition-transform group-hover:scale-110", feature.color)}>
                   {feature.icon}
                 </div>
                 <h3 className="text-base font-bold mb-3">{feature.title}</h3>
@@ -209,13 +209,13 @@ const HomeView = () => {
               },
             ].map((plan) => (
               <div key={plan.name} className={cn(
-                "relative rounded-none border p-6 flex flex-col transition-all",
+                "relative rounded-xl border p-6 flex flex-col transition-all",
                 plan.highlight 
                   ? "bg-background border-primary shadow-xl shadow-primary/10 scale-105 z-10" 
                   : "bg-card border-border/50 hover:border-border"
               )}>
                 {plan.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-none uppercase tracking-wider">
+                  <div className="absolute rounded-full -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
                     Most Popular
                   </div>
                 )}
@@ -233,7 +233,7 @@ const HomeView = () => {
                       </li>
                    ))}
                 </ul>
-                <Button variant={plan.highlight ? "default" : "outline"} className="w-full rounded-none h-10 text-sm">
+                <Button variant={plan.highlight ? "default" : "outline"} className="w-full h-10 text-sm">
                    {plan.price === "Soon" ? "Coming Soon" : "Get Started"}
                 </Button>
               </div>
@@ -267,9 +267,9 @@ const HomeView = () => {
                 a: "Yes. Resumes are stored securely and parsed data is private to your account. We don&apos;t train public models on your personal data.",
               },
             ].map((faq) => (
-              <div key={faq.q} className="rounded-none border border-border/50 bg-card p-6 transition-all hover:shadow-lg">
+              <div key={faq.q} className="rounded-xl border border-border/50 bg-card p-6 transition-all hover:shadow-lg">
                 <h3 className="text-base font-bold flex items-start gap-3">
-                  <div className="mt-0.5 rounded-none bg-primary/10 p-1 shrink-0">
+                  <div className="mt-0.5 rounded-md bg-primary/10 p-1 shrink-0">
                      <CheckCircle className="h-4 w-4 text-primary" />
                   </div>
                   {faq.q}
@@ -285,7 +285,7 @@ const HomeView = () => {
 
       {/* CTA Section */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-16">
-        <div className="relative overflow-hidden rounded-none border border-border/50 bg-card px-6 py-16 text-center shadow-xl">
+        <div className="relative overflow-hidden rounded-xl border border-border/50 bg-card px-6 py-16 text-center shadow-xl">
           {/* Subtle gradient bg */}
           <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-blue-500/5" />
           
@@ -297,7 +297,7 @@ const HomeView = () => {
               Join the growing community of professionals who use Rescomail to outsmart the ATS, track applications, and write perfect emails.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-sm shadow-xl shadow-primary/20 rounded-none hover:scale-105 transition-all" asChild>
+              <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-sm shadow-xl shadow-primary/20 hover:scale-105 transition-all" asChild>
                 <Link href="/signup">Create Free Account</Link>
               </Button>
             </div>

@@ -43,10 +43,10 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
   const { setOpenMobile, isMobile } = useSidebar();
 
   return (
-    <Sidebar className="font-mono border-r border-border/50 bg-sidebar/80 backdrop-blur-xl rounded-none">
+    <Sidebar className="font-mono border-r border-border/50 bg-sidebar/80 backdrop-blur-xl ">
       <SidebarHeader className="h-16 border-b border-border/50 px-6 flex flex-row items-center gap-3">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-none bg-foreground text-background font-bold shadow-md transition-all group-hover:scale-105">
+          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-foreground text-background font-bold shadow-md transition-all group-hover:scale-105">
             <span className="text-base">R</span>
           </div>
           <div className="flex flex-col gap-0.5">
@@ -63,7 +63,7 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
       <SidebarContent className="p-4 gap-6">
         <div className="px-2">
           <Button
-            className="h-10 w-full justify-start gap-2 rounded-none transition-all shadow-md shadow-primary/10 hover:shadow-primary/20 hover:-translate-y-0.5"
+            className="h-10 w-full justify-start gap-2 transition-all shadow-md shadow-primary/10 hover:shadow-primary/20 hover:-translate-y-0.5"
             size="sm"
             asChild
             onClick={() => {
@@ -89,10 +89,10 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
                     asChild
                     isActive={pathname === item.href}
                     className={cn(
-                      "h-10 rounded-none px-3 py-2 transition-all duration-200",
+                      "h-10 px-3 py-2 rounded-lg transition-all duration-200",
                       pathname === item.href
-                        ? "bg-primary/10 text-primary border-l-2 border-primary font-semibold"
-                        : "text-muted-foreground border-l-2 border-transparent hover:bg-muted/50 hover:text-foreground",
+                        ? "bg-primary/10 text-primary font-semibold"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                     onClick={() => {
                       if (isMobile) setOpenMobile(false);
@@ -119,10 +119,10 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
 
       <SidebarFooter className="p-4 gap-4">
         <div>{creditsSlot}</div>
-        <div className="rounded-none border border-border/50 bg-muted/30 p-2 shadow-sm transition-colors hover:bg-muted/50">
+        <div className="rounded-lg border border-border/50 bg-muted/30 p-2 shadow-sm transition-colors hover:bg-muted/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 px-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-background/40 shadow-sm border border-border/50">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-background/40 shadow-sm border border-border/50">
                 <Settings className="h-4 w-4 text-foreground" />
               </div>
               <div className="flex flex-col">

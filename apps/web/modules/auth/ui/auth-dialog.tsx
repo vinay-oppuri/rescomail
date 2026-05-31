@@ -18,7 +18,7 @@ const AuthDialog = () => {
 
     if (session?.user) {
         return (
-            <Button asChild className="rounded-none font-semibold gap-2 px-4 h-8 bg-foreground! text-background! transition-all duration-300 ease-out hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5">
+            <Button asChild className="font-semibold gap-2 px-4 h-8 bg-foreground! text-background! transition-all duration-300 ease-out hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5">
                 <Link href="/dashboard">
                     <LogIn className="h-4 w-4" />
                     <span>Login</span>
@@ -30,12 +30,12 @@ const AuthDialog = () => {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="rounded-none font-semibold gap-2 px-4 h-8 bg-foreground! text-background! transition-all duration-300 ease-out hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5">
+                <Button className="font-semibold gap-2 px-4 h-8 bg-foreground! text-background! transition-all duration-300 ease-out hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5">
                     <LogIn className="h-4 w-4" />
                     <span>Login</span>
                 </Button>
             </DialogTrigger>
-            <DialogContent className="rounded-none sm:max-w-100 p-0 overflow-hidden bg-background/95 backdrop-blur-2xl shadow-2xl">
+            <DialogContent className="rounded-lg sm:max-w-100 p-0 overflow-hidden bg-background/95 backdrop-blur-2xl shadow-2xl">
                 <div className="p-8">
                     <DialogHeader className="mb-8">
                         <DialogTitle className="text-2xl font-extrabold tracking-tight">
@@ -48,14 +48,14 @@ const AuthDialog = () => {
 
                     <div className="flex flex-col gap-4">
                         <Button
-                            className="rounded-none h-11 w-full justify-center gap-4 px-6 hover:scale-103 transition-all duration-300"
+                            className="h-11 w-full justify-center gap-4 px-6 hover:scale-103 transition-all duration-300"
                             onClick={onGoogle}
                         >
                             <SiGoogle className="h-5 w-5" />
                             Continue with Google
                         </Button>
                         <Button disabled
-                            className="rounded-none h-11 w-full justify-center gap-4 px-6 hover:scale-103"
+                            className="h-11 w-full justify-center gap-4 px-6 hover:scale-103"
                         >
                             <SiGithub className="h-5 w-5" />
                             Continue with Github

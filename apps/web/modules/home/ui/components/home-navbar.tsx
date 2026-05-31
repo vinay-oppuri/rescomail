@@ -22,7 +22,7 @@ const HomeNavbar = () => {
       {/* Top bar */}
       <div className="flex items-center justify-between">
         <Link href="/" className="inline-flex items-center gap-2">
-          <span className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center border bg-foreground font-heading text-xs md:text-sm text-primary-foreground">
+          <span className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-md border bg-foreground font-heading text-xs md:text-sm text-primary-foreground">
             R
           </span>
           <h1 className="text-lg md:text-2xl font-bold">Rescomail</h1>
@@ -32,7 +32,7 @@ const HomeNavbar = () => {
         <div className="hidden md:flex items-center fixed top-0 left-1/2 -translate-x-1/2">
           <div
             className="flex items-center gap-8 px-14 py-4 bg-foreground backdrop-blur-md text-sm text-background"
-            style={{ clipPath: "polygon(0 0, 100% 0, 92% 100%, 8% 100%)" }}
+            style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 30px) calc(100% - 15px), calc(100% - 36px) calc(100% - 7px), calc(100% - 41px) calc(100% - 2px), calc(100% - 45px) 100%, 45px 100%, 41px calc(100% - 2px), 36px calc(100% - 7px), 30px calc(100% - 15px))" }}
           >
             {navLinks.map((link) => (
               <Link key={link.name} href={link.path} className="group relative flex flex-col font-semibold transition-colors">
@@ -52,7 +52,7 @@ const HomeNavbar = () => {
         {/* Mobile actions */}
         <div 
           className="absolute right-0 top-0 flex md:hidden items-center gap-1 pl-6 pr-2 py-2 bg-foreground backdrop-blur-md"
-          style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 25% 100%)" }}
+          style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 40% 100%, 33% 99.5%, 28% 97.5%, 24% 93%, 21% 85%, 16% 65%, 10% 40%)" }}
         >
           <ThemeToggle iconClassName="text-background!" />
           <div className="bg-muted-foreground h-7 w-px"/>

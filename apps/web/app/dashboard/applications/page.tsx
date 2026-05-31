@@ -20,7 +20,7 @@ const Page = () => {
           </p>
         </div>
 
-        <Button disabled className="rounded-none h-9 text-xs md:text-sm">
+        <Button disabled className="h-9 text-xs md:text-sm">
           <Plus className="mr-2 h-4 w-4" />
           New Application
         </Button>
@@ -28,18 +28,18 @@ const Page = () => {
 
       <div className="grid gap-4 md:grid-cols-4">
         {pipelineStages.map((stage) => (
-          <div key={stage.label} className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm p-4 sm:p-6">
+          <div key={stage.label} className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm p-4 sm:p-6 rounded-xl">
             <p className="text-sm font-medium">{stage.label}</p>
             <p className="mt-3 text-3xl font-bold">{stage.count}</p>
           </div>
         ))}
       </div>
 
-      <div className="flex min-h-80 flex-col items-center justify-center gap-4 rounded-none border border-foreground/5 bg-card/20 shadow-sm px-6 py-12 text-center">
-        <div className="flex h-12 w-12 items-center justify-center border border-foreground/5 bg-muted/40 rounded-none">
+      <div className="flex min-h-80 flex-col items-center justify-center gap-4 border border-foreground/5 bg-card/20 shadow-sm px-6 py-12 text-center rounded-xl">
+        <div className="flex h-12 w-12 items-center justify-center border border-foreground/5 bg-muted/40 rounded-md">
           <Briefcase className="h-5 w-5 text-muted-foreground" />
         </div>
-        <Badge variant="secondary" className="rounded-none">Coming next</Badge>
+        <Badge variant="secondary" className="rounded-md">Coming next</Badge>
         <div className="space-y-1 mt-2">
           <p className="text-sm font-medium">Application tracking is queued</p>
           <p className="max-w-md text-sm text-muted-foreground">

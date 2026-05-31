@@ -36,11 +36,11 @@ export default function ApiKeyPromptDialog({ hasApiKey }: { hasApiKey: boolean }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="rounded-none sm:max-w-sm p-0 overflow-hidden border-foreground/5 bg-background/95 backdrop-blur-2xl shadow-2xl">
+      <DialogContent className="rounded-xl sm:max-w-sm p-0 overflow-hidden border-foreground/5 bg-background/95 backdrop-blur-2xl shadow-2xl">
         <div className="p-6">
           <DialogHeader className="mb-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-none bg-primary/10 text-primary">
+              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <Key className="h-4 w-4" />
               </div>
               <DialogTitle className="text-xl font-extrabold tracking-tight">
@@ -59,7 +59,7 @@ export default function ApiKeyPromptDialog({ hasApiKey }: { hasApiKey: boolean }
                 placeholder="Enter your Gemini API Key..."
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="rounded-none h-9 border-border/50 bg-background/50 focus-visible:ring-primary focus-visible:border-primary transition-all px-4"
+                className="h-9 border-border/50 bg-background/50 focus-visible:ring-primary focus-visible:border-primary transition-all px-4"
                 required
               />
               {error && <span className="text-xs text-destructive font-medium">{error}</span>}
@@ -80,7 +80,7 @@ export default function ApiKeyPromptDialog({ hasApiKey }: { hasApiKey: boolean }
             <Button
               type="submit"
               disabled={loading || !apiKey.trim()}
-              className="rounded-none h-9 w-full gap-2 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md"
+              className="h-9 w-full gap-2 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md"
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save API Key"}
             </Button>

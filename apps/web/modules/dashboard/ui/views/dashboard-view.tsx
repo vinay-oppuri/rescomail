@@ -47,12 +47,12 @@ const DashboardView = async () => {
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8 relative">
             {/* Ambient Background Glow (Subtle) */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] overflow-hidden -z-10 pointer-events-none opacity-40">
-                <div className="absolute top-[-20%] left-[10%] w-[50%] h-[50%] rounded-none bg-primary/10 blur-[100px]" />
-                <div className="absolute top-[10%] right-[10%] w-[40%] h-[40%] rounded-none bg-blue-500/10 blur-[100px]" />
+                <div className="absolute top-[-20%] left-[10%] w-[50%] h-[50%] bg-primary/10 blur-[100px]" />
+                <div className="absolute top-[10%] right-[10%] w-[40%] h-[40%] bg-blue-500/10 blur-[100px]" />
             </div>
 
             {/* Minimalist Welcome Header */}
-            <div className="relative overflow-hidden rounded-none border border-border/50 bg-card/80 backdrop-blur-xl p-4 md:p-8 shadow-xl">
+            <div className="relative overflow-hidden rounded-xl border border-border/50 bg-card/80 backdrop-blur-xl p-4 md:p-8 shadow-xl">
                 <div className="absolute -inset-0.5 bg-linear-to-br from-primary/10 to-blue-500/10 blur-xl opacity-50 -z-10" />
                 <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
@@ -68,12 +68,12 @@ const DashboardView = async () => {
                         </p>
                     </div>
                     <div className="flex flex-col md:flex-row gap-3 shrink-0">
-                        <Button asChild size="default" className="rounded-none h-9 md:h-11 px-3 md:px-5 shadow-lg shadow-primary/20 hover:scale-105 transition-all text-xs md:text-sm font-medium">
+                        <Button asChild size="default" className="h-9 md:h-11 px-3 md:px-5 shadow-lg shadow-primary/20 hover:scale-105 transition-all text-xs md:text-sm font-medium">
                             <Link href="/dashboard/resumes">
                                 <Upload className="mr-2 h-4 w-4" /> Upload Resume
                             </Link>
                         </Button>
-                        <Button asChild size="default" variant="outline" className="rounded-none h-9 md:h-11 px-3 md:px-5 border-border/50 hover:bg-muted transition-all text-xs md:text-sm font-medium bg-card/50 backdrop-blur-sm">
+                        <Button asChild size="default" variant="outline" className="h-9 md:h-11 px-3 md:px-5 border-border/50 hover:bg-muted transition-all text-xs md:text-sm font-medium bg-card/50 backdrop-blur-sm">
                             <Link href="/dashboard/ats">
                                 <Sparkles className="mr-2 h-4 w-4 text-primary" /> Run ATS Scan
                             </Link>
@@ -84,13 +84,13 @@ const DashboardView = async () => {
             
             {/* Statistics Cards Grid */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                <Card className="group relative rounded-none border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <Card className="group relative border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div className="absolute top-0 left-0 w-1 h-full bg-primary/70" />
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                             Total Resumes
                         </CardTitle>
-                        <div className="p-2 bg-primary/10 text-primary shrink-0">
+                        <div className="p-2 rounded-md bg-primary/10 text-primary shrink-0">
                             <FileText className="h-5 w-5" />
                         </div>
                     </CardHeader>
@@ -102,13 +102,13 @@ const DashboardView = async () => {
                     </CardContent>
                 </Card>
                 
-                <Card className="group relative rounded-none border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <Card className="group relative border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div className="absolute top-0 left-0 w-1 h-full bg-blue-500/70" />
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                             ATS Scans Done
                         </CardTitle>
-                        <div className="p-2 bg-blue-500/10 text-blue-500 shrink-0">
+                        <div className="p-2 rounded-md bg-blue-500/10 text-blue-500 shrink-0">
                             <Activity className="h-5 w-5" />
                         </div>
                     </CardHeader>
@@ -120,13 +120,13 @@ const DashboardView = async () => {
                     </CardContent>
                 </Card>
 
-                <Card className="group relative rounded-none border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <Card className="group relative border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500/70" />
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                             Average Match
                         </CardTitle>
-                        <div className="p-2 bg-emerald-500/10 text-emerald-500 shrink-0">
+                        <div className="p-2 rounded-md bg-emerald-500/10 text-emerald-500 shrink-0">
                             <Award className="h-5 w-5" />
                         </div>
                     </CardHeader>
@@ -136,7 +136,7 @@ const DashboardView = async () => {
                                 {averageAtsScore > 0 ? `${averageAtsScore}%` : "—"}
                             </div>
                             {averageAtsScore > 0 && (
-                                <Badge variant="outline" className={`rounded-none px-2 py-0.5 text-[10px] font-bold uppercase border ${getScoreBadgeColor(averageAtsScore)}`}>
+                                <Badge variant="outline" className={`px-2 py-0.5 text-[10px] font-bold uppercase border ${getScoreBadgeColor(averageAtsScore)}`}>
                                     {averageAtsScore >= 85 ? "Excellent" : averageAtsScore >= 70 ? "Good" : "Needs Work"}
                                 </Badge>
                             )}
@@ -158,7 +158,7 @@ const DashboardView = async () => {
                             <p className="text-sm text-muted-foreground mt-0.5">Tailored comparisons and keyword checks</p>
                         </div>
                         {recentScans.length > 0 && (
-                            <Button asChild variant="ghost" size="sm" className="rounded-none text-xs font-semibold hover:bg-muted/50 transition-colors">
+                            <Button asChild variant="ghost" size="sm" className="text-xs font-semibold hover:bg-muted/50 transition-colors">
                                 <Link href="/dashboard/ats" className="flex items-center gap-1">
                                     View All <ChevronRight className="h-3 w-3" />
                                 </Link>
@@ -186,10 +186,10 @@ const DashboardView = async () => {
                                 return (
                                     <div 
                                         key={scan.id} 
-                                        className="flex items-center justify-between p-4 border border-border/50 bg-card/80 backdrop-blur-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 rounded-none"
+                                        className="flex items-center justify-between p-4 rounded-md border border-border/50 bg-card/80 backdrop-blur-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 "
                                     >
                                         <div className="flex items-center gap-4">
-                                            <div className="p-2.5 bg-primary/10 text-primary shrink-0 rounded-none">
+                                            <div className="p-2.5 rounded-md bg-primary/10 text-primary shrink-0 ">
                                                 <Briefcase className="h-5 w-5" />
                                             </div>
                                             <div className="space-y-1">
@@ -205,7 +205,7 @@ const DashboardView = async () => {
                                             </div>
                                             <Badge 
                                                 variant="outline" 
-                                                className={`rounded-none px-2 py-1 text-[10px] font-bold border w-24 justify-center ${verdictColorMap[scan.verdict] || "bg-muted text-muted-foreground"}`}
+                                                className={`px-2 py-1 text-[10px] font-bold border w-24 justify-center ${verdictColorMap[scan.verdict] || "bg-muted text-muted-foreground"}`}
                                             >
                                                 {verdictLabelMap[scan.verdict] || scan.verdict}
                                             </Badge>
@@ -218,15 +218,15 @@ const DashboardView = async () => {
                             })}
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center p-12 border border-border/50 border-dashed bg-card/50 backdrop-blur-sm text-center rounded-none">
-                            <div className="p-4 bg-muted mb-4 text-muted-foreground/50 rounded-none">
+                        <div className="flex flex-col items-center justify-center p-12 rounded-xl border border-border/50 border-dashed bg-card/50 backdrop-blur-sm text-center ">
+                            <div className="p-4 rounded-md bg-muted mb-4 text-muted-foreground/50 ">
                                <Sparkles className="h-8 w-8" />
                             </div>
                             <p className="text-sm font-semibold text-foreground">No recent scans yet</p>
                             <p className="text-sm text-muted-foreground mt-2 max-w-sm leading-relaxed">
                                 Upload your resume and scan against a job description to get started.
                             </p>
-                            <Button asChild size="default" className="rounded-none mt-6 h-10 px-6 text-sm">
+                            <Button asChild size="default" className="mt-6 h-10 px-6 text-sm">
                                 <Link href="/dashboard/ats">Run First Scan</Link>
                             </Button>
                         </div>
@@ -241,7 +241,7 @@ const DashboardView = async () => {
                     </div>
 
                     <div className="space-y-4">
-                        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 border-l-2 border-l-primary rounded-none shadow-md hover:shadow-lg transition-shadow">
+                        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 border-l-2 border-l-primary shadow-md hover:shadow-lg transition-shadow">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-2">
                                     <BarChart2 className="h-4 w-4" /> Core Tip #1: Match Rate
@@ -252,7 +252,7 @@ const DashboardView = async () => {
                             </CardContent>
                         </Card>
 
-                        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 border-l-2 border-l-blue-500 rounded-none shadow-md hover:shadow-lg transition-shadow">
+                        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 border-l-2 border-l-blue-500 shadow-md hover:shadow-lg transition-shadow">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-xs font-bold uppercase tracking-widest text-blue-500 flex items-center gap-2">
                                     <Sparkles className="h-4 w-4" /> Core Tip #2: Action Verbs

@@ -87,7 +87,7 @@ const AuthForgotPassword = () => {
         <div className="w-full max-w-sm space-y-6 md:space-y-8">
           <div className="space-y-2">
             <Link href="/" className="group mb-6 md:mb-8 flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-none bg-primary font-bold text-primary-foreground">
+              <div className="flex h-8 w-8 items-center justify-center bg-primary font-bold text-primary-foreground">
                 R
               </div>
               <span className="text-base md:text-xl font-bold">Rescomail</span>
@@ -165,7 +165,7 @@ const AuthForgotPassword = () => {
       <div className="relative hidden w-1/2 overflow-hidden border-l bg-muted/20 lg:flex">
         <div className="relative z-10 flex w-full flex-col justify-center p-16">
           <div className="max-w-md space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-none border bg-background px-3 py-1 text-sm font-medium">
+            <div className="inline-flex items-center gap-2 border bg-background px-3 py-1 text-sm font-medium">
               <Mail className="h-4 w-4 text-primary" />
               Secure account recovery
             </div>

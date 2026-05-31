@@ -48,18 +48,18 @@ const AtsResumePicker = () => {
           onValueChange={setResumeId}
           disabled={resumes.length === 0}
         >
-          <SelectTrigger id="resume" className="w-full rounded-none bg-muted/20! border-foreground/5!">
+          <SelectTrigger id="resume" className="w-full bg-muted/20! border-foreground/5! rounded-md">
             <SelectValue placeholder="Select a resume" />
           </SelectTrigger>
 
-          <SelectContent className="rounded-none">
+          <SelectContent className="">
             {resumes.length === 0 ? (
-              <SelectItem value="empty" disabled className="rounded-none">
+              <SelectItem value="empty" disabled className="">
                 No resumes uploaded
               </SelectItem>
             ) : (
               resumes.map((resume) => (
-                <SelectItem key={resume.id} value={resume.id} className="rounded-none">
+                <SelectItem key={resume.id} value={resume.id} className="">
                   {resume.title}
                 </SelectItem>
               ))
@@ -72,9 +72,9 @@ const AtsResumePicker = () => {
       </div>
 
       {selectedResume && (
-        <div className="border border-foreground/5 bg-muted/20 text-xs text-muted-foreground">
+        <div className="border border-foreground/5 bg-muted/20 text-xs text-muted-foreground rounded-md overflow-hidden">
           <div className="grid grid-cols-[36px_1fr_auto] items-center gap-3 p-3">
-            <div className="flex h-9 w-9 items-center justify-center border border-foreground/5! bg-card">
+            <div className="flex h-9 w-9 items-center justify-center border border-foreground/5! bg-card rounded-md">
               <FileText className="h-4 w-4" />
             </div>
 

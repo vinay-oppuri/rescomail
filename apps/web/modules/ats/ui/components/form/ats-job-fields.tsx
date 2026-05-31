@@ -30,7 +30,7 @@ const AtsJobFields = () => {
             id="job-title"
             value={jobTitle}
             onChange={(event) => setJobTitle(event.target.value)}
-            className="rounded-none bg-muted/20! border-foreground/5!"
+            className="bg-muted/20! border-foreground/5! rounded-md"
             placeholder="Machine learning engineer"
           />
         </div>
@@ -41,7 +41,7 @@ const AtsJobFields = () => {
             id="company-name"
             value={companyName}
             onChange={(event) => setCompanyName(event.target.value)}
-            className="rounded-none bg-muted/20! border-foreground/5!"
+            className="bg-muted/20! border-foreground/5! rounded-md"
             placeholder="Acme AI"
           />
         </div>
@@ -53,7 +53,7 @@ const AtsJobFields = () => {
           id="job-description"
           value={jobDescription}
           onChange={(event) => setJobDescription(event.target.value)}
-          className="h-24 md:h-48 resize-y rounded-none bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin"
+          className="h-24 md:h-48 resize-y bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin rounded-md"
           placeholder="Paste the role description here..."
         />
         <p className="text-xs text-muted-foreground">
@@ -67,7 +67,7 @@ const AtsJobFields = () => {
           id="priority-keywords"
           value={keywordText}
           onChange={(event) => setKeywordText(event.target.value)}
-          className="h-16 resize-y rounded-none bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin"
+          className="h-16 resize-y bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin rounded-md"
           placeholder="Python, FastAPI, SQL"
         />
       </div>

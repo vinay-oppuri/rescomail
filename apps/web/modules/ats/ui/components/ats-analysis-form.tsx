@@ -20,7 +20,7 @@ const AtsAnalysisForm = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col rounded-none border border-foreground/5 bg-card/20 shadow-sm overflow-hidden">
+    <form onSubmit={onSubmit} className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-xl">
       <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
         <div>
           <h2 className="text-sm font-semibold tracking-tight text-foreground">
@@ -30,7 +30,7 @@ const AtsAnalysisForm = () => {
             Provide the resume and target role to extract actionable intelligence.
           </p>
         </div>
-        <Badge variant="secondary" className="shrink-0 gap-1.5 rounded-none shadow-sm">
+        <Badge variant="secondary" className="shrink-0 gap-1.5 shadow-sm">
           <Zap className="h-3.5 w-3.5 text-primary" />
           Live BGE Model
         </Badge>
@@ -54,7 +54,7 @@ const AtsAnalysisForm = () => {
         </div>
 
         {error ? (
-          <div className="flex gap-3 border-l-4 border-l-destructive border-y border-r border-y-destructive/20 border-r-destructive/20 bg-destructive/5 p-4 text-sm text-destructive shadow-sm">
+          <div className="flex gap-3 border-l-4 border-l-destructive border-y border-r border-y-destructive/20 border-r-destructive/20 bg-destructive/5 p-4 text-sm text-destructive shadow-sm rounded-md">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <p className="font-medium">{error}</p>
           </div>
@@ -63,7 +63,7 @@ const AtsAnalysisForm = () => {
         <Button 
           type="submit" 
           disabled={!canAnalyze || isAnalyzing}
-          className="mt-4 h-11 w-full font-semibold text-xs md:text-sm rounded-none"
+          className="mt-4 h-11 w-full font-semibold text-xs md:text-sm "
         >
           {isAnalyzing ? (
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />

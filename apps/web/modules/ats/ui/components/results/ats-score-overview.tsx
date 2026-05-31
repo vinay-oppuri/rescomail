@@ -24,10 +24,10 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
     <div className="relative grid gap-4 border-b p-4 md:grid-cols-[180px_1fr] overflow-hidden bg-linear-to-br from-background to-muted/30">
       
       {/* Decorative Background Glow */}
-      <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-none bg-primary/5 blur-3xl" />
+      <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 bg-primary/5 blur-3xl" />
 
       {/* Score Ring */}
-      <div className="relative flex aspect-square w-full max-w-[160px] flex-col items-center justify-center self-center rounded-none border bg-card/50 p-4 shadow-sm backdrop-blur-xl transition-all duration-500 hover:shadow-md hover:border-primary/20">
+      <div className="relative flex aspect-square w-full max-w-[160px] flex-col items-center justify-center self-center border bg-card/50 p-4 shadow-sm backdrop-blur-xl transition-all duration-500 hover:shadow-md hover:border-primary/20 rounded-full">
         <div className="relative flex h-24 w-24 items-center justify-center">
           <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
             <circle
@@ -70,7 +70,7 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
         <div className="flex items-start justify-between">
           <Badge
             variant="outline"
-            className={cn("h-7 rounded-none px-3 text-xs shadow-sm transition-all hover:scale-105", verdictTone[analysis.verdict])}
+            className={cn("h-7 px-3 text-xs shadow-sm transition-all hover:scale-105", verdictTone[analysis.verdict])}
           >
             {verdictLabel[analysis.verdict]}
           </Badge>
@@ -82,7 +82,7 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
 
         <div className="grid gap-3 sm:grid-cols-2 mt-2">
           {Object.entries(analysis.categoryScores).map(([key, catScore]) => (
-            <div key={key} className="group relative overflow-hidden rounded-none border bg-card/50 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-muted/30 hover:shadow-sm">
+            <div key={key} className="group relative overflow-hidden border bg-card/50 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-muted/30 hover:shadow-sm rounded-lg">
               <div className="flex items-center justify-between text-xs font-semibold">
                 <span className="text-foreground/80 group-hover:text-foreground transition-colors">
                   {categoryLabels[key as keyof AtsAnalysisResponse["categoryScores"]]}
@@ -91,9 +91,9 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
                   {catScore}
                 </span>
               </div>
-              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-none bg-muted/50">
+              <div className="mt-3 h-1.5 w-full overflow-hidden bg-muted/50 rounded-full">
                 <div
-                  className={cn("h-full rounded-none transition-all duration-1000 ease-out", scoreColor(catScore))}
+                  className={cn("h-full transition-all duration-1000 ease-out", scoreColor(catScore))}
                   style={{ width: `${catScore}%` }}
                 />
               </div>

@@ -109,7 +109,7 @@ const ColdmailView = ({ emails, resumes }: ColdmailViewProps) => {
         {showComposer ? (
           <ColdmailComposer />
         ) : (
-          <section className="min-h-175 overflow-hidden rounded-none border border-foreground/5 bg-card/60 shadow-sm">
+          <section className="min-h-175 overflow-hidden border border-foreground/5 bg-card/60 shadow-sm rounded-xl">
             <div className="flex items-center justify-between gap-3 border-b border-foreground/5 px-5 py-3">
               <div className="flex flex-col gap-1">
                 <h2 className="text-sm font-semibold tracking-tight">Generated draft</h2>

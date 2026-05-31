@@ -46,7 +46,7 @@ const Layout = async ({ children }: Props) => {
           creditsSlot={
             <Suspense
               fallback={
-                <div className="h-24 rounded-none bg-primary/5 animate-pulse" />
+                <div className="h-24 bg-primary/5 animate-pulse" />
               }
             >
               <DashboardCredits userId={session.user.id} />
