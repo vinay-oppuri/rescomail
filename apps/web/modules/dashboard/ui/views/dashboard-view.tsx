@@ -52,7 +52,7 @@ const DashboardView = async () => {
             </div>
 
             {/* Minimalist Welcome Header */}
-            <div className="relative overflow-hidden rounded-xl border border-border/50 bg-card/80 backdrop-blur-xl p-4 md:p-8 shadow-xl">
+            <div className="relative overflow-hidden rounded-sm border border-border/50 bg-card/80 backdrop-blur-xl p-4 md:p-8 shadow-xl">
                 <div className="absolute -inset-0.5 bg-linear-to-br from-primary/10 to-blue-500/10 blur-xl opacity-50 -z-10" />
                 <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
@@ -90,7 +90,7 @@ const DashboardView = async () => {
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                             Total Resumes
                         </CardTitle>
-                        <div className="p-2 rounded-md bg-primary/10 text-primary shrink-0">
+                        <div className="p-2 rounded-sm bg-primary/10 text-primary shrink-0">
                             <FileText className="h-5 w-5" />
                         </div>
                     </CardHeader>
@@ -108,7 +108,7 @@ const DashboardView = async () => {
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                             ATS Scans Done
                         </CardTitle>
-                        <div className="p-2 rounded-md bg-blue-500/10 text-blue-500 shrink-0">
+                        <div className="p-2 rounded-sm bg-blue-500/10 text-blue-500 shrink-0">
                             <Activity className="h-5 w-5" />
                         </div>
                     </CardHeader>
@@ -126,7 +126,7 @@ const DashboardView = async () => {
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                             Average Match
                         </CardTitle>
-                        <div className="p-2 rounded-md bg-emerald-500/10 text-emerald-500 shrink-0">
+                        <div className="p-2 rounded-sm bg-emerald-500/10 text-emerald-500 shrink-0">
                             <Award className="h-5 w-5" />
                         </div>
                     </CardHeader>
@@ -186,10 +186,10 @@ const DashboardView = async () => {
                                 return (
                                     <div 
                                         key={scan.id} 
-                                        className="flex items-center justify-between p-4 rounded-md border border-border/50 bg-card/80 backdrop-blur-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 "
+                                        className="flex items-center justify-between p-4 rounded-sm border border-border/50 bg-card/80 backdrop-blur-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 "
                                     >
                                         <div className="flex items-center gap-4">
-                                            <div className="p-2.5 rounded-md bg-primary/10 text-primary shrink-0 ">
+                                            <div className="p-2.5 rounded-sm bg-primary/10 text-primary shrink-0 ">
                                                 <Briefcase className="h-5 w-5" />
                                             </div>
                                             <div className="space-y-1">
@@ -218,8 +218,8 @@ const DashboardView = async () => {
                             })}
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center p-12 rounded-xl border border-border/50 border-dashed bg-card/50 backdrop-blur-sm text-center ">
-                            <div className="p-4 rounded-md bg-muted mb-4 text-muted-foreground/50 ">
+                        <div className="flex flex-col items-center justify-center p-12 rounded-sm border border-border/50 border-dashed bg-card/50 backdrop-blur-sm text-center ">
+                            <div className="p-4 rounded-sm bg-muted mb-4 text-muted-foreground/50 ">
                                <Sparkles className="h-8 w-8" />
                             </div>
                             <p className="text-sm font-semibold text-foreground">No recent scans yet</p>

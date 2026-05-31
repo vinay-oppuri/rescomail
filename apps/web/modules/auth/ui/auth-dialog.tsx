@@ -35,7 +35,7 @@ const AuthDialog = () => {
                     <span>Login</span>
                 </Button>
             </DialogTrigger>
-            <DialogContent className="rounded-lg sm:max-w-100 p-0 overflow-hidden bg-background/95 backdrop-blur-2xl shadow-2xl">
+            <DialogContent className="rounded-sm sm:max-w-100 p-0 overflow-hidden bg-background/95 backdrop-blur-2xl shadow-2xl">
                 <div className="p-8">
                     <DialogHeader className="mb-8">
                         <DialogTitle className="text-2xl font-extrabold tracking-tight">

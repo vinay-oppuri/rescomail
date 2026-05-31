@@ -115,7 +115,7 @@ const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
         {showForm ? (
           <AtsAnalysisForm />
         ) : (
-          <section className="min-h-175 overflow-hidden border bg-card rounded-xl">
+          <section className="min-h-175 overflow-hidden border bg-card rounded-sm">
             <div className="flex items-center justify-between gap-3 border-b px-5 py-3">
               <div>
                 <h2 className="text-sm font-semibold">Match report</h2>

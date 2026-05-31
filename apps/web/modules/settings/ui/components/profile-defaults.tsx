@@ -73,7 +73,7 @@ export function ProfileDefaults() {
   };
 
   return (
-    <section className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-xl">
+    <section className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-sm">
       <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
         <div>
           <h2 className="text-sm font-semibold tracking-tight text-foreground">
@@ -90,7 +90,7 @@ export function ProfileDefaults() {
           <div className="space-y-2">
             <Label>Target Seniority</Label>
             <Select value={seniority} onValueChange={setSeniority}>
-              <SelectTrigger className="h-9! w-full bg-muted/20! border-foreground/5! rounded-md">
+              <SelectTrigger className="h-9! w-full bg-muted/20! border-foreground/5! rounded-sm">
                 <SelectValue placeholder="Select level" />
               </SelectTrigger>
               <SelectContent className="">
@@ -106,7 +106,7 @@ export function ProfileDefaults() {
           <div className="space-y-2">
             <Label>Work Mode</Label>
             <Select value={workMode} onValueChange={setWorkMode}>
-              <SelectTrigger className="h-9! w-full bg-muted/20! border-foreground/5! rounded-md">
+              <SelectTrigger className="h-9! w-full bg-muted/20! border-foreground/5! rounded-sm">
                 <SelectValue placeholder="Select work mode" />
               </SelectTrigger>
               <SelectContent className="">
@@ -122,7 +122,7 @@ export function ProfileDefaults() {
           <div className="space-y-2">
             <Label>Employment Type</Label>
             <Select value={employmentType} onValueChange={setEmploymentType}>
-              <SelectTrigger className="h-9! w-full bg-muted/20! border-foreground/5! rounded-md">
+              <SelectTrigger className="h-9! w-full bg-muted/20! border-foreground/5! rounded-sm">
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>
               <SelectContent className="">
@@ -141,7 +141,7 @@ export function ProfileDefaults() {
               <MapPin className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 id="preferred-location"
-                className="h-9 pl-8 bg-muted/20! border-foreground/5! rounded-md"
+                className="h-9 pl-8 bg-muted/20! border-foreground/5! rounded-sm"
                 placeholder="e.g. San Francisco, Remote"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
@@ -155,7 +155,7 @@ export function ProfileDefaults() {
               <Briefcase className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 id="target-role"
-                className="h-9 pl-8 bg-muted/20! border-foreground/5! rounded-md"
+                className="h-9 pl-8 bg-muted/20! border-foreground/5! rounded-sm"
                 placeholder="e.g. Software Engineer"
                 value={targetRole}
                 onChange={(e) => setTargetRole(e.target.value)}

@@ -22,7 +22,7 @@ const HomeNavbar = () => {
       {/* Top bar */}
       <div className="flex items-center justify-between">
         <Link href="/" className="inline-flex items-center gap-2">
-          <span className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-md border bg-foreground font-heading text-xs md:text-sm text-primary-foreground">
+          <span className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-sm border bg-foreground font-heading text-xs md:text-sm text-primary-foreground">
             R
           </span>
           <h1 className="text-lg md:text-2xl font-bold">Rescomail</h1>

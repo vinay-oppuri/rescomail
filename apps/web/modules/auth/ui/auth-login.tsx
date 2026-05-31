@@ -19,6 +19,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { loginSchema, type LoginInput } from "@repo/validations";
+import { clientEnv } from "@repo/env/client";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 import { PasswordInput } from "./password-input";
 
@@ -35,6 +37,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 const AuthLogin = () => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -68,10 +71,19 @@ const AuthLogin = () => {
       const response = await signIn.email({
         email: values.email,
         password: values.password,
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": captchaToken || "",
+          }
+        }
       });
 
       if (response.error) {
-        setAuthError(response.error.message ?? "Unable to sign in.");
+        if (response.error.status === 429) {
+          setAuthError("Too many failed attempts. Please try again in 15 minutes.");
+        } else {
+          setAuthError(response.error.message ?? "Unable to sign in.");
+        }
         return;
       }
 
@@ -113,7 +125,7 @@ const AuthLogin = () => {
         <div className="w-full max-w-sm space-y-6 md:space-y-8">
           <div className="space-y-2">
             <Link href="/" className="group mb-6 md:mb-8 flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center bg-primary font-bold text-primary-foreground">
+              <div className="flex h-8 w-8 items-center justify-center bg-primary font-bold text-primary-foreground rounded-sm">
                 R
               </div>
               <span className="text-base md:text-xl font-bold">Rescomail</span>
@@ -178,6 +190,16 @@ const AuthLogin = () => {
                   </FormItem>
                 )}
               />
+              {clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+                  <Turnstile
+                    siteKey={clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                    onSuccess={setCaptchaToken}
+                    options={{
+                      theme: "auto",
+                      size: "invisible"
+                    }}
+                  />
+              )}
               <Button
                 type="submit"
                 className="h-10 w-full text-sm md:text-base"
@@ -231,7 +253,7 @@ const AuthLogin = () => {
       <div className="relative hidden w-1/2 overflow-hidden border-l bg-muted/20 lg:flex">
         <div className="relative z-10 flex w-full flex-col justify-center p-16">
           <div className="max-w-md space-y-6">
-            <div className="inline-flex items-center gap-2 border bg-background px-3 py-1 text-sm font-medium">
+            <div className="inline-flex items-center gap-2 border bg-background px-4 py-2 text-sm font-medium rounded-full">
               <CheckCircle2 className="h-4 w-4 text-primary" />
               Used by 5000+ applicants
             </div>
@@ -246,7 +268,7 @@ const AuthLogin = () => {
                 "Unlimited resume versions",
               ].map((text) => (
                 <div key={text} className="flex items-center gap-3">
-                  <div className="h-1.5 w-1.5 bg-primary" />
+                  <div className="h-1.5 w-1.5 bg-primary rounded-full" />
                   <span className="text-sm md:text-lg text-muted-foreground">{text}</span>
                 </div>
               ))}
@@ -254,7 +276,7 @@ const AuthLogin = () => {
 
             <div className="mt-12 border-t pt-12">
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 bg-primary" />
+                <div className="h-12 w-12 bg-primary rounded-sm" />
                 <div>
                   <p className="font-bold">Alex Chen</p>
                   <p className="text-sm text-muted-foreground">

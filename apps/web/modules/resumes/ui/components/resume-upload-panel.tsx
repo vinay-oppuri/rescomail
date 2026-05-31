@@ -98,7 +98,7 @@ const ResumeUploadPanel = () => {
   };
 
   return (
-    <div className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-xl">
+    <div className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-sm">
       <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
         <div>
           <h2 className="text-sm font-semibold tracking-tight text-foreground">
@@ -136,14 +136,14 @@ const ResumeUploadPanel = () => {
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           disabled={isUploading}
-          className="bg-muted/20! border-foreground/5! rounded-md"
+          className="bg-muted/20! border-foreground/5! rounded-sm"
         />
       </div>
 
       <button
         type="button"
         className={cn(
-          "flex min-h-44 w-full flex-col items-center justify-center gap-3 border border-dashed border-foreground/10 px-4 py-8 text-center transition-colors bg-muted/10!",
+          "flex min-h-44 w-full flex-col items-center justify-center gap-3 border border-dashed border-foreground/10 px-4 py-8 text-center transition-colors bg-muted/10! rounded-sm",
           isDragging
             ? "border-primary bg-primary/5!"
             : "hover:border-primary/40 hover:bg-muted/40!",
@@ -162,7 +162,7 @@ const ResumeUploadPanel = () => {
         }}
         disabled={isUploading}
       >
-        <div className="flex h-10 w-10 items-center justify-center border border-foreground/5 bg-card rounded-md">
+        <div className="flex h-10 w-10 items-center justify-center border border-foreground/5 bg-card rounded-sm">
           <FileUp className="h-5 w-5 text-muted-foreground" />
         </div>
         <div className="space-y-1">
@@ -184,7 +184,7 @@ const ResumeUploadPanel = () => {
       />
 
       {file ? (
-        <div className="flex items-center justify-between border bg-muted/30 px-3 py-2 text-sm rounded-md">
+        <div className="flex items-center justify-between border bg-muted/30 px-3 py-2 text-sm rounded-sm">
           <span className="truncate">{file.name}</span>
           <Button
             type="button"

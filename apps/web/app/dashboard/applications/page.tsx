@@ -28,18 +28,18 @@ const Page = () => {
 
       <div className="grid gap-4 md:grid-cols-4">
         {pipelineStages.map((stage) => (
-          <div key={stage.label} className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm p-4 sm:p-6 rounded-xl">
+          <div key={stage.label} className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm p-4 sm:p-6 rounded-sm">
             <p className="text-sm font-medium">{stage.label}</p>
             <p className="mt-3 text-3xl font-bold">{stage.count}</p>
           </div>
         ))}
       </div>
 
-      <div className="flex min-h-80 flex-col items-center justify-center gap-4 border border-foreground/5 bg-card/20 shadow-sm px-6 py-12 text-center rounded-xl">
-        <div className="flex h-12 w-12 items-center justify-center border border-foreground/5 bg-muted/40 rounded-md">
+      <div className="flex min-h-80 flex-col items-center justify-center gap-4 border border-foreground/5 bg-card/20 shadow-sm px-6 py-12 text-center rounded-sm">
+        <div className="flex h-12 w-12 items-center justify-center border border-foreground/5 bg-muted/40 rounded-sm">
           <Briefcase className="h-5 w-5 text-muted-foreground" />
         </div>
-        <Badge variant="secondary" className="rounded-md">Coming next</Badge>
+        <Badge variant="secondary" className="rounded-sm">Coming next</Badge>
         <div className="space-y-1 mt-2">
           <p className="text-sm font-medium">Application tracking is queued</p>
           <p className="max-w-md text-sm text-muted-foreground">

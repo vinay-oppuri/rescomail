@@ -13,7 +13,7 @@ const DashboardNavbar = () => {
         <div className="flex items-center gap-2">
           <SidebarTrigger className="hover:bg-muted/50 transition-colors" />
           <div className="h-6 w-px bg-border/50 mx-1 md:hidden" />
-          <div className="md:hidden flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-background font-bold text-sm shadow-md">
+          <div className="md:hidden flex h-7 w-7 items-center justify-center rounded-sm bg-foreground text-background font-bold text-sm shadow-md">
             R
           </div>
         </div>

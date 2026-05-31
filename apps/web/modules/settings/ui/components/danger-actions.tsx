@@ -12,7 +12,7 @@ export function DangerActions() {
     router.push("/");
   };
   return (
-    <section className="flex flex-col border border-destructive/20 bg-destructive/5 shadow-sm overflow-hidden rounded-xl">
+    <section className="flex flex-col border border-destructive/20 bg-destructive/5 shadow-sm overflow-hidden rounded-sm">
       <div className="flex items-start justify-between gap-3 border-b border-destructive/20 bg-destructive/10 px-3 md:px-5 py-3 md:py-4">
         <div>
           <h2 className="text-sm font-semibold tracking-tight text-destructive">

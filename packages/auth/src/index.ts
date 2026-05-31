@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { captcha } from "better-auth/plugins";
 import { db } from "@repo/db";
 import { serverEnv } from "@repo/env/server";
 
@@ -21,6 +22,24 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
+  rateLimit: {
+    enabled: true,
+    storage: "database",
+    window: 60,
+    max: 100,
+    customRules: {
+      "/sign-in/email": {
+        window: 60 * 15,
+        max: 5,
+      },
+    },
+  },
+  plugins: [
+    captcha({
+      provider: "cloudflare-turnstile",
+      secretKey: serverEnv.TURNSTILE_SECRET_KEY || "dummy-key",
+    }),
+  ],
   emailAndPassword: {
     enabled: true,
     resetPasswordTokenExpiresIn: 60 * 60,

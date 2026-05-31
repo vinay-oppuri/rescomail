@@ -1,5 +1,5 @@
 import { jsonb } from "drizzle-orm/pg-core";
-import { boolean, text, timestamp, pgTable } from "drizzle-orm/pg-core";
+import { boolean, text, timestamp, pgTable, integer, bigint } from "drizzle-orm/pg-core";
 import { companyStageEnum, employmentTypeEnum, seniorityEnum, workModeEnum } from "./enums";
 
 export const user = pgTable("user", {
@@ -74,4 +74,11 @@ export const userPreferences = pgTable("user_preferences", {
   geminiApiKey: text("gemini_api_key"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const rateLimit = pgTable("rate_limit", {
+  id: text("id").primaryKey(),
+  key: text("key"),
+  count: integer("count"),
+  lastRequest: bigint("last_request", { mode: "number" }),
 });

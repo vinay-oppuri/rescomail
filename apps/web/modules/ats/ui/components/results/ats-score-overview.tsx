@@ -82,7 +82,7 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
 
         <div className="grid gap-3 sm:grid-cols-2 mt-2">
           {Object.entries(analysis.categoryScores).map(([key, catScore]) => (
-            <div key={key} className="group relative overflow-hidden border bg-card/50 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-muted/30 hover:shadow-sm rounded-lg">
+            <div key={key} className="group relative overflow-hidden border bg-card/50 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-muted/30 hover:shadow-sm rounded-sm">
               <div className="flex items-center justify-between text-xs font-semibold">
                 <span className="text-foreground/80 group-hover:text-foreground transition-colors">
                   {categoryLabels[key as keyof AtsAnalysisResponse["categoryScores"]]}

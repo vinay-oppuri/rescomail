@@ -36,11 +36,11 @@ export default function ApiKeyPromptDialog({ hasApiKey }: { hasApiKey: boolean }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="rounded-xl sm:max-w-sm p-0 overflow-hidden border-foreground/5 bg-background/95 backdrop-blur-2xl shadow-2xl">
+      <DialogContent className="rounded-sm sm:max-w-sm p-0 overflow-hidden border-foreground/5 bg-background/95 backdrop-blur-2xl shadow-2xl">
         <div className="p-6">
           <DialogHeader className="mb-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+              <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary/10 text-primary">
                 <Key className="h-4 w-4" />
               </div>
               <DialogTitle className="text-xl font-extrabold tracking-tight">

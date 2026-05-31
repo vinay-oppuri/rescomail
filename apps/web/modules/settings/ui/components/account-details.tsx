@@ -53,7 +53,7 @@ export function AccountDetails({ user }: AccountDetailsProps) {
   };
 
   return (
-    <section className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden w-full rounded-xl">
+    <section className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden w-full rounded-sm">
       <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
         <div>
           <h2 className="text-sm font-semibold tracking-tight text-foreground">
@@ -116,7 +116,7 @@ export function AccountDetails({ user }: AccountDetailsProps) {
               <User className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 id="full-name"
-                className="h-9 pl-8 bg-muted/20! border-foreground/5! rounded-md"
+                className="h-9 pl-8 bg-muted/20! border-foreground/5! rounded-sm"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your full name"
@@ -126,7 +126,7 @@ export function AccountDetails({ user }: AccountDetailsProps) {
 
           <div className="space-y-2">
             <Label htmlFor="email-display">Email Address</Label>
-            <div className="flex h-9 items-center gap-2.5 bg-muted/20! border border-foreground/5! px-2.5 text-sm text-muted-foreground rounded-md">
+            <div className="flex h-9 items-center gap-2.5 bg-muted/20! border border-foreground/5! px-2.5 text-sm text-muted-foreground rounded-sm">
               <Mail className="h-4 w-4 shrink-0" />
               <span className="truncate">{user.email}</span>
             </div>
@@ -134,7 +134,7 @@ export function AccountDetails({ user }: AccountDetailsProps) {
 
           <div className="space-y-2">
             <Label>Account Status</Label>
-            <div className="flex h-9 items-center gap-2.5 bg-muted/20! border border-foreground/5! px-2.5 text-xs rounded-md">
+            <div className="flex h-9 items-center gap-2.5 bg-muted/20! border border-foreground/5! px-2.5 text-xs rounded-sm">
               <Shield className="h-4 w-4 text-green-500 shrink-0" />
               <span className="font-medium">Active &amp; Secure</span>
             </div>

@@ -20,7 +20,7 @@ const AtsAnalysisForm = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-xl">
+    <form onSubmit={onSubmit} className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-sm">
       <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
         <div>
           <h2 className="text-sm font-semibold tracking-tight text-foreground">
@@ -54,7 +54,7 @@ const AtsAnalysisForm = () => {
         </div>
 
         {error ? (
-          <div className="flex gap-3 border-l-4 border-l-destructive border-y border-r border-y-destructive/20 border-r-destructive/20 bg-destructive/5 p-4 text-sm text-destructive shadow-sm rounded-md">
+          <div className="flex gap-3 border-l-4 border-l-destructive border-y border-r border-y-destructive/20 border-r-destructive/20 bg-destructive/5 p-4 text-sm text-destructive shadow-sm rounded-sm">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <p className="font-medium">{error}</p>
           </div>

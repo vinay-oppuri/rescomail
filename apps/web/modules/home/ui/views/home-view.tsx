@@ -67,9 +67,9 @@ const HomeView = () => {
                
                <div className="relative flex flex-col gap-4">
                   {/* Feature Card 1 */}
-                  <div className="group relative rounded-xl border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-primary/10">
+                  <div className="group relative rounded-sm border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-primary/10">
                      <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary shadow-inner">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary shadow-inner">
                           <Target className="h-6 w-6" />
                         </div>
                         <div>
@@ -82,9 +82,9 @@ const HomeView = () => {
                   </div>
 
                   {/* Feature Card 2 */}
-                  <div className="group relative rounded-xl border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/10 ml-0 sm:ml-8">
+                  <div className="group relative rounded-sm border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/10 ml-0 sm:ml-8">
                      <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-blue-500/10 text-blue-500 shadow-inner">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-blue-500/10 text-blue-500 shadow-inner">
                           <Mail className="h-6 w-6" />
                         </div>
                         <div>
@@ -97,9 +97,9 @@ const HomeView = () => {
                   </div>
 
                   {/* Feature Card 3 */}
-                  <div className="group relative rounded-xl border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-purple-500/10">
+                  <div className="group relative rounded-sm border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-purple-500/10">
                      <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-purple-500/10 text-purple-500 shadow-inner">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-purple-500/10 text-purple-500 shadow-inner">
                           <Briefcase className="h-6 w-6" />
                         </div>
                         <div>
@@ -155,9 +155,9 @@ const HomeView = () => {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="group relative rounded-xl border border-border/50 bg-card p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1"
+                className="group relative rounded-sm border border-border/50 bg-card p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1"
               >
-                <div className={cn("w-12 h-12 flex rounded-md items-center justify-center mb-6 transition-transform group-hover:scale-110", feature.color)}>
+                <div className={cn("w-12 h-12 flex rounded-sm items-center justify-center mb-6 transition-transform group-hover:scale-110", feature.color)}>
                   {feature.icon}
                 </div>
                 <h3 className="text-base font-bold mb-3">{feature.title}</h3>
@@ -209,7 +209,7 @@ const HomeView = () => {
               },
             ].map((plan) => (
               <div key={plan.name} className={cn(
-                "relative rounded-xl border p-6 flex flex-col transition-all",
+                "relative rounded-sm border p-6 flex flex-col transition-all",
                 plan.highlight 
                   ? "bg-background border-primary shadow-xl shadow-primary/10 scale-105 z-10" 
                   : "bg-card border-border/50 hover:border-border"
@@ -267,9 +267,9 @@ const HomeView = () => {
                 a: "Yes. Resumes are stored securely and parsed data is private to your account. We don&apos;t train public models on your personal data.",
               },
             ].map((faq) => (
-              <div key={faq.q} className="rounded-xl border border-border/50 bg-card p-6 transition-all hover:shadow-lg">
+              <div key={faq.q} className="rounded-sm border border-border/50 bg-card p-6 transition-all hover:shadow-lg">
                 <h3 className="text-base font-bold flex items-start gap-3">
-                  <div className="mt-0.5 rounded-md bg-primary/10 p-1 shrink-0">
+                  <div className="mt-0.5 rounded-sm bg-primary/10 p-1 shrink-0">
                      <CheckCircle className="h-4 w-4 text-primary" />
                   </div>
                   {faq.q}
@@ -285,7 +285,7 @@ const HomeView = () => {
 
       {/* CTA Section */}
       <section className="mx-auto max-w-7xl px-6 lg:px-8 pb-16">
-        <div className="relative overflow-hidden rounded-xl border border-border/50 bg-card px-6 py-16 text-center shadow-xl">
+        <div className="relative overflow-hidden rounded-sm border border-border/50 bg-card px-6 py-16 text-center shadow-xl">
           {/* Subtle gradient bg */}
           <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-blue-500/5" />
           

@@ -54,7 +54,7 @@ export function ApiKeys({ geminiApiKey }: { geminiApiKey?: string | null }) {
   };
 
   return (
-    <section className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-xl">
+    <section className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-sm">
       <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
         <div>
           <h2 className="text-sm font-semibold tracking-tight text-foreground">
@@ -74,7 +74,7 @@ export function ApiKeys({ geminiApiKey }: { geminiApiKey?: string | null }) {
             <Input
               id="gemini-api-key"
               type="password"
-              className="h-9 pl-8 bg-muted/20! border-foreground/5! rounded-md"
+              className="h-9 pl-8 bg-muted/20! border-foreground/5! rounded-sm"
               placeholder="AIza..."
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
@@ -105,7 +105,7 @@ export function ApiKeys({ geminiApiKey }: { geminiApiKey?: string | null }) {
       {geminiApiKey && (
         <div className="border-t border-foreground/5 p-3 sm:p-6 space-y-4">
           <h3 className="text-xs font-medium">Saved API Keys</h3>
-          <div className="flex items-center justify-between border border-foreground/10 bg-background px-3 py-1 gap-4 rounded-md">
+          <div className="flex items-center justify-between border border-foreground/10 bg-background px-3 py-1 gap-4 rounded-sm">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <Key className="h-4 w-4 text-muted-foreground shrink-0" />
               <div className="font-mono text-xs break-all">

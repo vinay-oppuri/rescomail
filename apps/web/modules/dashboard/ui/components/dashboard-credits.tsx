@@ -37,7 +37,7 @@ const DashboardCredits = async ({ userId }: Props) => {
   const displayEmailUsed = hasApiKey ? '∞' : Math.min(coldEmailUsed, emailLimit);
 
   return (
-    <div className="relative mb-4 overflow-hidden rounded-xl border border-primary/10 bg-primary/5 p-4">
+    <div className="relative mb-4 overflow-hidden rounded-sm border border-primary/10 bg-primary/5 p-4">
       <div className="absolute top-0 right-0 p-2 opacity-5">
         <Sparkles className="h-10 w-10 text-primary" />
       </div>
@@ -46,7 +46,7 @@ const DashboardCredits = async ({ userId }: Props) => {
           AI Credits
         </p>
         <span
-          className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
+          className={`rounded-sm px-1.5 py-0.5 text-[10px] font-bold ${
             hasApiKey
               ? "bg-green-500/10 text-green-600 dark:text-green-400"
               : isExhausted
@@ -80,7 +80,7 @@ const DashboardCredits = async ({ userId }: Props) => {
         </div>
 
         {isExhausted && !hasApiKey && (
-          <p className="text-[9px] rounded-md text-destructive font-semibold leading-tight bg-destructive/10 p-1.5 border border-destructive/20 text-center">
+          <p className="text-[9px] rounded-sm text-destructive font-semibold leading-tight bg-destructive/10 p-1.5 border border-destructive/20 text-center">
             Limit reached. Please add your personal API key for more.
           </p>
         )}

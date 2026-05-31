@@ -19,6 +19,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { signupSchema, type SignupInput } from "@repo/validations";
+import { clientEnv } from "@repo/env/client";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 import { PasswordInput } from "./password-input";
 
@@ -35,6 +37,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 const AuthSignup = () => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -71,10 +74,19 @@ const AuthSignup = () => {
         name: `${values.firstName} ${values.lastName}`,
         email: values.email,
         password: values.password,
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": captchaToken || "",
+          }
+        }
       });
 
       if (response.error) {
-        setAuthError(response.error.message ?? "Unable to create an account.");
+        if (response.error.status === 429) {
+          setAuthError("Too many failed attempts. Please try again later.");
+        } else {
+          setAuthError(response.error.message ?? "Unable to create an account.");
+        }
         return;
       }
 
@@ -116,7 +128,7 @@ const AuthSignup = () => {
         <div className="w-full max-w-sm space-y-6 md:space-y-8">
           <div className="space-y-2">
             <Link href="/" className="group mb-6 md:mb-8 flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center bg-primary font-bold text-primary-foreground">
+              <div className="flex h-8 w-8 items-center justify-center bg-primary font-bold text-primary-foreground rounded-sm">
                 R
               </div>
               <span className="text-base md:text-xl font-bold">Rescomail</span>
@@ -213,6 +225,16 @@ const AuthSignup = () => {
                   </FormItem>
                 )}
               />
+              {clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+                <Turnstile
+                  siteKey={clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                  onSuccess={setCaptchaToken}
+                  options={{
+                    theme: "light",
+                    size: "invisible"
+                  }}
+                />
+              )}
               <Button
                 type="submit"
                 className="h-10 w-full text-sm md:text-base"
@@ -266,7 +288,7 @@ const AuthSignup = () => {
       <div className="relative hidden w-1/2 overflow-hidden border-l bg-muted/20 lg:flex">
         <div className="relative z-10 flex w-full flex-col justify-center p-16">
           <div className="max-w-md space-y-6">
-            <div className="inline-flex items-center gap-2 border bg-background px-3 py-1 text-sm font-medium">
+            <div className="inline-flex items-center gap-2 border bg-background px-4 py-2 text-sm font-medium rounded-full">
               <CheckCircle2 className="h-4 w-4 text-primary" />
               Trusted by developers worldwide
             </div>
@@ -288,7 +310,7 @@ const AuthSignup = () => {
                   desc: "Apply to 10x more roles daily",
                 },
               ].map((item) => (
-                <div key={item.title} className="flex gap-4">
+                <div key={item.title} className="flex gap-4 [&_div]:rounded-full">
                   <div className="flex h-6 w-6 shrink-0 items-center justify-center border border-primary">
                     <div className="h-2 w-2 bg-primary" />
                   </div>
