@@ -19,8 +19,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { signupSchema, type SignupInput } from "@repo/validations";
-import { clientEnv } from "@repo/env/client";
-import { Turnstile } from "@marsidev/react-turnstile";
 
 import { PasswordInput } from "./password-input";
 
@@ -37,7 +35,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 const AuthSignup = () => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -74,11 +72,6 @@ const AuthSignup = () => {
         name: `${values.firstName} ${values.lastName}`,
         email: values.email,
         password: values.password,
-        fetchOptions: {
-          headers: {
-            "x-captcha-response": captchaToken || "",
-          }
-        }
       });
 
       if (response.error) {
@@ -225,16 +218,6 @@ const AuthSignup = () => {
                   </FormItem>
                 )}
               />
-              {clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
-                <Turnstile
-                  siteKey={clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                  onSuccess={setCaptchaToken}
-                  options={{
-                    theme: "light",
-                    size: "invisible"
-                  }}
-                />
-              )}
               <Button
                 type="submit"
                 className="h-10 w-full text-sm md:text-base"

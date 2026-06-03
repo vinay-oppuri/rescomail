@@ -39,7 +39,6 @@ const serverEnvSchema = z
     AI_SERVICE_GRPC_URL: optionalUrl,
     TAVILY_API_KEY: optionalNonEmptyString,
     AI_SERVICE_API_KEY: optionalNonEmptyString,
-    TURNSTILE_SECRET_KEY: optionalNonEmptyString,
   })
   .superRefine((env, ctx) => {
     const hasGoogleId = Boolean(env.GOOGLE_CLIENT_ID);
@@ -70,7 +69,6 @@ export const serverEnv = serverEnvSchema.parse({
   AI_SERVICE_GRPC_URL: process.env.AI_SERVICE_GRPC_URL,
   TAVILY_API_KEY: process.env.TAVILY_API_KEY,
   AI_SERVICE_API_KEY: process.env.AI_SERVICE_API_KEY,
-  TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

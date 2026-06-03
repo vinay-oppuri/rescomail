@@ -19,8 +19,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { loginSchema, type LoginInput } from "@repo/validations";
-import { clientEnv } from "@repo/env/client";
-import { Turnstile } from "@marsidev/react-turnstile";
 
 import { PasswordInput } from "./password-input";
 
@@ -37,7 +35,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 const AuthLogin = () => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -71,11 +69,6 @@ const AuthLogin = () => {
       const response = await signIn.email({
         email: values.email,
         password: values.password,
-        fetchOptions: {
-          headers: {
-            "x-captcha-response": captchaToken || "",
-          }
-        }
       });
 
       if (response.error) {
@@ -190,16 +183,6 @@ const AuthLogin = () => {
                   </FormItem>
                 )}
               />
-              {clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
-                  <Turnstile
-                    siteKey={clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                    onSuccess={setCaptchaToken}
-                    options={{
-                      theme: "auto",
-                      size: "invisible"
-                    }}
-                  />
-              )}
               <Button
                 type="submit"
                 className="h-10 w-full text-sm md:text-base"
