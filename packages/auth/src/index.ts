@@ -36,10 +36,14 @@ export const auth = betterAuth({
     },
   },
   plugins: [
-    captcha({
-      provider: "cloudflare-turnstile",
-      secretKey: serverEnv.TURNSTILE_SECRET_KEY || "dummy-key",
-    }),
+    ...(serverEnv.TURNSTILE_SECRET_KEY
+      ? [
+          captcha({
+            provider: "cloudflare-turnstile",
+            secretKey: serverEnv.TURNSTILE_SECRET_KEY,
+          }),
+        ]
+      : []),
   ],
   emailAndPassword: {
     enabled: true,
