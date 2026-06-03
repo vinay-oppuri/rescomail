@@ -12,8 +12,8 @@ export default function DashboardLoading() {
       <div className="grid gap-8 md:grid-cols-5">
         <div className="md:col-span-3 space-y-5">
           <div className="flex flex-col gap-2">
-            <Skeleton className="h-6 w-3/4 sm:w-32 max-w-full" />
-            <Skeleton className="h-4 w-full sm:w-48 max-w-full" />
+            <Skeleton className="h-6 w-3/4 sm:w-32 max-w-full rounded-sm" />
+            <Skeleton className="h-4 w-full sm:w-48 max-w-full rounded-sm" />
           </div>
           <div className="flex flex-col gap-3">
             <Skeleton className="h-20 rounded-sm" />
@@ -23,8 +23,8 @@ export default function DashboardLoading() {
         </div>
         <div className="md:col-span-2 space-y-5">
           <div className="flex flex-col gap-2">
-            <Skeleton className="h-6 w-3/4 sm:w-32 max-w-full" />
-            <Skeleton className="h-4 w-full sm:w-48 max-w-full" />
+            <Skeleton className="h-6 w-3/4 sm:w-32 max-w-full rounded-sm" />
+            <Skeleton className="h-4 w-full sm:w-48 max-w-full rounded-sm" />
           </div>
           <div className="space-y-4">
             <Skeleton className="h-24 rounded-sm" />
