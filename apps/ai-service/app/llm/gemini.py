@@ -1,8 +1,21 @@
+"""
+app/llm/gemini.py — Google Gemini API client with tenacity retry + token usage logging.
+Uses exponential backoff on 429 / 503 / network errors before surfacing a failure.
+"""
+
 import json
 import logging
-import os
 
 import requests
+from tenacity import (
+    retry,
+    retry_if_exception,
+    stop_after_attempt,
+    wait_exponential,
+    before_sleep_log,
+)
+
+from app.core.config import settings
 
 logger = logging.getLogger("rescomail.ai-service.gemini")
 
@@ -10,31 +23,74 @@ REQUEST_TIMEOUT = (5, 60)
 _GEMINI_API_KEY_ENV = "GEMINI_API_KEY"
 _GEMINI_MODEL_ENV = "GEMINI_MODEL"
 _DEFAULT_MODEL = "gemini-2.5-flash"
-_FALLBACK_MODEL = "gemini-1.5-flash"
 
-# HTTP status codes that indicate the model is temporarily overloaded / rate-limited.
-_OVERLOAD_STATUSES = {429, 503}
+# HTTP status codes that warrant a retry (transient overload / rate-limit).
+_RETRYABLE_STATUSES = {429, 500, 503}
+
+
+def _is_retryable(exc: BaseException) -> bool:
+    """Return True if the exception is worth retrying."""
+    if isinstance(exc, _GeminiAPIError):
+        return exc.status_code in _RETRYABLE_STATUSES
+    # Retry on connection-level errors (timeout, reset, etc.)
+    return isinstance(exc, (requests.Timeout, requests.ConnectionError))
+
+
+class _GeminiAPIError(RuntimeError):
+    """Internal error that carries the HTTP status code for retry decisions."""
+
+    def __init__(self, status_code: int, body: str):
+        self.status_code = status_code
+        super().__init__(f"Gemini API error {status_code}: {body[:400]}")
 
 
 def _get_api_key() -> str:
     """Return the Gemini API key, raising clearly if it is not set."""
-    key = os.getenv(_GEMINI_API_KEY_ENV, "").strip()
+    key = settings.gemini_api_key.strip()
     if not key:
         raise RuntimeError(
-            f"{_GEMINI_API_KEY_ENV} is not set. "
+            "gemini_api_key is not set in settings. "
             "Rescomail uses Google Gemini as its only LLM provider. "
             "Set this variable in apps/ai-service/.env before starting the service."
         )
     return key
 
 
-def _call_gemini(api_key: str, model: str, payload: dict) -> requests.Response:
-    """Make a single generateContent request and return the raw Response."""
-    url = (
+def _build_url(api_key: str, model: str) -> str:
+    return (
         "https://generativelanguage.googleapis.com/v1beta/models/"
         f"{model}:generateContent?key={api_key}"
     )
-    return requests.post(url, json=payload, timeout=REQUEST_TIMEOUT)
+
+
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception(_is_retryable),
+    before_sleep=before_sleep_log(logger, logging.WARNING),
+    reraise=True,
+)
+def _call_with_retry(api_key: str, model: str, payload: dict) -> dict:
+    """Make a generateContent request, raising _GeminiAPIError on non-200."""
+    url = _build_url(api_key, model)
+    response = requests.post(url, json=payload, timeout=REQUEST_TIMEOUT)
+
+    if response.status_code != 200:
+        raise _GeminiAPIError(response.status_code, response.text)
+
+    data = response.json()
+
+    # Log token usage when available
+    usage = data.get("usageMetadata", {})
+    if usage:
+        logger.info(
+            "Gemini token usage — prompt: %s, candidates: %s, total: %s",
+            usage.get("promptTokenCount", "?"),
+            usage.get("candidatesTokenCount", "?"),
+            usage.get("totalTokenCount", "?"),
+        )
+
+    return data
 
 
 def generate_gemini_json(
@@ -45,8 +101,27 @@ def generate_gemini_json(
     temperature: float = 0.1,
     api_key: str | None = None,
 ) -> dict | None:
+    """Generate a structured JSON response from Gemini.
+
+    Retries up to 3 times with exponential backoff on transient errors (429, 503,
+    connection resets). Surfaces a clear RuntimeError after exhausted retries.
+
+    Args:
+        prompt: Full prompt text.
+        response_schema: JSON Schema the model must conform to.
+        model: Gemini model to use (defaults to GEMINI_MODEL env or gemini-2.5-flash).
+        temperature: Sampling temperature.
+        api_key: Override the GEMINI_API_KEY env var (useful in tests).
+
+    Returns:
+        Parsed dict from the model response.
+
+    Raises:
+        RuntimeError: After all retries are exhausted or on a fatal error.
+    """
     resolved_api_key = api_key or _get_api_key()
-    primary_model = model or os.getenv(_GEMINI_MODEL_ENV, _DEFAULT_MODEL)
+    resolved_model = model or settings.gemini_model
+
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
@@ -56,30 +131,16 @@ def generate_gemini_json(
         },
     }
 
-    response = _call_gemini(resolved_api_key, primary_model, payload)
-
-    # If the primary model is overloaded / rate-limited, fall back to gemini-1.5-flash
-    # so the request can still be served rather than failing outright.
-    if response.status_code in _OVERLOAD_STATUSES and primary_model != _FALLBACK_MODEL:
-        logger.warning(
-            "Gemini model '%s' returned %s (high demand). "
-            "Retrying with fallback model '%s'.",
-            primary_model,
-            response.status_code,
-            _FALLBACK_MODEL,
-        )
-        response = _call_gemini(resolved_api_key, _FALLBACK_MODEL, payload)
-
-    if response.status_code != 200:
+    try:
+        data = _call_with_retry(resolved_api_key, resolved_model, payload)
+    except _GeminiAPIError as exc:
         logger.error(
-            "Gemini API error %s from model '%s': %s",
-            response.status_code,
-            primary_model,
-            response.text[:400],
+            "Gemini API failed after retries — model: %s, status: %s",
+            resolved_model,
+            exc.status_code,
         )
-        raise RuntimeError(f"Gemini API error {response.status_code}: {response.text[:400]}")
+        raise RuntimeError(str(exc)) from exc
 
-    data = response.json()
     text = (
         data.get("candidates", [{}])[0]
         .get("content", {})

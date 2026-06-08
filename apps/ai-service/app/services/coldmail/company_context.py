@@ -1,8 +1,8 @@
-import os
 import re
 import logging
 import requests
 
+from app.core.config import settings
 from app.embeddings.semantic import semantic_search_scores
 
 logger = logging.getLogger("rescomail.ai-service.company_context")
@@ -18,10 +18,10 @@ def get_rag_company_context(
     job_description: str = "",
     company_website_url: str = "",
 ) -> str:
-    api_key = os.getenv("TAVILY_API_KEY")
+    api_key = settings.tavily_api_key
     if not api_key:
         logger.warning(
-            "Company context RAG SKIPPED — TAVILY_API_KEY is not configured. "
+            "Company context RAG SKIPPED — tavily_api_key is not configured. "
             "Set it in your env to enable website-based context enrichment."
         )
         return ""
@@ -99,8 +99,6 @@ def get_rag_company_context(
         except Exception as exc:
             logger.error("Fallback extract FAILED for '%s': %s", company_website_url, exc)
 
-
-    
     if not raw_text_blocks:
         logger.warning("No usable text returned from Tavily Search for '%s'.", target_name)
         return ""

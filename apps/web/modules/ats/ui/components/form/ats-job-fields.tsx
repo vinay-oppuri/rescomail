@@ -1,18 +1,14 @@
 "use client";
 
-import { Input, Label, Textarea } from "@repo/ui";
+import { Label, Textarea } from "@repo/ui";
 import { useAtsStore } from "../../../store/ats-store";
 
 const fieldClassName = "border-foreground/5! bg-muted/20!";
 
 const AtsJobFields = () => {
   const {
-    jobTitle,
-    companyName,
     jobDescription,
     keywordText,
-    setJobTitle,
-    setCompanyName,
     setJobDescription,
     setKeywordText,
   } = useAtsStore();
@@ -23,31 +19,7 @@ const AtsJobFields = () => {
 
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="job-title">Target Role</Label>
-          <Input
-            id="job-title"
-            value={jobTitle}
-            onChange={(event) => setJobTitle(event.target.value)}
-            className="bg-muted/20! border-foreground/5! rounded-sm"
-            placeholder="Machine learning engineer"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="company-name">Company</Label>
-          <Input
-            id="company-name"
-            value={companyName}
-            onChange={(event) => setCompanyName(event.target.value)}
-            className="bg-muted/20! border-foreground/5! rounded-sm"
-            placeholder="Acme AI"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2 mt-4">
+      <div className="space-y-2">
         <Label htmlFor="job-description">Job Description</Label>
         <Textarea
           id="job-description"

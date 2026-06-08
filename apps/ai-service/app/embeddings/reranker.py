@@ -1,7 +1,8 @@
 import math
-import os
 from functools import lru_cache
 from typing import Any
+
+from app.core.config import settings
 
 from app.embeddings.semantic import (
     FALLBACK_ENV,
@@ -16,7 +17,7 @@ def reranker_model_name() -> str:
     if _should_use_fallback():
         return "semantic-similarity-dev-fallback"
 
-    return os.getenv(RERANKER_MODEL_ENV, DEFAULT_RERANKER_MODEL)
+    return settings.rescomail_reranker_model
 
 
 def reranker_backend() -> str:
@@ -40,10 +41,10 @@ def _load_cross_encoder() -> Any:
         raise RuntimeError(
             "sentence-transformers is required for the production reranker. "
             "Install apps/ai-service/requirements.txt or set "
-            f"{FALLBACK_ENV}=1 only for local development."
+            "RESCOMAIL_ALLOW_HASHED_EMBEDDING_FALLBACK=1 only for local development."
         ) from error
 
-    return CrossEncoder(os.getenv(RERANKER_MODEL_ENV, DEFAULT_RERANKER_MODEL))
+    return CrossEncoder(settings.rescomail_reranker_model)
 
 
 def _sigmoid(value: float) -> float:
@@ -56,4 +57,4 @@ def _sigmoid(value: float) -> float:
 
 
 def _should_use_fallback() -> bool:
-    return os.getenv(FALLBACK_ENV, "").strip().lower() in {"1", "true", "yes"}
+    return settings.rescomail_allow_hashed_embedding_fallback

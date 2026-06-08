@@ -1,62 +1,65 @@
-import logging
-import os
+"""
+app/main.py — FastAPI application factory.
+
+Wires together:
+  - Structured logging (structlog + TraceMiddleware)
+  - Rate limiting (slowapi)
+  - Custom exception handlers
+  - All API routers
+"""
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 
 from app.api.router import api_router
+from app.core.config import settings
+from app.core.exceptions import RescomailError, rescomail_exception_handler
+from app.core.logging import TraceMiddleware, configure_structlog, get_logger
+from app.core.rate_limit import limiter
 
-load_dotenv_called = False
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-    load_dotenv_called = True
-except ImportError:
-    pass
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("rescomail.ai-service")
-
-
-def _assert_required_env() -> None:
-    """Fail fast at startup if critical environment variables are missing."""
-    missing = []
-
-    if not os.getenv("GEMINI_API_KEY", "").strip():
-        missing.append(
-            "GEMINI_API_KEY — required for Gemini LLM (the only supported provider)"
-        )
-
-    if not os.getenv("AI_SERVICE_API_KEY", "").strip():
-        missing.append(
-            "AI_SERVICE_API_KEY - required to authenticate inbound web app requests"
-        )
-
-    if missing:
-        raise RuntimeError(
-            "Rescomail AI service cannot start — missing required environment variables:\n"
-            + "\n".join(f"  • {m}" for m in missing)
-        )
+# Initialise structlog before anything else
+configure_structlog(settings.log_level)
+logger = get_logger("rescomail.ai-service")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    _assert_required_env()
-    
-    # Precompile Pydantic schemas to avoid thread concurrency mega-cache errors
+    # Precompile Pydantic schemas at startup to avoid cold-start latency and
+    # thread-concurrency mega-cache errors under load.
     try:
         from app.schemas.ats import AtsAnalyzeRequest, AtsAnalysisResponse
         from app.schemas.resume import StructuredResume
+
         AtsAnalyzeRequest.model_json_schema()
         AtsAnalysisResponse.model_json_schema()
         StructuredResume.model_json_schema()
-    except Exception as e:
-        logger.warning(f"Failed to precompile models: {e}")
+    except Exception as exc:
+        logger.warning("Failed to precompile Pydantic schemas", error=str(exc))
 
-    logger.info("Rescomail AI service started (Gemini provider: %s)", os.getenv("GEMINI_MODEL", "gemini-2.5-flash"))
+    logger.info(
+        "Rescomail AI service started",
+        gemini_model=settings.gemini_model,
+        log_level=settings.log_level,
+        rate_limit=f"{settings.rate_limit_per_minute}/minute",
+    )
     yield
     logger.info("Rescomail AI service shutting down.")
 
 
 app = FastAPI(title="Rescomail AI Service", lifespan=lifespan)
+
+# --- Middleware ---
+app.state.limiter = limiter
+app.add_middleware(SlowAPIMiddleware)
+app.add_middleware(TraceMiddleware)
+
+# --- Exception handlers ---
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(RescomailError, rescomail_exception_handler)
+
+# --- Routers ---
 app.include_router(api_router)

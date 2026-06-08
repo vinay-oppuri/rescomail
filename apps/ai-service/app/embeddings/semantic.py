@@ -1,10 +1,11 @@
 import hashlib
 import math
-import os
 from collections import Counter
 from collections.abc import Iterable
 from functools import lru_cache
 from typing import Any
+
+from app.core.config import settings
 
 from app.models.ats_semantics import SEMANTIC_ALIASES
 from app.utils.text import normalize_keyword, tokenize
@@ -20,7 +21,7 @@ def embedding_model_name() -> str:
     if _should_use_hashed_fallback():
         return "rescomail-hashed-semantic-dev-fallback"
 
-    return os.getenv(EMBEDDING_MODEL_ENV, DEFAULT_EMBEDDING_MODEL)
+    return settings.rescomail_embedding_model
 
 
 def embedding_backend() -> str:
@@ -159,14 +160,14 @@ def _load_sentence_transformer() -> Any:
         raise RuntimeError(
             "sentence-transformers is required for production embeddings. "
             "Install apps/ai-service/requirements.txt or set "
-            f"{FALLBACK_ENV}=1 only for local development."
+            "RESCOMAIL_ALLOW_HASHED_EMBEDDING_FALLBACK=1 only for local development."
         ) from error
 
-    return SentenceTransformer(os.getenv(EMBEDDING_MODEL_ENV, DEFAULT_EMBEDDING_MODEL))
+    return SentenceTransformer(settings.rescomail_embedding_model)
 
 
 def _should_use_hashed_fallback() -> bool:
-    return os.getenv(FALLBACK_ENV, "").strip().lower() in {"1", "true", "yes"}
+    return settings.rescomail_allow_hashed_embedding_fallback
 
 
 def _weighted_features(text: str) -> Counter[str]:

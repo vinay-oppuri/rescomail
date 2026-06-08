@@ -57,6 +57,29 @@ def analyze_resume_fit(
         + intelligence.compatibilityPrediction.probability * 0.28
     )
 
+    # 1. Establish robust local template-based fallbacks
+    strengths = build_strengths(category_scores, evidence)
+    risks = build_risks(category_scores, evidence, job_profile)
+    suggestions = build_suggestions(category_scores, evidence, job_profile)
+    rewrite_suggestions = build_rewrite_suggestions(evidence, job_profile)
+    summary = build_summary(overall_score, job_profile, evidence)
+
+    # 2. Try RAG LLM layer enrichment via Gemini
+    from app.services.ats.llm_layer import run_ats_llm_layer
+    ai_response = run_ats_llm_layer(
+        request=request,
+        resume_text=resume_text,
+        missing_keywords=missing_keywords(evidence),
+        job_profile=job_profile,
+        category_scores=category_scores,
+        semantic_resume_job=semantic_resume_job,
+    )
+
+    if ai_response:
+        suggestions = ai_response.suggestions
+        rewrite_suggestions = ai_response.rewriteSuggestions
+        summary = ai_response.summary
+
     return AtsAnalysisResponse(
         resumeId=request.resumeId,
         overallScore=overall_score,
@@ -66,10 +89,10 @@ def analyze_resume_fit(
         evidence=evidence,
         matchedKeywords=matched_keywords(evidence),
         missingKeywords=missing_keywords(evidence),
-        strengths=build_strengths(category_scores, evidence),
-        risks=build_risks(category_scores, evidence, job_profile),
-        suggestions=build_suggestions(category_scores, evidence, job_profile),
-        rewriteSuggestions=build_rewrite_suggestions(evidence, job_profile),
+        strengths=strengths,
+        risks=risks,
+        suggestions=suggestions,
+        rewriteSuggestions=rewrite_suggestions,
         intelligence=intelligence,
-        summary=build_summary(overall_score, job_profile, evidence),
+        summary=summary,
     )

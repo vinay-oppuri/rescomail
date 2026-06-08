@@ -11,7 +11,7 @@ const AtsRewritePlan = ({ rewrites }: AtsRewritePlanProps) => {
 
   return (
     <div className="border-t p-5">
-      <h3 className="text-sm font-semibold">Resume rewrite plan</h3>
+      <h3 className="text-sm font-semibold">Bullet point improvements</h3>
       <div className="mt-4 grid gap-3">
         {rewrites.map((rewrite) => (
           <div key={rewrite.target} className="border p-4">

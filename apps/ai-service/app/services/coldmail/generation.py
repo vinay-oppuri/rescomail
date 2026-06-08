@@ -1,17 +1,17 @@
 """
-coldmail_generation.py
+coldmail/generation.py
 ----------------------
 Orchestrates the cold email generation pipeline.
 
 Flow:
   1. Call Gemini with the prompt and JSON schema.
-  2. Normalise the returned body to proper email structure (coldmail_body).
+  2. Normalise the returned body to proper email structure (coldmail/body).
   3. Overwrite Gemini's quality score and read-time with server-computed values.
   4. Validate against ColdEmailResponse schema.
   5. On Gemini failure or schema error, return a deterministic fallback email.
 
 All deterministic helpers (copy building, scoring, text utilities) live in
-coldmail_helpers.py.  Body post-processing lives in coldmail_body.py.
+coldmail/helpers.py. Body post-processing lives in coldmail/body.py.
 """
 import logging
 
@@ -22,8 +22,8 @@ from app.models.coldmail import GEMINI_COLD_EMAIL_SCHEMA
 from app.prompts.coldmail import build_cold_email_prompt
 from app.schemas.coldmail import ColdEmailGenerateRequest, ColdEmailResponse
 from app.schemas.resume import StructuredResume
-from app.services.coldmail_body import normalize_body
-from app.services.coldmail_helpers import (
+from app.services.coldmail.body import normalize_body
+from app.services.coldmail.helpers import (
     candidate_name,
     candidate_skills,
     context_sentence,

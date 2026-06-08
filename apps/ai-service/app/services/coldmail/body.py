@@ -1,5 +1,5 @@
 """
-coldmail_body.py
+coldmail/body.py
 ----------------
 Post-processing for Gemini-generated cold email bodies.
 
@@ -31,7 +31,7 @@ _SIGN_OFF_RE = re.compile(
 def normalize_body(body: str) -> str:
     """Ensure the email body always has proper greeting → paragraphs → sign-off structure.
 
-    - If the body already contains blank-line-separated paragraphs (``\\n\\n``),
+    - If the body already contains blank-line-separated paragraphs (``\n\n``),
       only whitespace cleanup is applied.
     - If the body is a single prose blob, it is split into logical sections:
       greeting, content paragraphs (≤ 3 sentences each), and sign-off.

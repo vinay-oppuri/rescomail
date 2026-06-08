@@ -1,8 +1,8 @@
 from app.schemas.resume import ParseRequest, StructuredResume
-from app.services.document_extraction import extract_text_from_url
-from app.services.resume_heuristics import preprocess_resume_text
-from app.services.resume_structuring import structure_resume
-from app.services.text_cleaning import clean_resume_text
+from app.services.resume.document_extraction import extract_text_from_url
+from app.services.resume.heuristics import preprocess_resume_text
+from app.services.resume.structuring import structure_resume
+from app.services.resume.cleaning import clean_resume_text
 
 
 def parse_resume(request: ParseRequest) -> StructuredResume:

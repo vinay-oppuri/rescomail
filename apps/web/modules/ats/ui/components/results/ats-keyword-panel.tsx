@@ -11,7 +11,7 @@ const AtsKeywordPanel = ({
   keywords,
   muted = false,
 }: AtsKeywordPanelProps) => (
-  <div className="border-b p-5 lg:border-r lg:[&:nth-child(2)]:border-r-0">
+  <div className="p-5">
     <h3 className="text-sm font-semibold">{title}</h3>
     <div className="mt-4 flex flex-wrap gap-2">
       {keywords.length === 0 ? (

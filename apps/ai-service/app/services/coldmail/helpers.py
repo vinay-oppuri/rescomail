@@ -1,5 +1,5 @@
 """
-coldmail_helpers.py
+coldmail/helpers.py
 -------------------
 Deterministic helper functions for cold email generation.
 Covers resume extraction, copy building, scoring, and text utilities.
