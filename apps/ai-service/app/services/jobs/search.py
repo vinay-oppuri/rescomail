@@ -61,11 +61,11 @@ def search_jsearch(query: str, location: str, page: int = 1, num_pages: int = 1)
         logger.warning("JSEARCH_API_KEY is not set — skipping JSearch.")
         return []
 
+    query_str = f"{query} in {location}" if (location and location.strip()) else query
     params: dict[str, Any] = {
-        "query": f"{query} in {location}",
+        "query": query_str,
         "page": str(page),
         "num_pages": str(num_pages),
-        "date_posted": "week",
     }
     headers = {
         "X-RapidAPI-Key": settings.jsearch_api_key,

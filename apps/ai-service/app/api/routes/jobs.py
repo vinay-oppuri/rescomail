@@ -93,3 +93,21 @@ async def unsubscribe_from_jobs(
     logger.info("Unsubscribe request for user %s", request.user_id)
     # Placeholder — actual DB cleanup happens in the main web app.
     return {"unsubscribed": True, "user_id": request.user_id}
+
+
+@router.get("/search")
+async def search_jobs_route(
+    query: str,
+    location: str,
+    max_results: int = 15,
+    _auth: None = Depends(require_service_auth),
+):
+    """Search for jobs using JSearch or Adzuna."""
+    logger.info("Job search query: '%s' in location: '%s'", query, location)
+    try:
+        from app.services.jobs.search import search_jobs
+        results = search_jobs(query, location, max_results=max_results)
+        return {"results": results}
+    except Exception as exc:
+        logger.exception("Failed to search jobs for query '%s'", query)
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
