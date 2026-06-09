@@ -160,14 +160,16 @@ ai-service/
 │   └── evals/                          # prompt regression suite — run before any prompt change
 │
 ├── docker/                             # NEW — split by service
-│   ├── Dockerfile.api                  # API image
-│   └── Dockerfile.worker               # Celery worker image
+│   ├── Dockerfile.api                  # API image (uses start.sh to run all services)
+│   ├── Dockerfile.worker               # Celery worker image
+│   └── start.sh                        # NEW — Unified start script for free tier (runs API + Worker + Beat)
 │
 ├── docker-compose.yml                  # NEW — local dev: api + worker + redis
 ├── pyproject.toml                      # NEW — replaces requirements.txt
 ├── .dockerignore
 ├── .env.example                        # MODIFY — document every variable
 ├── package.json
+
 └── AGENTS.md
 ```
 
@@ -380,7 +382,20 @@ app/tasks/job_tasks.py
 
 ---
 
+## ☁️ Render Free Tier Unified Deployment
+
+To bypass Render's $7/month charge for running separate Background Workers, we package the API, Celery Worker, and Celery Beat scheduler together inside a single Web Service container using a startup script:
+
+1. **`docker/start.sh`** starts the Celery Beat scheduler, the Celery Worker (with `--concurrency=1` to optimize RAM), and the FastAPI Uvicorn web server concurrently.
+2. **`docker/Dockerfile.api`** is configured to execute `./start.sh` on startup.
+3. **Important Configuration:** Because Render's Free tier provides only 512MB of RAM, you **must** set:
+   * `RESCOMAIL_ALLOW_HASHED_EMBEDDING_FALLBACK=True`
+   This keeps the combined memory footprint of the container under **150MB**.
+
+---
+
 ## 🔑 Required Environment Variables
+
 
 | Variable | Required For | Notes |
 | :--- | :--- | :--- |

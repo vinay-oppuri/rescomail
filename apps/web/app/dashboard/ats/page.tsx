@@ -6,7 +6,8 @@ import { getAtsAnalysisHistoryForUser } from "@/modules/ats/server/ats-history";
 import { getAtsResumeOptions } from "@/modules/ats/server/ats-resumes";
 import AtsAnalysisView from "@/modules/ats/ui/views/ats-analysis-view";
 
-const Page = async () => {
+const Page = async (props: { searchParams: Promise<{ resumeId?: string }> }) => {
+  const searchParams = await props.searchParams;
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -20,7 +21,7 @@ const Page = async () => {
     getAtsAnalysisHistoryForUser(session.user.id),
   ]);
 
-  return <AtsAnalysisView analyses={analyses} resumes={resumes} />;
+  return <AtsAnalysisView analyses={analyses} resumes={resumes} initialResumeId={searchParams.resumeId} />;
 };
 
 export default Page;

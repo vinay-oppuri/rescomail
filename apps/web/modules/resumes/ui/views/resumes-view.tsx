@@ -1,6 +1,10 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
-import { FileText } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
 
 import type { ResumeListItem } from "../../server/resumes";
 import ResumeUploadPanel from "../components/resume-upload-panel";
@@ -46,6 +50,25 @@ const formatFileSize = (bytes: number) => {
 };
 
 const ResumesView = ({ resumes }: ResumesViewProps) => {
+  const router = useRouter();
+
+  const hasPending = resumes.some(
+    (r) =>
+      r.status === "uploaded" ||
+      r.status === "queued" ||
+      r.status === "processing"
+  );
+
+  useEffect(() => {
+    if (!hasPending) return;
+
+    const interval = setInterval(() => {
+      router.refresh();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [hasPending, router]);
+
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">
       <div className="flex flex-col gap-4 border-b border-border/50 pb-6 lg:flex-row lg:items-end lg:justify-between">
@@ -98,7 +121,10 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
                       <p className="truncate text-xs font-medium">
                         {resume.title}
                       </p>
-                      <Badge variant={statusVariant(resume.status)}>
+                      <Badge variant={statusVariant(resume.status)} className="gap-1.5">
+                        {resume.status === "processing" || resume.status === "queued" || resume.status === "uploaded" ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : null}
                         {statusLabel[resume.status] ?? resume.status}
                       </Badge>
                     </div>
@@ -116,7 +142,7 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
 
                   <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" asChild>
-                      <a href={resume.fileUrl} target="_blank" rel="noreferrer">
+                      <a href={`/api/resumes/${resume.id}/file`} target="_blank" rel="noreferrer">
                         Open PDF
                       </a>
                     </Button>

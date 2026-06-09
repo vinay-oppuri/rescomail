@@ -28,16 +28,17 @@ import AtsEmptyState from "../components/ats-empty-state";
 interface AtsAnalysisViewProps {
   analyses: AtsAnalysisHistoryItem[];
   resumes: AtsResumeOption[];
+  initialResumeId?: string;
 }
 
-const AtsAnalysisView = ({ analyses, resumes }: AtsAnalysisViewProps) => {
+const AtsAnalysisView = ({ analyses, resumes, initialResumeId }: AtsAnalysisViewProps) => {
   const { initStore, showForm, setShowForm, analysis, setAnalysis, history } = useAtsStore();
 
   // Hydrate the store with the latest server data each time the server
   // re-renders (e.g. after router.refresh()). Form fields are preserved.
   useEffect(() => {
-    initStore(analyses, resumes);
-  }, [analyses, resumes, initStore]);
+    initStore(analyses, resumes, initialResumeId);
+  }, [analyses, resumes, initialResumeId, initStore]);
 
   const parsedResumes = resumes.filter((r) => r.status === "parsed").length;
 

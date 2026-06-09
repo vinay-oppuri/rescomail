@@ -37,7 +37,7 @@ const ResumeActionsRow = ({
 
   return (
     <div className="flex items-center gap-2">
-      {canAnalyse && (
+      {canAnalyse ? (
         <Button
           variant="outline"
           size="sm"
@@ -47,6 +47,15 @@ const ResumeActionsRow = ({
             <Sparkles className="h-3.5 w-3.5" />
             Analyse
           </a>
+        </Button>
+      ) : (
+        <Button
+          variant="outline"
+          size="sm"
+          disabled
+        >
+          <Sparkles className="h-3.5 w-3.5" />
+          Analyse
         </Button>
       )}
 

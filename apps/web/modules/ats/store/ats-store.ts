@@ -133,6 +133,7 @@ interface AtsStore {
   initStore: (
     analyses: AtsAnalysisHistoryItem[],
     resumes: AtsResumeOption[],
+    initialResumeId?: string,
   ) => void;
 
   setResumeId: (value: string) => void;
@@ -161,14 +162,15 @@ export const useAtsStore = create<AtsStore>((set, get) => ({
   showForm: true,
 
   // ---------------------------------------------------------------------------
-  initStore: (analyses, resumes) => {
+  initStore: (analyses, resumes, initialResumeId) => {
     set((state) => {
       const firstParsed =
         resumes.find((r) => r.status === "parsed") ?? resumes[0];
-      // Preserve the current resumeId if it still exists in the fresh list;
-      // otherwise fall back to the first parsed resume.
+      // Prefer initialResumeId, then state.resumeId, then firstParsed
       const nextResumeId =
-        state.resumeId && resumes.some((r) => r.id === state.resumeId)
+        initialResumeId && resumes.some((r) => r.id === initialResumeId)
+          ? initialResumeId
+          : state.resumeId && resumes.some((r) => r.id === state.resumeId)
           ? state.resumeId
           : (firstParsed?.id ?? "");
 

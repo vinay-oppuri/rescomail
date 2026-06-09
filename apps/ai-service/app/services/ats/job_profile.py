@@ -24,7 +24,11 @@ def extract_job_profile(request: AtsAnalyzeRequest) -> AtsJobProfile:
     job_description = request.jobDescription
     normalized_job = normalize_text(job_description)
     sentences = split_sentences(job_description)
-    job_keywords = extract_job_keywords(job_description, request.targetKeywords)
+    job_keywords = extract_job_keywords(
+        job_description, 
+        request.targetKeywords,
+        request.companyName
+    )
 
     required_sentences = _sentences_with_markers(sentences, REQUIRED_MARKERS)
     preferred_sentences = _sentences_with_markers(sentences, PREFERRED_MARKERS)
@@ -69,13 +73,17 @@ def extract_job_profile(request: AtsAnalyzeRequest) -> AtsJobProfile:
 def extract_job_keywords(
     job_description: str,
     target_keywords: list[str],
+    company_name: str = "",
 ) -> list[str]:
     normalized_job = normalize_text(job_description)
+    normalized_company = normalize_text(company_name) if company_name else ""
     keywords: list[str] = []
     keywords.extend(target_keywords)
 
     for hint in sorted(NORMALIZED_HINTS, key=lambda term: (-len(term), term)):
         if contains_term(normalized_job, hint):
+            if normalized_company and normalized_company == hint:
+                continue
             keywords.append(hint)
 
     tokens = [token for token in tokenize(job_description) if is_keyword_token(token)]
@@ -83,6 +91,8 @@ def extract_job_keywords(
 
     for token, count in counts.most_common(35):
         if count >= 2 or token in NORMALIZED_HINTS:
+            if normalized_company and normalized_company == token:
+                continue
             keywords.append(token)
 
     bigrams = Counter(
@@ -93,9 +103,20 @@ def extract_job_keywords(
 
     for phrase, count in bigrams.most_common(15):
         if count >= 2 or phrase in NORMALIZED_HINTS:
+            if normalized_company and normalized_company == phrase:
+                continue
             keywords.append(phrase)
 
-    return compact_unique(keywords, limit=45)
+    final_keywords = compact_unique(keywords, limit=45)
+    
+    # Final safety net to completely remove the company name
+    if normalized_company:
+        final_keywords = [
+            kw for kw in final_keywords 
+            if normalize_text(kw) != normalized_company
+        ]
+
+    return final_keywords
 
 
 def _sentences_with_markers(sentences: list[str], markers: set[str]) -> list[str]:

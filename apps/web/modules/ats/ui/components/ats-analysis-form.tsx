@@ -10,10 +10,12 @@ import AtsJobFields from "./form/ats-job-fields";
 import AtsResumePicker from "./form/ats-resume-picker";
 
 const AtsAnalysisForm = () => {
-  const { handleAnalyze, error, isAnalyzing, resumeId, jobDescription } =
+  const { handleAnalyze, error, isAnalyzing, resumeId, jobDescription, resumes } =
     useAtsStore();
 
-  const canAnalyze = Boolean(resumeId && jobDescription.trim().length >= 20);
+  const selectedResume = resumes.find((r) => r.id === resumeId);
+  const isParsed = selectedResume?.status === "parsed";
+  const canAnalyze = Boolean(isParsed && jobDescription.trim().length >= 20);
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     void handleAnalyze(event);

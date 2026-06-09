@@ -48,6 +48,8 @@ const ResumeUploadPanel = () => {
           ? `${uploadedResume.title} uploaded successfully.`
           : "Resume uploaded successfully.",
       );
+      
+      setTimeout(() => setSuccess(null), 300);
       router.refresh();
     },
     onUploadError: (uploadError) => {
@@ -120,13 +122,7 @@ const ResumeUploadPanel = () => {
         </Alert>
       ) : null}
 
-      {success ? (
-        <Alert>
-          <CheckCircle2 className="h-4 w-4" />
-          <AlertTitle>Upload complete</AlertTitle>
-          <AlertDescription>{success}</AlertDescription>
-        </Alert>
-      ) : null}
+
 
       <div className="space-y-2">
         <Label htmlFor="resume-title">Resume title</Label>
@@ -143,11 +139,11 @@ const ResumeUploadPanel = () => {
       <button
         type="button"
         className={cn(
-          "flex min-h-44 w-full flex-col items-center justify-center gap-3 border border-dashed border-foreground/10 px-4 py-8 text-center transition-colors bg-muted/10! rounded-sm",
+          "flex min-h-44 w-full flex-col items-center justify-center gap-3 border border-dashed border-foreground/10 px-4 py-8 text-center transition-all duration-300 ease-in-out bg-muted/10! rounded-sm relative overflow-hidden",
           isDragging
-            ? "border-primary bg-primary/5!"
+            ? "border-primary bg-primary/5! scale-[1.01] shadow-sm"
             : "hover:border-primary/40 hover:bg-muted/40!",
-          isUploading && "pointer-events-none opacity-70",
+          isUploading && "pointer-events-none border-primary/30 bg-primary/5!",
         )}
         onClick={() => inputRef.current?.click()}
         onDragOver={(event) => {
@@ -162,10 +158,13 @@ const ResumeUploadPanel = () => {
         }}
         disabled={isUploading}
       >
-        <div className="flex h-10 w-10 items-center justify-center border border-foreground/5 bg-card rounded-sm">
-          <FileUp className="h-5 w-5 text-muted-foreground" />
+        {isUploading && (
+          <div className="absolute inset-0 bg-linear-to-tr from-primary/5 via-transparent to-primary/10 animate-pulse mix-blend-overlay" />
+        )}
+        <div className="flex h-10 w-10 items-center justify-center border border-foreground/5 bg-card rounded-sm shadow-xs transition-transform duration-300 group-hover:scale-110 z-10">
+          <FileUp className={cn("h-5 w-5 text-muted-foreground transition-colors", isDragging && "text-primary")} />
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1 z-10">
           <p className="text-xs font-medium">
             {file ? file.name : "Choose a PDF or drag it here"}
           </p>
@@ -183,43 +182,42 @@ const ResumeUploadPanel = () => {
         onChange={(event) => selectFile(event.target.files?.[0])}
       />
 
-      {file ? (
-        <div className="flex items-center justify-between border bg-muted/30 px-3 py-2 text-sm rounded-sm">
-          <span className="truncate">{file.name}</span>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => setFile(null)}
-            disabled={isUploading}
-          >
-            <X className="h-4 w-4" />
-            <span className="sr-only">Remove selected resume</span>
-          </Button>
-        </div>
-      ) : null}
+
 
       {isUploading ? (
-        <div className="space-y-2">
-          <div className="h-1.5 overflow-hidden bg-muted">
+        <div className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500 pt-2">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-muted/50 border border-muted/20 shadow-inner">
             <div
-              className="h-full bg-primary transition-all"
+              className="h-full bg-linear-to-r from-primary/80 to-primary transition-all duration-300 ease-out relative"
               style={{ width: `${progress}%` }}
-            />
+            >
+              <div className="absolute inset-0 bg-white/20 animate-pulse" />
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Uploading resume, {progress}% complete
-          </p>
+          <div className="flex justify-between items-center px-1">
+            <p className="text-xs font-medium text-muted-foreground animate-pulse">
+              {progress < 100 ? "Securely uploading resume..." : "Finalizing upload..."}
+            </p>
+            <p className="text-xs font-semibold text-primary">{progress}%</p>
+          </div>
         </div>
       ) : null}
 
       <Button
         type="button"
-        className="mt-2 h-11 w-full font-semibold text-xs md:text-sm "
+        className={cn(
+          "mt-2 h-9 w-full font-semibold text-xs md:text-sm transition-colors",
+          success && "bg-emerald-500 hover:bg-emerald-600 text-white"
+        )}
         onClick={uploadResume}
-        disabled={isUploading || !file}
+        disabled={isUploading || (!file && !success)}
       >
-        {isUploading ? (
+        {success ? (
+          <div className="flex items-center gap-2 animate-in fade-in slide-in-from-bottom-1">
+            <CheckCircle2 className="h-4 w-4" />
+            {success}
+          </div>
+        ) : isUploading ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             Uploading
