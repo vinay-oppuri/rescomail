@@ -1,5 +1,5 @@
 import { Button } from "@repo/ui/components/button";
-import { CheckCircle, Zap, FileText, Mail, ArrowRight, Sparkles, Target, Briefcase } from "lucide-react";
+import { CheckCircle, Zap, FileText, Mail, ArrowRight, Sparkles, Target, Briefcase, Search } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@repo/ui/lib/utils";
 
@@ -19,10 +19,6 @@ const HomeView = () => {
             
             {/* Left Column: Title & Description */}
             <div className="max-w-2xl min-h-[calc(100vh-4rem)] lg:min-h-0 flex flex-col justify-center pb-12 lg:py-0">
-              <div className="mb-6 w-fit inline-flex items-center gap-2 rounded-full border border-foreground/5 bg-primary/5 px-3 py-1 text-xs font-medium text-primary shadow-sm backdrop-blur-sm">
-                <Sparkles className="h-3.5 w-3.5 animate-pulse" />
-                <span>AI-Powered Job Search Copilot</span>
-              </div>
               <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl leading-[1.1]">
                 Land Your Dream Job with{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-500">
@@ -30,7 +26,7 @@ const HomeView = () => {
                 </span>
               </h1>
               <p className="mb-8 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl">
-                The ultimate AI assistant for your career. Optimize your resume for ATS, generate personalized cold emails, and track applications—all in one place.
+                The ultimate AI assistant for your career. Discover relevant jobs, optimize your resume for ATS, track your pipeline, and generate personalized cold emails—all in one place.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <Button size="lg" className="w-[75%] sm:w-auto h-10 md:h-12 px-6 text-sm shadow-lg shadow-primary/20 transition-all hover:scale-105 " asChild>
@@ -129,8 +125,15 @@ const HomeView = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {[
+              {
+                title: "AI Job Search",
+                description:
+                  "Discover and filter relevant job opportunities perfectly tailored to your skills and preferences.",
+                icon: <Search className="h-6 w-6 text-green-500" />,
+                color: "bg-green-500/10 text-green-500",
+              },
               {
                 title: "ATS Semantic Matching",
                 description:
@@ -170,7 +173,7 @@ const HomeView = () => {
         </div>
       </section>
 
-      <section id="pricing" className="py-16 md:py-24 bg-muted/30 border-y border-border/40">
+{/* <section id="pricing" className="py-16 md:py-24 bg-muted/30 border-y border-border/40">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-xl md:text-2xl font-bold mb-4 tracking-tight">
@@ -240,7 +243,7 @@ const HomeView = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* FAQ Section */}
       <section id="faq" className="py-16 md:py-24">

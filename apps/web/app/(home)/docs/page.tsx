@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { ArrowRight, BookOpen, CheckCircle, FileText, Settings, Shield, User, SlidersHorizontal, Upload } from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle, FileText, Settings, Shield, User, SlidersHorizontal, Upload, Search } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -19,6 +19,7 @@ const Page = () => {
           <Link href="#resume-editor" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">Editor</Link>
           <Link href="#ats-analysis" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">ATS</Link>
           <Link href="#cold-emails" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">Emails</Link>
+          <Link href="#job-search" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">Jobs</Link>
           <Link href="#profile-defaults" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">Profile</Link>
           <Link href="#custom-api-key" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">API Keys</Link>
         </div>
@@ -53,6 +54,7 @@ const Page = () => {
                 <ul className="space-y-2 text-xs text-muted-foreground">
                   <li><Link href="#ats-analysis" className="hover:text-primary transition-colors">ATS Analysis</Link></li>
                   <li><Link href="#cold-emails" className="hover:text-primary transition-colors">Cold Emails</Link></li>
+                  <li><Link href="#job-search" className="hover:text-primary transition-colors">Job Search</Link></li>
                 </ul>
               </div>
 
@@ -94,15 +96,19 @@ const Page = () => {
                 Applying to jobs is often a numbers game, but blindly sending out generic resumes leads to immediate rejections. Rescomail solves this by:
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="border border-border/50 bg-card p-4 ">
+                <div className="rounded-sm border border-border/50 bg-card p-4">
                   <h4 className="font-semibold text-sm mb-1.5 flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-green-500"/> Beating the ATS</h4>
                   <p className="text-xs text-muted-foreground">Identifies missing keywords and semantic gaps between your resume and the job description before you apply.</p>
                 </div>
-                <div className="border border-border/50 bg-card p-4 ">
+                <div className="rounded-sm border border-border/50 bg-card p-4">
                   <h4 className="font-semibold text-sm mb-1.5 flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-blue-500"/> Saving Time</h4>
                   <p className="text-xs text-muted-foreground">Drafts highly personalized, context-aware cold emails to hiring managers in 1 click.</p>
                 </div>
-                <div className="border border-border/50 bg-card p-4 ">
+                <div className="rounded-sm border border-border/50 bg-card p-4">
+                  <h4 className="font-semibold text-sm mb-1.5 flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-orange-500"/> Finding Jobs</h4>
+                  <p className="text-xs text-muted-foreground">Discover relevant jobs tailored to your skills and track them in your Kanban board.</p>
+                </div>
+                <div className="rounded-sm border border-border/50 bg-card p-4">
                   <h4 className="font-semibold text-sm mb-1.5 flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-purple-500"/> Live Feedback</h4>
                   <p className="text-xs text-muted-foreground">A live two-panel resume editor lets you immediately fix weaknesses and see changes in real-time.</p>
                 </div>
@@ -120,7 +126,7 @@ const Page = () => {
               </p>
               <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground ml-2">
                 <li>We do <strong>not</strong> use your personal resume data to train public AI models.</li>
-                <li>API keys provided by users are stored securely and used exclusively for your requests.</li>
+                <li>API keys provided by users are encrypted at rest using AES-256-GCM and used exclusively for your requests.</li>
                 <li>You have complete control to delete your account and all associated data at any time from the Settings page.</li>
               </ul>
             </section>
@@ -134,7 +140,7 @@ const Page = () => {
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                 Everything in Rescomail starts with your base resume. We use powerful AI models to extract your experience, skills, and education into a structured format.
               </p>
-              <div className="bg-muted/30 p-5 border border-border/50 mb-3">
+              <div className="rounded-sm bg-muted/30 p-5 border border-border/50 mb-3">
                 <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
                   <li>Navigate to the <strong>Dashboard</strong> after logging in.</li>
                   <li>Click on <strong>Resumes</strong> in the sidebar.</li>
@@ -155,22 +161,22 @@ const Page = () => {
                 Once parsed, you can edit your resume directly in our Live Editor. This ensures your data is perfectly structured for our AI features.
               </p>
               <ul className="space-y-4 text-sm text-muted-foreground">
-                <li className="flex items-start gap-3 border border-border/50 p-4 bg-card">
-                  <div className="mt-0.5 bg-primary/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-primary" /></div>
+                <li className="flex items-start gap-3 rounded-sm border border-border/50 p-4 bg-card">
+                  <div className="mt-0.5 rounded-sm bg-primary/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-primary" /></div>
                   <div>
                     <strong className="text-foreground block mb-1">Two-Panel Layout</strong>
                     Use the left panel to update fields (Name, Experience, Skills) and instantly see the formatted HTML preview on the right.
                   </div>
                 </li>
-                <li className="flex items-start gap-3 border border-border/50 p-4 bg-card">
-                  <div className="mt-0.5 bg-primary/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-primary" /></div>
+                <li className="flex items-start gap-3 rounded-sm border border-border/50 p-4 bg-card">
+                  <div className="mt-0.5 rounded-sm bg-primary/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-primary" /></div>
                   <div>
                     <strong className="text-foreground block mb-1">Auto-Save & Versioning</strong>
                     Changes are automatically saved as you type. Use standard keyboard shortcuts (<kbd className="bg-muted px-1 py-0.5 border border-border/50 text-[10px]">Ctrl+Z</kbd> / <kbd className="bg-muted px-1 py-0.5 border border-border/50 text-[10px]">Cmd+Z</kbd>) to undo mistakes.
                   </div>
                 </li>
-                <li className="flex items-start gap-3 border border-border/50 p-4 bg-card">
-                  <div className="mt-0.5 bg-primary/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-primary" /></div>
+                <li className="flex items-start gap-3 rounded-sm border border-border/50 p-4 bg-card">
+                  <div className="mt-0.5 rounded-sm bg-primary/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-primary" /></div>
                   <div>
                     <strong className="text-foreground block mb-1">Export to PDF</strong>
                     Once you&apos;re happy with the edits, click the <strong>Export</strong> button to download a beautifully formatted, ATS-compliant PDF ready for applications.
@@ -185,7 +191,7 @@ const Page = () => {
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                 Applicant Tracking Systems (ATS) filter out up to 75% of resumes before a human ever sees them. Our semantic matching engine tells you exactly why.
               </p>
-              <div className="bg-muted/30 p-5 border border-border/50 mb-4">
+              <div className="rounded-sm bg-muted/30 p-5 border border-border/50 mb-4">
                 <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
                   <li>Go to your <strong>Dashboard</strong> and click <strong>ATS Scans</strong>.</li>
                   <li>Click <strong>New Scan</strong>.</li>
@@ -212,7 +218,7 @@ const Page = () => {
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                 Cold emailing hiring managers can increase your interview rate by 10x, but writing them is exhausting. We automate the hardest part: personalization.
               </p>
-              <div className="bg-muted/30 p-5 border border-border/50 ">
+              <div className="rounded-sm bg-muted/30 p-5 border border-border/50 ">
                 <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
                   <li>Navigate to <strong>Cold Emails</strong> in the sidebar.</li>
                   <li>Click <strong>Draft New Email</strong>.</li>
@@ -220,6 +226,26 @@ const Page = () => {
                   <li>(Optional) Add the <strong>Company Website URL</strong>. Our AI will scrape it to find recent company context to mention!</li>
                   <li>Choose your desired <strong>Tone</strong> (e.g., confident, warm) and <strong>Call to Action</strong> (e.g., ask for feedback, request interview).</li>
                   <li>Click <strong>Generate Email</strong>.</li>
+                </ol>
+              </div>
+            </section>
+
+            {/* Job Search & Tracking */}
+            <section id="job-search" className="scroll-mt-28">
+              <h2 className="text-xl font-bold mb-3 tracking-tight border-b border-border/50 pb-2 flex items-center gap-2">
+                <Search className="w-5 h-5 text-orange-500" />
+                Job Search & Tracking
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                Discover the perfect role and manage your entire application pipeline directly within Rescomail.
+              </p>
+              <div className="rounded-sm bg-muted/30 p-5 border border-border/50 ">
+                <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
+                  <li>Navigate to <strong>Applications</strong> in the sidebar.</li>
+                  <li>Use the <strong>Job Search</strong> panel to find relevant roles based on your preferences.</li>
+                  <li>Save interesting jobs with one click to add them to your <strong>Kanban Board</strong>.</li>
+                  <li>Drag and drop applications across stages (Saved, Applied, Phone Screen, Interview, Offer, Rejected).</li>
+                  <li>Attach a specific <strong>Resume</strong> to each application to keep track of which version you used.</li>
                 </ol>
               </div>
             </section>
@@ -233,7 +259,7 @@ const Page = () => {
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                 To save time when running multiple ATS scans or generating emails, you can set global defaults for your job search preferences.
               </p>
-              <div className="bg-muted/30 p-5 border border-border/50 mb-3">
+              <div className="rounded-sm bg-muted/30 p-5 border border-border/50 mb-3">
                 <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
                   <li>Go to the <strong>Settings</strong> page from your dashboard.</li>
                   <li>In the <strong>Profile Defaults</strong> section, specify your preferences:
@@ -258,7 +284,7 @@ const Page = () => {
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                 Rescomail offers a generous free tier for trial users. If you hit your limits, you can simply provide your own Google Gemini API key to unlock <strong>unlimited usage</strong>.
               </p>
-              <div className="border border-primary/20 bg-primary/5 p-5 ">
+              <div className="rounded-sm border border-primary/20 bg-primary/5 p-5 ">
                 <h4 className="font-semibold text-sm text-foreground mb-3">How to add your API Key:</h4>
                 <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
                   <li>Get a free API key from <a href="https://aistudio.google.com/" target="_blank" rel="noreferrer" className="text-primary hover:underline">Google AI Studio</a>.</li>
@@ -267,7 +293,7 @@ const Page = () => {
                   <li>Paste your key into the <strong>Gemini API Key</strong> field and click Save.</li>
                 </ol>
                 <p className="mt-4 text-xs text-muted-foreground">
-                  Your key is securely stored and instantly validated.
+                  Your key is encrypted at rest using AES-256-GCM and instantly validated.
                 </p>
               </div>
             </section>
@@ -282,15 +308,15 @@ const Page = () => {
                 You can update your personal information or permanently delete your account directly from the platform.
               </p>
               <ul className="space-y-4 text-sm text-muted-foreground">
-                <li className="flex items-start gap-3 border border-border/50 p-4 bg-card">
-                  <div className="mt-0.5 bg-primary/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-primary" /></div>
+                <li className="flex items-start gap-3 rounded-sm border border-border/50 p-4 bg-card">
+                  <div className="mt-0.5 rounded-sm bg-primary/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-primary" /></div>
                   <div>
                     <strong className="text-foreground block mb-1">Update Name</strong>
                     Navigate to Settings &gt; Profile to update your display name across the platform.
                   </div>
                 </li>
-                <li className="flex items-start gap-3 border border-destructive/20 p-4 bg-destructive/5">
-                  <div className="mt-0.5 bg-destructive/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-destructive" /></div>
+                <li className="flex items-start gap-3 rounded-sm border border-destructive/20 p-4 bg-destructive/5">
+                  <div className="mt-0.5 rounded-sm bg-destructive/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-destructive" /></div>
                   <div>
                     <strong className="text-foreground block mb-1">Delete Account</strong>
                     Scroll to the bottom of the Settings page and click <strong>Delete Account</strong>. <span className="text-destructive font-medium">Warning:</span> This action is permanent and will securely wipe all your resumes, scans, emails, and preferences from our servers.

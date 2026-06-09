@@ -46,7 +46,7 @@ const DashboardView = async () => {
     return (
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8 relative">
             {/* Ambient Background Glow (Subtle) */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] overflow-hidden -z-10 pointer-events-none opacity-40">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-125 overflow-hidden -z-10 pointer-events-none opacity-40">
                 <div className="absolute top-[-20%] left-[10%] w-[50%] h-[50%] bg-primary/10 blur-[100px]" />
                 <div className="absolute top-[10%] right-[10%] w-[40%] h-[40%] bg-blue-500/10 blur-[100px]" />
             </div>
@@ -85,7 +85,6 @@ const DashboardView = async () => {
             {/* Statistics Cards Grid */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <Card className="group relative border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-primary/70" />
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                             Total Resumes
@@ -103,7 +102,6 @@ const DashboardView = async () => {
                 </Card>
                 
                 <Card className="group relative border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-blue-500/70" />
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                             ATS Scans Done
@@ -121,7 +119,6 @@ const DashboardView = async () => {
                 </Card>
 
                 <Card className="group relative border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500/70" />
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                             Average Match
@@ -241,7 +238,7 @@ const DashboardView = async () => {
                     </div>
 
                     <div className="space-y-4">
-                        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 border-l-2 border-l-primary shadow-md hover:shadow-lg transition-shadow">
+                        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 shadow-md hover:shadow-lg transition-shadow">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-2">
                                     <BarChart2 className="h-4 w-4" /> Core Tip #1: Match Rate
@@ -252,7 +249,7 @@ const DashboardView = async () => {
                             </CardContent>
                         </Card>
 
-                        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 border-l-2 border-l-blue-500 shadow-md hover:shadow-lg transition-shadow">
+                        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 shadow-md hover:shadow-lg transition-shadow">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-xs font-bold uppercase tracking-widest text-blue-500 flex items-center gap-2">
                                     <Sparkles className="h-4 w-4" /> Core Tip #2: Action Verbs

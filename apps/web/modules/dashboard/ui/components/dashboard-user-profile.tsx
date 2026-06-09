@@ -83,7 +83,7 @@ const DashboardUserProfile = () => {
           </div>
         </div>
 
-        <div className="px-1 py-1">
+{/* <div className="px-1 py-1">
           <div className="flex items-center justify-between bg-secondary/50 px-3 py-2 mt-2 text-sm font-medium border border-border/50 rounded-sm">
             <div className="flex items-center gap-2 text-xs text-foreground">
               <Sparkles className="h-4 w-4" />
@@ -91,7 +91,7 @@ const DashboardUserProfile = () => {
             </div>
             <span className="text-xs text-muted-foreground cursor-pointer hover:text-foreground font-semibold mt-1">Upgrade</span>
           </div>
-        </div>
+        </div> */}
 
         <div className="px-1 py-1 space-y-0.5">
           <DropdownMenuGroup>
@@ -105,10 +105,10 @@ const DashboardUserProfile = () => {
               <span className="text-xs font-medium">Dashboard</span>
             </DropdownMenuItem>
             
-            <DropdownMenuItem onClick={() => router.push("/dashboard/billing")} className="cursor-pointer gap-3 py-2.5 hover:rounded-sm! ">
+{/* <DropdownMenuItem onClick={() => router.push("/dashboard/billing")} className="cursor-pointer gap-3 py-2.5 hover:rounded-sm! ">
               <CreditCard className="h-4 w-4 text-muted-foreground" />
               <span className="text-xs font-medium">Billing & Plans</span>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             
             <DropdownMenuItem onClick={() => router.push("/dashboard/settings")} className="cursor-pointer gap-3 py-2.5 hover:rounded-sm! ">
               <Settings className="h-4 w-4 text-muted-foreground" />

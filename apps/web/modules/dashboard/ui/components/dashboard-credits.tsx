@@ -105,12 +105,12 @@ const DashboardCredits = async ({ userId }: Props) => {
               Add API Key
             </Link>
           )}
-          <Link
+{/* <Link
             href="/dashboard/billing"
             className="text-[10px] text-primary font-bold hover:underline underline-offset-4"
           >
             Upgrade
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>
