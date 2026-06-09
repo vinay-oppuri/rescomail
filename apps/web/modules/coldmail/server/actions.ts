@@ -26,9 +26,7 @@ export const deleteColdmailAction = async (coldEmailId: string) => {
       );
     revalidatePath("/dashboard/emails");
     return { success: true };
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to delete cold email.";
-    return { success: false, error: message };
+  } catch {
+    return { success: false, error: "Failed to delete cold email." };
   }
 };

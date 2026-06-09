@@ -27,7 +27,7 @@ export default function ApiKeyPromptDialog({ hasApiKey }: { hasApiKey: boolean }
       } else if (result.success) {
         setOpen(false);
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -66,7 +66,7 @@ export default function ApiKeyPromptDialog({ hasApiKey }: { hasApiKey: boolean }
             </div>
 
             <div className="text-xs text-muted-foreground mb-2">
-              Don't have one? Get it from{" "}
+              Don&apos;t have one? Get it from{" "}
               <a
                 href="https://aistudio.google.com/app/apikey"
                 target="_blank"

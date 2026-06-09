@@ -30,6 +30,7 @@ const serverEnvSchema = z
       .url()
       .default("http://localhost:3000"),
     BETTER_AUTH_SECRET: requiredSecret,
+    DATA_ENCRYPTION_KEY: requiredSecret.optional(),
     GOOGLE_CLIENT_ID: optionalNonEmptyString,
     GOOGLE_CLIENT_SECRET: optionalNonEmptyString,
     RESEND_API_KEY: optionalNonEmptyString,
@@ -52,6 +53,64 @@ const serverEnvSchema = z
           "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be configured together.",
       });
     }
+
+    if (env.NODE_ENV === "production") {
+      const publicUrls = [
+        ["BETTER_AUTH_URL", env.BETTER_AUTH_URL],
+        ["NEXT_PUBLIC_BETTER_AUTH_URL", env.NEXT_PUBLIC_BETTER_AUTH_URL],
+      ] as const;
+
+      for (const [key, value] of publicUrls) {
+        if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(value)) {
+          ctx.addIssue({
+            code: "custom",
+            path: [key],
+            message: `${key} must not point to localhost in production.`,
+          });
+        }
+
+        if (!value.startsWith("https://")) {
+          ctx.addIssue({
+            code: "custom",
+            path: [key],
+            message: `${key} must use HTTPS in production.`,
+          });
+        }
+      }
+
+      if (!env.AI_SERVICE_API_KEY) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["AI_SERVICE_API_KEY"],
+          message: "AI_SERVICE_API_KEY is required in production.",
+        });
+      }
+
+      if (!env.DATA_ENCRYPTION_KEY) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["DATA_ENCRYPTION_KEY"],
+          message: "DATA_ENCRYPTION_KEY is required in production.",
+        });
+      }
+
+      if (!env.AI_SERVICE_URL.startsWith("https://")) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["AI_SERVICE_URL"],
+          message: "AI_SERVICE_URL must use HTTPS in production.",
+        });
+      }
+
+      if (env.BETTER_AUTH_URL !== env.NEXT_PUBLIC_BETTER_AUTH_URL) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["NEXT_PUBLIC_BETTER_AUTH_URL"],
+          message:
+            "NEXT_PUBLIC_BETTER_AUTH_URL must match BETTER_AUTH_URL in production.",
+        });
+      }
+    }
   });
 
 export const serverEnv = serverEnvSchema.parse({
@@ -60,6 +119,7 @@ export const serverEnv = serverEnvSchema.parse({
   BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
   NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
   BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+  DATA_ENCRYPTION_KEY: process.env.DATA_ENCRYPTION_KEY,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   RESEND_API_KEY: process.env.RESEND_API_KEY,

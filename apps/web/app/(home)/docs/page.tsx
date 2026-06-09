@@ -83,7 +83,7 @@ const Page = () => {
             <section id="introduction" className="scroll-mt-28">
               <h2 className="text-xl font-bold mb-3 tracking-tight border-b border-border/50 pb-2">What is Rescomail?</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Rescomail is an AI-powered job search copilot designed specifically to give you an edge in today's competitive job market. We combine advanced natural language processing with career expertise to help you build better resumes and write outreach emails that actually get responses.
+                Rescomail is an AI-powered job search copilot designed specifically to give you an edge in today&apos;s competitive job market. We combine advanced natural language processing with career expertise to help you build better resumes and write outreach emails that actually get responses.
               </p>
             </section>
 
@@ -173,7 +173,7 @@ const Page = () => {
                   <div className="mt-0.5 bg-primary/10 p-1 shrink-0"><ArrowRight className="w-3.5 h-3.5 text-primary" /></div>
                   <div>
                     <strong className="text-foreground block mb-1">Export to PDF</strong>
-                    Once you're happy with the edits, click the <strong>Export</strong> button to download a beautifully formatted, ATS-compliant PDF ready for applications.
+                    Once you&apos;re happy with the edits, click the <strong>Export</strong> button to download a beautifully formatted, ATS-compliant PDF ready for applications.
                   </div>
                 </li>
               </ul>

@@ -74,10 +74,8 @@ export const generateColdEmailForUser = async (
       throw error;
     }
 
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Unknown Cold Email trigger error";
+    console.error("Failed to queue cold email generation", error);
+    const message = "Unable to start cold email generation right now.";
 
     if (savedColdmailId) {
       await db

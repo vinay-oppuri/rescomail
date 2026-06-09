@@ -6,11 +6,17 @@ Also import `limiter_handler` and register it on the FastAPI app in main.py.
 
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_remote_address
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-limiter = Limiter(key_func=get_remote_address, default_limits=["60/minute"])
+
+def get_rate_limit_key(request: Request) -> str:
+    return request.headers.get("x-rescomail-user-id") or (
+        request.client.host if request.client else "unknown"
+    )
+
+
+limiter = Limiter(key_func=get_rate_limit_key, default_limits=["60/minute"])
 
 
 async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:

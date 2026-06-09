@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     ai_service_api_key: str
 
     # --- Resume file restrictions ---
-    resume_file_allowed_hosts: str = ""
+    resume_file_allowed_hosts: str = "utfs.io,ufs.sh"
     resume_max_download_bytes: int = 10 * 1024 * 1024  # 10 MB
 
     # --- Redis (Celery broker + embedding cache) ---

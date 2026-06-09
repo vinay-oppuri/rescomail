@@ -19,9 +19,7 @@ export const deleteResumeAction = async (resumeId: string) => {
     await deleteResume(resumeId, session.user.id);
     revalidatePath("/dashboard/resumes");
     return { success: true };
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to delete resume.";
-    return { success: false, error: message };
+  } catch {
+    return { success: false, error: "Failed to delete resume." };
   }
 };

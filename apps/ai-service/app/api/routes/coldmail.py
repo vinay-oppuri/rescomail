@@ -31,4 +31,7 @@ async def generate_coldmail_route(
         raise HTTPException(status_code=400, detail=str(error)) from error
     except Exception as error:
         logger.exception("Cold email generation failed for resume %s", body.resumeId)
-        raise HTTPException(status_code=500, detail=str(error)) from error
+        raise HTTPException(
+            status_code=500,
+            detail="Cold email generation failed. Please retry.",
+        ) from error

@@ -12,13 +12,11 @@ import type { ApplicationItem, ResumeOption } from "../../server/queries";
 interface ApplicationsViewProps {
   initialApplications: ApplicationItem[];
   resumes: ResumeOption[];
-  userId: string;
 }
 
 export default function ApplicationsView({
   initialApplications,
   resumes,
-  userId,
 }: ApplicationsViewProps) {
   const [applications, setApplications] = useState<ApplicationItem[]>(initialApplications);
   const [activeTab, setActiveTab] = useState<"tracker" | "search">("tracker");
@@ -99,6 +97,7 @@ export default function ApplicationsView({
       </div>
 
       <ApplicationDialog
+        key={`${selectedApplication?.id ?? "new"}:${isDialogOpen}`}
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         application={selectedApplication}

@@ -7,6 +7,8 @@ import { db, applications } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 import { serverEnv } from "@repo/env/server";
 
+const JOB_SEARCH_TIMEOUT_MS = 15_000;
+
 export const createApplicationAction = async (data: {
   jobTitle: string;
   companyName: string;
@@ -44,9 +46,8 @@ export const createApplicationAction = async (data: {
 
     revalidatePath("/dashboard/applications");
     return { success: true, data: newApp };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to create application.";
-    return { success: false, error: message };
+  } catch {
+    return { success: false, error: "Failed to create application." };
   }
 };
 
@@ -71,7 +72,7 @@ export const updateApplicationAction = async (
   }
 
   try {
-    const updateData: Record<string, any> = {};
+    const updateData: Partial<typeof applications.$inferInsert> = {};
     if (data.jobTitle !== undefined) updateData.jobTitle = data.jobTitle;
     if (data.companyName !== undefined) updateData.companyName = data.companyName;
     if (data.jobUrl !== undefined) updateData.jobUrl = data.jobUrl || null;
@@ -93,9 +94,8 @@ export const updateApplicationAction = async (
 
     revalidatePath("/dashboard/applications");
     return { success: true };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to update application.";
-    return { success: false, error: message };
+  } catch {
+    return { success: false, error: "Failed to update application." };
   }
 };
 
@@ -115,9 +115,8 @@ export const deleteApplicationAction = async (id: string) => {
 
     revalidatePath("/dashboard/applications");
     return { success: true };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to delete application.";
-    return { success: false, error: message };
+  } catch {
+    return { success: false, error: "Failed to delete application." };
   }
 };
 
@@ -145,18 +144,17 @@ export const searchJobsAction = async (query: string, location: string) => {
     const response = await fetch(url.toString(), {
       method: "GET",
       headers: headersObj,
+      signal: AbortSignal.timeout(JOB_SEARCH_TIMEOUT_MS),
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      return { success: false, error: `AI Search failed: ${errorText}` };
+      return { success: false, error: "Job search is temporarily unavailable." };
     }
 
     const data = await response.json();
     return { success: true, results: data.results || [] };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Job search query failed.";
-    return { success: false, error: message };
+  } catch {
+    return { success: false, error: "Job search query failed." };
   }
 };
 
@@ -173,8 +171,7 @@ export const getApplicationsAction = async () => {
     const { getApplicationsForUser } = await import("./queries");
     const data = await getApplicationsForUser(session.user.id);
     return { success: true, data };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to fetch applications.";
-    return { success: false, error: message };
+  } catch {
+    return { success: false, error: "Failed to fetch applications." };
   }
 };

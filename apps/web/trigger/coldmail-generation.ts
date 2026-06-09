@@ -4,6 +4,7 @@ import { and, eq } from "drizzle-orm";
 
 import { ColdmailError } from "@/modules/coldmail/server/coldmail-errors";
 import { runAiColdmailGeneration } from "@/modules/coldmail/server/coldmail-service-client";
+import { decryptSecret } from "@/lib/server/secrets";
 import type {
   ColdEmailCallToAction,
   ColdEmailLength,
@@ -87,7 +88,8 @@ export const coldmailGenerationTask = task({
         callToAction: emailRecord.callToAction as ColdEmailCallToAction,
       },
       resume,
-      prefs?.geminiApiKey ?? undefined
+      userId,
+      decryptSecret(prefs?.geminiApiKey) ?? undefined
     );
 
     await db.transaction(async (tx) => {

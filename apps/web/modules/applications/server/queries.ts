@@ -1,5 +1,5 @@
 import { db, applications, resumes } from "@repo/db";
-import { and, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export const getApplicationsForUser = async (userId: string) => {
   const rows = await db

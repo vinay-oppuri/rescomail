@@ -1,6 +1,8 @@
 import { db, usageEvents, userPreferences } from "@repo/db";
 import { and, eq, gte, sql } from "drizzle-orm";
 
+import { hasUsableSecret } from "@/lib/server/secrets";
+
 /**
  * Free-plan credit limits per calendar month.
  * Update these when paid plans are introduced.
@@ -46,7 +48,7 @@ export const checkUsageLimit = async (
   });
 
   // If the user provided their own API key, bypass limits
-  if (prefs?.geminiApiKey) {
+  if (hasUsableSecret(prefs?.geminiApiKey)) {
     return;
   }
 

@@ -8,6 +8,51 @@ const optionalTrimmedString = (maxLength: number) =>
     .optional()
     .transform((value) => value ?? "");
 
+const isPublicWebsiteUrl = (value: string) => {
+  try {
+    const url = new URL(value);
+    const hostname = url.hostname.toLowerCase().replace(/\.$/, "");
+
+    if (
+      !["http:", "https:"].includes(url.protocol) ||
+      url.username ||
+      url.password ||
+      hostname === "localhost" ||
+      hostname.endsWith(".local")
+    ) {
+      return false;
+    }
+
+    if (hostname.includes(":")) {
+      return false;
+    }
+
+    const ipv4Parts = hostname.split(".").map(Number);
+
+    if (
+      ipv4Parts.length === 4 &&
+      ipv4Parts.every((part) => Number.isInteger(part) && part >= 0 && part <= 255)
+    ) {
+      const first = ipv4Parts[0]!;
+      const second = ipv4Parts[1]!;
+
+      return !(
+        first === 0 ||
+        first === 10 ||
+        first === 127 ||
+        (first === 169 && second === 254) ||
+        (first === 172 && second >= 16 && second <= 31) ||
+        (first === 192 && second === 168) ||
+        first >= 224
+      );
+    }
+
+    return hostname.includes(".");
+  } catch {
+    return false;
+  }
+};
+
 const companyWebsiteUrlSchema = z.preprocess((value) => {
   if (typeof value !== "string") {
     return value;
@@ -20,7 +65,12 @@ const companyWebsiteUrlSchema = z.preprocess((value) => {
   }
 
   return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-}, z.string().trim().url("Enter a valid company website URL.").max(500));
+}, z
+  .string()
+  .trim()
+  .url("Enter a valid company website URL.")
+  .max(500)
+  .refine(isPublicWebsiteUrl, "Enter a public company website URL."));
 
 export const coldEmailToneSchema = z.enum([
   "warm",

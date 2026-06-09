@@ -5,6 +5,41 @@ import { db, user, userPreferences, session as sessionTable, account as accountT
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { randomUUID } from "crypto";
+import {
+  profileNameSchema,
+  settingsPreferencesSchema,
+  type SettingsPreferencesInput,
+} from "@repo/validations";
+
+import { encryptSecret } from "@/lib/server/secrets";
+
+const GEMINI_KEY_VALIDATION_TIMEOUT_MS = 10_000;
+
+const validateGeminiApiKey = async (apiKey: string) => {
+  const controller = new AbortController();
+  const timeout = setTimeout(
+    () => controller.abort(),
+    GEMINI_KEY_VALIDATION_TIMEOUT_MS,
+  );
+
+  try {
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models",
+      {
+        headers: {
+          "x-goog-api-key": apiKey,
+        },
+        signal: controller.signal,
+      },
+    );
+
+    return response.ok;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
+};
 
 export const EditProfileActions = async (name: string) => {
   const session = await auth.api.getSession({
@@ -15,17 +50,19 @@ export const EditProfileActions = async (name: string) => {
     throw new Error("Unauthorized");
   }
 
-  await db.update(user).set({ name }).where(eq(user.id, session.user.id));
+  const parsedName = profileNameSchema.safeParse(name);
+
+  if (!parsedName.success) {
+    throw new Error("Enter a valid profile name.");
+  }
+
+  await db
+    .update(user)
+    .set({ name: parsedName.data })
+    .where(eq(user.id, session.user.id));
 };
 
-export const EditPreferenceAction = async (data: {
-  targetRoles?: string[];
-  targetSeniority?: "intern" | "new_grad" | "junior" | "mid" | "senior" | "lead";
-  workModes?: ("remote" | "hybrid" | "onsite")[];
-  employmentTypes?: ("internship" | "full_time" | "part_time" | "contract" | "freelance")[];
-  preferredLocations?: { city?: string; state?: string; country?: string; remote?: boolean }[];
-  geminiApiKey?: string | null;
-}) => {
+export const EditPreferenceAction = async (input: SettingsPreferencesInput) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -34,11 +71,29 @@ export const EditPreferenceAction = async (data: {
     throw new Error("Unauthorized");
   }
 
-  if (data.geminiApiKey) {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models?key=${data.geminiApiKey}`
-    );
-    if (!response.ok) {
+  const parsed = settingsPreferencesSchema.safeParse(input);
+
+  if (!parsed.success) {
+    return { error: "Invalid settings payload." };
+  }
+
+  const data = parsed.data;
+  const geminiApiKey =
+    data.geminiApiKey === null ? null : data.geminiApiKey?.trim();
+  const nextData = {
+    ...data,
+    geminiApiKey:
+      geminiApiKey === undefined
+        ? undefined
+        : geminiApiKey
+          ? encryptSecret(geminiApiKey)
+          : null,
+  };
+
+  if (geminiApiKey) {
+    const isValid = await validateGeminiApiKey(geminiApiKey);
+
+    if (!isValid) {
       return { error: "Invalid Gemini API Key. Please provide a valid key." };
     }
   }
@@ -51,7 +106,7 @@ export const EditPreferenceAction = async (data: {
     await db
       .update(userPreferences)
       .set({
-        ...data,
+        ...nextData,
         updatedAt: new Date(),
       })
       .where(eq(userPreferences.userId, session.user.id));
@@ -59,7 +114,7 @@ export const EditPreferenceAction = async (data: {
     await db.insert(userPreferences).values({
       id: randomUUID(),
       userId: session.user.id,
-      ...data,
+      ...nextData,
     });
   }
 

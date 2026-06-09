@@ -7,13 +7,15 @@ import {
 import { db, userPreferences } from "@repo/db";
 import { eq } from "drizzle-orm";
 
+import { hasUsableSecret } from "@/lib/server/secrets";
+
 interface Props {
   userId: string;
 }
 
 /**
- * Async server component — fetches real monthly usage and renders the
- * credit bar in the sidebar. Imported as a slot by DashboardSidebar.
+ * Async server component. Fetches real monthly usage and renders the credit bar
+ * in the sidebar. Imported as a slot by DashboardSidebar.
  */
 const DashboardCredits = async ({ userId }: Props) => {
   const { atsUsed, coldEmailUsed } = await getMonthlyUsageSummary(userId);
@@ -21,20 +23,23 @@ const DashboardCredits = async ({ userId }: Props) => {
   const atsLimit = FREE_PLAN_LIMITS.ats_analysis;
   const emailLimit = FREE_PLAN_LIMITS.cold_email_generate;
 
-  // Show the "tighter" credit as the primary bar.
   const primaryUsed = Math.max(atsUsed, coldEmailUsed);
   const primaryLimit = primaryUsed === atsUsed ? atsLimit : emailLimit;
 
   const prefs = await db.query.userPreferences.findFirst({
     where: eq(userPreferences.userId, userId),
   });
-  const hasApiKey = !!prefs?.geminiApiKey;
+  const hasApiKey = hasUsableSecret(prefs?.geminiApiKey);
 
-  const pct = hasApiKey ? 0 : Math.min(100, Math.round((primaryUsed / primaryLimit) * 100));
+  const pct = hasApiKey
+    ? 0
+    : Math.min(100, Math.round((primaryUsed / primaryLimit) * 100));
   const isExhausted = hasApiKey ? false : primaryUsed >= primaryLimit;
 
-  const displayAtsUsed = hasApiKey ? '∞' : Math.min(atsUsed, atsLimit);
-  const displayEmailUsed = hasApiKey ? '∞' : Math.min(coldEmailUsed, emailLimit);
+  const displayAtsUsed = hasApiKey ? "Unlimited" : Math.min(atsUsed, atsLimit);
+  const displayEmailUsed = hasApiKey
+    ? "Unlimited"
+    : Math.min(coldEmailUsed, emailLimit);
 
   return (
     <div className="relative mb-4 overflow-hidden rounded-sm border border-primary/10 bg-primary/5 p-4">
@@ -54,7 +59,11 @@ const DashboardCredits = async ({ userId }: Props) => {
                 : "bg-primary/10 text-primary"
           }`}
         >
-          {hasApiKey ? "Unlimited" : isExhausted ? "Limit reached" : `${100 - pct}% left`}
+          {hasApiKey
+            ? "Unlimited"
+            : isExhausted
+              ? "Limit reached"
+              : `${100 - pct}% left`}
         </span>
       </div>
 
@@ -72,10 +81,12 @@ const DashboardCredits = async ({ userId }: Props) => {
       <div className="mt-3 space-y-2">
         <div className="flex justify-between items-center">
           <p className="text-[10px] text-muted-foreground font-medium">
-            ATS: {displayAtsUsed}{!hasApiKey && `/${atsLimit}`}
+            ATS: {displayAtsUsed}
+            {!hasApiKey && `/${atsLimit}`}
           </p>
           <p className="text-[10px] text-muted-foreground font-medium">
-            Emails: {displayEmailUsed}{!hasApiKey && `/${emailLimit}`}
+            Emails: {displayEmailUsed}
+            {!hasApiKey && `/${emailLimit}`}
           </p>
         </div>
 

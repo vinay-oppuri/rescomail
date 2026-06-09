@@ -4,6 +4,7 @@ import { and, eq } from "drizzle-orm";
 
 import { AtsAnalysisError } from "@/modules/ats/server/ats-errors";
 import { runAiAtsAnalysis } from "@/modules/ats/server/ats-service-client";
+import { decryptSecret } from "@/lib/server/secrets";
 
 type AtsAnalysisPayload = {
   analysisId: string;
@@ -83,7 +84,8 @@ export const atsAnalysisTask = task({
         targetKeywords: getTargetKeywords(analysisRecord.targetKeywords),
       },
       resume,
-      prefs?.geminiApiKey ?? undefined
+      userId,
+      decryptSecret(prefs?.geminiApiKey) ?? undefined
     );
 
     await db.transaction(async (tx) => {

@@ -55,33 +55,39 @@ def extract_text_from_url(file_url: str) -> str:
     _validate_file_url(file_url)
     max_download_bytes = _max_download_bytes()
 
-    response = requests.get(file_url, stream=True, timeout=REQUEST_TIMEOUT)
-
-    if response.status_code != 200:
-        raise RuntimeError(f"Failed to fetch PDF: {response.status_code}")
-
-    content_length = response.headers.get("content-length")
-
-    if content_length and int(content_length) > max_download_bytes:
-        raise ValueError("Resume PDF is larger than the allowed limit.")
-
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
     temp_path = temp_file.name
 
     try:
         downloaded = 0
 
-        with temp_file:
-            for chunk in response.iter_content(chunk_size=64 * 1024):
-                if not chunk:
-                    continue
+        with requests.get(
+            file_url,
+            stream=True,
+            timeout=REQUEST_TIMEOUT,
+            allow_redirects=False,
+        ) as response:
+            if response.status_code != 200:
+                raise RuntimeError(f"Failed to fetch PDF: {response.status_code}")
 
-                downloaded += len(chunk)
+            content_length = response.headers.get("content-length")
 
-                if downloaded > max_download_bytes:
-                    raise ValueError("Resume PDF is larger than the allowed limit.")
+            if content_length and int(content_length) > max_download_bytes:
+                raise ValueError("Resume PDF is larger than the allowed limit.")
 
-                temp_file.write(chunk)
+            with temp_file:
+                for chunk in response.iter_content(chunk_size=64 * 1024):
+                    if not chunk:
+                        continue
+
+                    downloaded += len(chunk)
+
+                    if downloaded > max_download_bytes:
+                        raise ValueError(
+                            "Resume PDF is larger than the allowed limit."
+                        )
+
+                    temp_file.write(chunk)
 
         return _sync_extract(temp_path)
     finally:

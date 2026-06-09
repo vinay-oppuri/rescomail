@@ -1,6 +1,8 @@
 import re
 import logging
+import ipaddress
 import requests
+from urllib.parse import urlparse
 
 from app.core.config import settings
 from app.embeddings.semantic import semantic_search_scores
@@ -10,6 +12,25 @@ logger = logging.getLogger("rescomail.ai-service.company_context")
 TAVILY_SEARCH_ENDPOINT = "https://api.tavily.com/search"
 TAVILY_TIMEOUT_MS = 20_000
 MAX_COMPANY_CONTEXT_LENGTH = 2000
+
+
+def _is_public_website_url(value: str) -> bool:
+    try:
+        parsed = urlparse(value)
+        hostname = (parsed.hostname or "").lower().rstrip(".")
+
+        if parsed.scheme not in {"http", "https"} or not hostname:
+            return False
+
+        if hostname == "localhost" or hostname.endswith(".local"):
+            return False
+
+        try:
+            return ipaddress.ip_address(hostname).is_global
+        except ValueError:
+            return True
+    except ValueError:
+        return False
 
 
 def get_rag_company_context(
@@ -25,6 +46,13 @@ def get_rag_company_context(
             "Set it in your env to enable website-based context enrichment."
         )
         return ""
+
+    if not company_name and not company_website_url:
+        return ""
+
+    if company_website_url and not _is_public_website_url(company_website_url):
+        logger.warning("Rejected non-public company website URL.")
+        company_website_url = ""
 
     if not company_name and not company_website_url:
         return ""
@@ -47,7 +75,6 @@ def get_rag_company_context(
         "max_results": 5,
     }
     if company_website_url:
-        from urllib.parse import urlparse
         parsed = urlparse(company_website_url)
         domain = parsed.hostname or company_website_url
         if domain.startswith("www."):

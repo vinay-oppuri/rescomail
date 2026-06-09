@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@repo/ui/components/button";
-import { LogIn, Menu, Moon, Sun, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useState } from "react";

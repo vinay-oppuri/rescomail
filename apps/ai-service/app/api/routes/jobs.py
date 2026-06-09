@@ -61,7 +61,10 @@ async def subscribe_to_jobs(
         return {"subscribed": True, "task_id": task.id, "message": "First digest enqueued."}
     except Exception as exc:
         logger.exception("Failed to enqueue job digest for user %s", request.user_id)
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=500,
+            detail="Job search failed. Please retry.",
+        ) from exc
 
 
 @router.post("/digest")
@@ -78,7 +81,10 @@ async def trigger_digest(
         return {"task_id": task.id, "message": "Digest task enqueued."}
     except Exception as exc:
         logger.exception("Failed to enqueue on-demand digest for user %s", request.user_id)
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=500,
+            detail="Job digest generation failed. Please retry.",
+        ) from exc
 
 
 @router.delete("/unsubscribe")
@@ -110,4 +116,7 @@ async def search_jobs_route(
         return {"results": results}
     except Exception as exc:
         logger.exception("Failed to search jobs for query '%s'", query)
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=500,
+            detail="Job digest delivery failed. Please retry.",
+        ) from exc

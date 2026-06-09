@@ -23,7 +23,6 @@ const Page = async () => {
     <ApplicationsView
       initialApplications={applications}
       resumes={resumes}
-      userId={session.user.id}
     />
   );
 };

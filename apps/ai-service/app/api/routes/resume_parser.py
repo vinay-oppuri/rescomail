@@ -23,4 +23,7 @@ async def parse_resume_route(
         return await loop.run_in_executor(None, parse_resume, request)
     except Exception as error:
         logger.exception("Resume parsing failed for %s", request.resumeId)
-        raise HTTPException(status_code=500, detail=str(error)) from error
+        raise HTTPException(
+            status_code=500,
+            detail="Resume parsing failed. Please retry.",
+        ) from error

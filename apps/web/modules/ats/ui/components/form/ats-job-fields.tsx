@@ -3,8 +3,6 @@
 import { Label, Textarea } from "@repo/ui";
 import { useAtsStore } from "../../../store/ats-store";
 
-const fieldClassName = "border-foreground/5! bg-muted/20!";
-
 const AtsJobFields = () => {
   const {
     jobDescription,

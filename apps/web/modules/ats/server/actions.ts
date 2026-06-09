@@ -26,9 +26,7 @@ export const deleteAtsAnalysisAction = async (analysisId: string) => {
       );
     revalidatePath("/dashboard/ats");
     return { success: true };
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to delete ATS analysis.";
-    return { success: false, error: message };
+  } catch {
+    return { success: false, error: "Failed to delete ATS analysis." };
   }
 };

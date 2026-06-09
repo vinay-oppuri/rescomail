@@ -20,6 +20,7 @@
       "cookie": "0.7.2",
       "effect": "3.21.0",
       "esbuild": "0.28.0",
+      "hono": "4.12.21",
       "postcss": "8.5.10",
       "systeminformation": "5.31.6",
       "ws": "8.20.1"

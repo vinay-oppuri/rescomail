@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -34,6 +34,14 @@ interface ApplicationDialogProps {
   onSaveSuccess: () => void;
 }
 
+type ApplicationStage =
+  | "saved"
+  | "applied"
+  | "phone_screen"
+  | "interview"
+  | "offer"
+  | "rejected";
+
 export const ApplicationDialog = ({
   isOpen,
   onClose,
@@ -41,42 +49,21 @@ export const ApplicationDialog = ({
   resumes,
   onSaveSuccess,
 }: ApplicationDialogProps) => {
-  const [jobTitle, setJobTitle] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [jobUrl, setJobUrl] = useState("");
-  const [stage, setStage] = useState<
-    "saved" | "applied" | "phone_screen" | "interview" | "offer" | "rejected"
-  >("saved");
-  const [notes, setNotes] = useState("");
-  const [resumeId, setResumeId] = useState("none");
-  const [appliedAt, setAppliedAt] = useState("");
+  const [jobTitle, setJobTitle] = useState(application?.jobTitle ?? "");
+  const [companyName, setCompanyName] = useState(application?.companyName ?? "");
+  const [jobUrl, setJobUrl] = useState(application?.jobUrl ?? "");
+  const [stage, setStage] = useState<ApplicationStage>(
+    application?.stage ?? "saved",
+  );
+  const [notes, setNotes] = useState(application?.notes ?? "");
+  const [resumeId, setResumeId] = useState(application?.resumeId ?? "none");
+  const [appliedAt, setAppliedAt] = useState(
+    application?.appliedAt
+      ? (new Date(application.appliedAt).toISOString().split("T")[0] ?? "")
+      : "",
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (application) {
-      setJobTitle(application.jobTitle);
-      setCompanyName(application.companyName);
-      setJobUrl(application.jobUrl || "");
-      setStage(application.stage);
-      setNotes(application.notes || "");
-      setResumeId(application.resumeId || "none");
-      setAppliedAt(
-        application.appliedAt
-          ? (new Date(application.appliedAt).toISOString().split("T")[0] || "")
-          : ""
-      );
-    } else {
-      setJobTitle("");
-      setCompanyName("");
-      setJobUrl("");
-      setStage("saved");
-      setNotes("");
-      setResumeId("none");
-      setAppliedAt("");
-    }
-    setError(null);
-  }, [application, isOpen]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -195,7 +182,7 @@ export const ApplicationDialog = ({
               <Label htmlFor="stage" className="text-xs font-semibold text-muted-foreground">Current Stage</Label>
               <Select
                 value={stage}
-                onValueChange={(val: any) => setStage(val)}
+                onValueChange={(value) => setStage(value as ApplicationStage)}
               >
                 <SelectTrigger className="bg-card text-foreground">
                   <SelectValue placeholder="Select stage" />

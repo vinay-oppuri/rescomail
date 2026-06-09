@@ -5,6 +5,7 @@ import { atsAnalyzeSchema } from "@repo/validations";
 import { runAtsAnalysisForUser } from "@/modules/ats/server/ats-analysis";
 import { AtsAnalysisError } from "@/modules/ats/server/ats-errors";
 import { UsageLimitError } from "@/modules/dashboard/server/usage-limits";
+import { internalServerError } from "@/lib/server/api-errors";
 
 const parseRequestJson = async (req: Request) => {
   try {
@@ -54,12 +55,10 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Unknown ATS analysis error",
-      },
-      { status: 500 },
+    return internalServerError(
+      "Unhandled ATS analysis route error",
+      error,
+      "Unable to run ATS analysis right now.",
     );
   }
 }

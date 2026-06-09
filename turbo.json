@@ -3,10 +3,12 @@
   "ui": "tui",
   "globalEnv": [
     "AI_SERVICE_API_KEY",
+    "AI_SERVICE_GRPC_URL",
     "AI_SERVICE_URL",
     "BETTER_AUTH_SECRET",
     "BETTER_AUTH_URL",
     "DATABASE_URL",
+    "DATA_ENCRYPTION_KEY",
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
     "NODE_ENV",

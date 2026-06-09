@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -20,7 +21,6 @@ async def analyze_ats_route(
 ):
     logger.info("Running ATS analysis for resume %s", body.resumeId or "inline")
 
-    import asyncio
     loop = asyncio.get_event_loop()
     try:
         return await loop.run_in_executor(None, analyze_ats, body)
@@ -28,4 +28,7 @@ async def analyze_ats_route(
         raise HTTPException(status_code=400, detail=str(error)) from error
     except Exception as error:
         logger.exception("ATS analysis failed for resume %s", body.resumeId)
-        raise HTTPException(status_code=500, detail=str(error)) from error
+        raise HTTPException(
+            status_code=500,
+            detail="ATS analysis failed. Please retry.",
+        ) from error

@@ -1,4 +1,4 @@
-import { LogIn, LayoutDashboard } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { Button } from "@repo/ui/components/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@repo/ui";
 import { SiGoogle } from "react-icons/si";

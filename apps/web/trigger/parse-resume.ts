@@ -2,6 +2,7 @@ import { logger, task } from "@trigger.dev/sdk/v3";
 import { db, resumes, userPreferences } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 import { serverEnv } from "@repo/env/server";
+import { decryptSecret } from "@/lib/server/secrets";
 
 const AI_SERVICE_TIMEOUT_MS = 120_000;
 
@@ -12,9 +13,10 @@ type ParseResumePayload = {
   fileName: string;
 };
 
-const aiServiceHeaders = () => {
+const aiServiceHeaders = (userId: string) => {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
+    "X-Rescomail-User-Id": userId,
   };
 
   if (serverEnv.AI_SERVICE_API_KEY) {
@@ -92,12 +94,12 @@ export const parseResumeTask = task({
 
       const response = await fetch(`${serverEnv.AI_SERVICE_URL}/parse`, {
         method: "POST",
-        headers: aiServiceHeaders(),
+        headers: aiServiceHeaders(userId),
         body: JSON.stringify({
           resumeId,
           fileUrl,
           fileName,
-          geminiApiKey: prefs?.geminiApiKey ?? undefined,
+          geminiApiKey: decryptSecret(prefs?.geminiApiKey) ?? undefined,
         }),
         signal: controller.signal,
       }).catch((error: unknown) => {

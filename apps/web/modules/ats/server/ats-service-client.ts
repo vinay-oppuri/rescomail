@@ -48,7 +48,8 @@ export const buildAiPayload = (
 export const runAiAtsAnalysis = async (
   input: AtsAnalyzeInput,
   resume: typeof resumes.$inferSelect,
-  geminiApiKey?: string
+  userId: string,
+  geminiApiKey?: string,
 ): Promise<AtsAnalysisResponse> => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), AI_SERVICE_TIMEOUT_MS);
@@ -56,7 +57,7 @@ export const runAiAtsAnalysis = async (
   try {
     const response = await fetch(`${serverEnv.AI_SERVICE_URL}/ats/analyze`, {
       method: "POST",
-      headers: aiServiceHeaders(),
+      headers: aiServiceHeaders(userId),
       body: JSON.stringify(buildAiPayload(input, resume, geminiApiKey)),
       signal: controller.signal,
     }).catch((err: unknown) => {
@@ -98,9 +99,10 @@ export const runAiAtsAnalysis = async (
   }
 };
 
-const aiServiceHeaders = () => {
+const aiServiceHeaders = (userId: string) => {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
+    "X-Rescomail-User-Id": userId,
   };
 
   if (serverEnv.AI_SERVICE_API_KEY) {

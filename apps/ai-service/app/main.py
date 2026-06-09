@@ -17,7 +17,11 @@ from slowapi.middleware import SlowAPIMiddleware
 
 from app.api.router import api_router
 from app.core.config import settings
-from app.core.exceptions import RescomailError, rescomail_exception_handler
+from app.core.exceptions import (
+    RescomailError,
+    rescomail_exception_handler,
+    unhandled_exception_handler,
+)
 from app.core.logging import TraceMiddleware, configure_structlog, get_logger
 from app.core.rate_limit import limiter
 
@@ -60,6 +64,7 @@ app.add_middleware(TraceMiddleware)
 # --- Exception handlers ---
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_exception_handler(RescomailError, rescomail_exception_handler)
+app.add_exception_handler(Exception, unhandled_exception_handler)
 
 # --- Routers ---
 app.include_router(api_router)

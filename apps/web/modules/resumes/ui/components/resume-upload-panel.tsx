@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, CheckCircle2, FileUp, Loader2, X } from "lucide-react";
+import { AlertCircle, CheckCircle2, FileUp, Loader2 } from "lucide-react";
 
 import { useUploadThing } from "@/lib/uploadthing";
 import { Alert, AlertDescription, AlertTitle } from "@repo/ui/components/alert";

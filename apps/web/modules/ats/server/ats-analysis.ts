@@ -68,8 +68,8 @@ export const runAtsAnalysisForUser = async (
       throw error;
     }
 
-    const message =
-      error instanceof Error ? error.message : "Unknown ATS trigger error";
+    console.error("Failed to queue ATS analysis", error);
+    const message = "Unable to start ATS analysis right now.";
 
     if (savedAnalysisId) {
       await db

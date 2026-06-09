@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { db, userPreferences } from "@repo/db";
 import { eq } from "drizzle-orm";
+import { hasUsableSecret } from "@/lib/server/secrets";
 
 import DashboardNavbar from "@/modules/dashboard/ui/components/dashboard-navbar";
 import DashboardSidebar from "@/modules/dashboard/ui/components/dashboard-sidebar";
@@ -36,7 +37,7 @@ const Layout = async ({ children }: Props) => {
     where: eq(userPreferences.userId, session.user.id),
   });
   
-  const hasApiKey = !!existingPrefs?.geminiApiKey;
+  const hasApiKey = hasUsableSecret(existingPrefs?.geminiApiKey);
 
   return (
     <div className="min-h-screen w-full bg-background font-sans antialiased">

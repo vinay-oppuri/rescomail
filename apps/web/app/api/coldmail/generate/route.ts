@@ -5,6 +5,7 @@ import { coldEmailGenerateSchema } from "@repo/validations";
 import { ColdmailError } from "@/modules/coldmail/server/coldmail-errors";
 import { generateColdEmailForUser } from "@/modules/coldmail/server/coldmail-generation";
 import { UsageLimitError } from "@/modules/dashboard/server/usage-limits";
+import { internalServerError } from "@/lib/server/api-errors";
 
 const parseRequestJson = async (req: Request) => {
   try {
@@ -54,14 +55,10 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unknown cold email generation error",
-      },
-      { status: 500 },
+    return internalServerError(
+      "Unhandled cold email generation route error",
+      error,
+      "Unable to generate a cold email right now.",
     );
   }
 }
