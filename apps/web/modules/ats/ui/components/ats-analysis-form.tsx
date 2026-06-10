@@ -33,8 +33,8 @@ const AtsAnalysisForm = () => {
           </p>
         </div>
         <Badge variant="secondary" className="shrink-0 gap-1.5 shadow-sm">
-          <Zap className="h-3.5 w-3.5 text-primary" />
-          Live BGE Model
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
+          LLM Powered
         </Badge>
       </div>
 

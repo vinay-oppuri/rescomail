@@ -1,25 +1,5 @@
-"""Domain model constants and value objects."""
-
-from .ats import (
-    ACTION_VERBS,
-    ATS_KEYWORD_HINTS,
-    DISPLAY_OVERRIDES,
-    GENERIC_JOB_WORDS,
-    SCORING_WEIGHTS,
-    SECTION_MARKERS,
-    SEMANTIC_ALIASES,
-    STOP_WORDS,
-)
 from .resume import GEMINI_STRUCTURED_RESUME_SCHEMA
 
 __all__ = [
-    "ACTION_VERBS",
-    "ATS_KEYWORD_HINTS",
-    "DISPLAY_OVERRIDES",
     "GEMINI_STRUCTURED_RESUME_SCHEMA",
-    "GENERIC_JOB_WORDS",
-    "SCORING_WEIGHTS",
-    "SECTION_MARKERS",
-    "SEMANTIC_ALIASES",
-    "STOP_WORDS",
 ]

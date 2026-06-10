@@ -27,7 +27,7 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
       <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 bg-primary/5 blur-3xl" />
 
       {/* Score Ring */}
-      <div className="relative flex aspect-square w-full max-w-[160px] flex-col items-center justify-center self-center border bg-card/50 p-4 shadow-sm backdrop-blur-xl transition-all duration-500 hover:shadow-md hover:border-primary/20 rounded-full">
+      <div className="relative flex aspect-square w-full max-w-[160px] flex-col items-center justify-center self-center border bg-card/50 p-4 shadow-sm backdrop-blur-xl transition-all duration-500 hover:shadow-md hover:border-primary/20 rounded-sm">
         <div className="relative flex h-24 w-24 items-center justify-center">
           <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
             <circle

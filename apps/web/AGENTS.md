@@ -16,6 +16,16 @@ This document serves as the comprehensive agentic/developer guide for the Next.j
 
 ---
 
+## 🧠 Hybrid AI Architecture (Web to AI Service)
+
+While the `apps/web` handles the user experience, all AI workloads are offloaded to `apps/ai-service`. The web application interacts with a **Hybrid Architecture** on the backend:
+*   **Local Embeddings** are used for high-volume filtering (e.g., matching a resume against hundreds of job descriptions or filtering large scraped website contexts). This ensures the web app receives fast responses for search queries without incurring massive LLM token costs.
+*   **LLMs (Gemini)** are reserved strictly for deep reasoning (e.g., generating ATS gap analysis, rewriting bullet points, or drafting cold emails).
+
+When polling for background jobs, remember that the AI Service utilizes this funneling technique to keep background processing times (and your polling cycles) as short as possible.
+
+---
+
 ## 2. Directory Structure & Architecture Philosophy
 
 The application strictly follows a **domain-driven modular architecture** rather than a technical-concern architecture. Most business logic, UI components, and server actions are grouped inside the `modules/` directory by feature domain.

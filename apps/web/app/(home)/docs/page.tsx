@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen pt-12 bg-background">
       <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8 py-8 md:py-12">
         
         {/* Mobile Navigation (Horizontal Scroll) */}
@@ -26,7 +26,7 @@ const Page = () => {
 
         {/* Left Sidebar Navigation (Desktop) */}
         <aside className="w-full md:w-56 lg:w-64 shrink-0 hidden md:block">
-          <div className="sticky top-24">
+          <div className="sticky top-32">
             <h3 className="font-semibold text-base mb-4 tracking-tight flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-primary" />
               Documentation
@@ -284,7 +284,7 @@ const Page = () => {
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                 Rescomail offers a generous free tier for trial users. If you hit your limits, you can simply provide your own Google Gemini API key to unlock <strong>unlimited usage</strong>.
               </p>
-              <div className="rounded-sm border border-primary/20 bg-primary/5 p-5 ">
+              <div className="rounded-sm border border-border/50 bg-muted/30 p-5 ">
                 <h4 className="font-semibold text-sm text-foreground mb-3">How to add your API Key:</h4>
                 <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
                   <li>Get a free API key from <a href="https://aistudio.google.com/" target="_blank" rel="noreferrer" className="text-primary hover:underline">Google AI Studio</a>.</li>

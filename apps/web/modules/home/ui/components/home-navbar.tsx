@@ -3,6 +3,7 @@
 import { Button } from "@repo/ui/components/button";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import {
@@ -24,7 +25,7 @@ const navLinks = [
 ];
 
 const HomeNavbar = () => {
-
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -32,155 +33,156 @@ const HomeNavbar = () => {
   const rawProgress = useTransform(scrollY, [0, SCROLL_THRESHOLD], [0, 1]);
   const progress = useSpring(rawProgress, { stiffness: 60, damping: 20, mass: 1 });
 
-  const pillOpacity = useTransform(progress, [0, 0.4], [1, 0]);
-  const pillY = useTransform(progress, [0, 0.5], [0, -12]);
-  const logoOpacity = useTransform(progress, [0, 0.3], [1, 0]);
-  const actionsOpacity = useTransform(progress, [0, 0.3], [1, 0]);
-  const menuOpacity = useTransform(progress, [0.3, 0.8], [0, 1]);
-  const menuScale = useTransform(progress, [0.3, 0.8], [0.8, 1]);
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // ─── SCROLL TRANSFORMATION MAPPINGS ─── //
+  const navMaxWidth = useTransform(progress, [0, 1], ["1152px", "380px"]);
+  const navHeight = useTransform(progress, [0, 1], ["80px", "56px"]);
+  const navPadding = useTransform(progress, [0, 1], ["0px 16px", "0px 12px"]);
+
+  // Moves the compact pill slightly down from the screen edge when scrolled
+  const navY = useTransform(progress, [0, 1], ["0px", "16px"]);
+  const compactBgOpacity = useTransform(progress, [0, 1], [0, 1]);
+
+  const linksWidth = useTransform(progress, [0, 1], ["400px", "0px"]);
+  const linksOpacity = useTransform(progress, [0, 0.4], [1, 0]);
+  const linksY = useTransform(progress, [0, 0.5], ["0px", "-40px"]);
+
+  const menuWidth = useTransform(progress, [0.5, 1], ["0px", "44px"]);
+  const menuOpacity = useTransform(progress, [0.6, 1], [0, 1]);
+
+  const themeToggleWidth = useTransform(progress, [0, 0.4], ["40px", "0px"]);
+  const themeToggleOpacity = useTransform(progress, [0, 0.3], [1, 0]);
+
+  const logoIconWidth = useTransform(progress, [0, 0.4], ["40px", "0px"]);
+  const logoIconOpacity = useTransform(progress, [0, 0.3], [1, 0]);
 
   return (
     <>
       {/* ── DESKTOP ── */}
-      {/* Outer nav: only holds logo (left) and actions (right), constrained to max-w-6xl */}
-      <nav className="fixed top-0 left-0 right-0 z-50 hidden md:block pt-5">
+      <div className="fixed top-0 left-0 right-0 z-50 hidden md:flex justify-center pointer-events-none">
 
-        {/* Logo — left-anchored inside the max-width container */}
-        <div className="mx-auto max-w-6xl px-6 md:px-0 flex items-center justify-between">
-          <motion.div style={{ opacity: logoOpacity }}>
-            <Link href="/" className="inline-flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-sm border bg-foreground font-heading text-sm text-primary-foreground">
-                R
-              </span>
-              <h1 className="text-2xl font-bold">Rescomail</h1>
+        <motion.nav
+          className="pointer-events-auto flex items-stretch justify-between relative overflow-hidden"
+          style={{
+            width: "100%",
+            maxWidth: navMaxWidth,
+            height: navHeight,
+            padding: navPadding,
+            y: navY,
+          }}
+        >
+          {/* Scrolled Background Layer (Glass effect) */}
+          <motion.div
+            className="absolute inset-0 bg-muted/80 backdrop-blur-md border border-border/50 shadow-sm rounded-sm"
+            style={{ opacity: compactBgOpacity }}
+          />
+
+          {/* Left: Logo */}
+          <motion.div className="flex-1 flex items-center relative z-10">
+            <Link href="/" onClick={handleLogoClick} className="inline-flex items-center pl-2">
+              <motion.div
+                style={{ width: logoIconWidth, opacity: logoIconOpacity }}
+                className="overflow-hidden shrink-0 flex items-center justify-start"
+              >
+                <span className="flex h-8 w-8 items-center justify-center rounded-sm border bg-foreground font-heading text-sm text-primary-foreground shrink-0">
+                  R
+                </span>
+              </motion.div>
+              <h1 className="text-xl font-bold tracking-tight">Rescomail</h1>
             </Link>
           </motion.div>
 
-          {/* Right actions */}
-          <motion.div style={{ opacity: actionsOpacity }} className="flex items-center gap-3">
-            <AuthDialog />
-            <ThemeToggle />
-          </motion.div>
-        </div>
+          {/* Center: The Nav Pill (Strictly top-0) */}
+          <div className="flex items-start justify-center relative z-10 flex-1">
 
-        {/* 
-          Nav pill & compact pill: both absolutely centered on the full viewport,
-          NOT constrained by the max-width container. 
-          We use a separate fixed layer for these.
-        */}
-        <div className="pointer-events-none absolute inset-0 flex items-start justify-center">
-
-          {/* Unscrolled: centered nav pill — fixed to true viewport top-0 center */}
-          <motion.div
-            style={{ opacity: pillOpacity, y: pillY }}
-            className="pointer-events-auto"
-          >
-            <div
-              className="flex items-center gap-8 px-14 py-4 bg-foreground text-sm text-background font-semibold"
-              style={{
-                clipPath:
-                  "polygon(0 0, 100% 0, calc(100% - 30px) calc(100% - 15px), calc(100% - 36px) calc(100% - 7px), calc(100% - 41px) calc(100% - 2px), calc(100% - 45px) 100%, 45px 100%, 41px calc(100% - 2px), 36px calc(100% - 7px), 30px calc(100% - 15px))",
-              }}
+            {/* Nav Links Container */}
+            <motion.div
+              style={{ width: linksWidth, opacity: linksOpacity, y: linksY }}
+              className="flex items-start justify-center overflow-hidden"
             >
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.path}
-                  className="group relative flex flex-col transition-colors"
-                >
-                  {link.name}
-                  <div className="absolute -bottom-1 left-0 h-1 w-full scale-x-0 origin-center bg-background transition-transform duration-200 group-hover:scale-x-100" />
-                </Link>
-              ))}
-            </div>
-          </motion.div>
+              <div
+                className="flex items-center gap-8 px-14 py-4 bg-foreground text-sm text-background font-semibold w-max"
+                style={{
+                  clipPath:
+                    "polygon(0 0, 100% 0, calc(100% - 30px) calc(100% - 15px), calc(100% - 36px) calc(100% - 7px), calc(100% - 41px) calc(100% - 2px), calc(100% - 45px) 100%, 45px 100%, 41px calc(100% - 2px), 36px calc(100% - 7px), 30px calc(100% - 15px))",
+                }}
+              >
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.path}
+                    className="group relative transition-colors hover:text-background/80"
+                  >
+                    {link.name}
+                    <div className="absolute -bottom-1 left-0 h-px w-full scale-x-0 bg-background transition-transform duration-200 group-hover:scale-x-100" />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
 
-          {/* Scrolled: compact pill — fades in, centered */}
-          <motion.div
-            style={{ opacity: menuOpacity, scale: menuScale }}
-            className="pointer-events-auto fixed top-4 left-1/2 -translate-x-1/2 z-50"
-          >
-            <div className="flex items-center bg-muted/80 backdrop-blur-sm text-foreground text-sm rounded-md shadow-lg border border-border/50">
-              {/* Logo */}
-              <Link href="/" className="flex items-center gap-2 p-4 py-[11px]">
-                <span className="flex h-6 w-6 items-center justify-center rounded-[3px] bg-foreground font-heading text-[10px] font-bold text-background">
-                  R
-                </span>
-                <span className="pl-2 font-bold text-sm">Rescomail</span>
-              </Link>
-
-              {/* Menu trigger */}
+            {/* Compact Menu Trigger (Centered vertically in compact mode) */}
+            <motion.div
+              style={{ width: menuWidth, opacity: menuOpacity }}
+              className="flex items-center justify-center h-full"
+            >
               <button
                 onClick={() => setMenuOpen((o) => !o)}
-                className="px-4 py-[11px] hover:bg-muted transition-colors cursor-pointer"
-                aria-label="Navigation menu"
+                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted/50 transition-colors text-foreground z-20"
               >
-                <AnimatePresence mode="wait" initial={false}>
-                  {menuOpen ? (
-                    <motion.span
-                      key="x"
-                      initial={{ rotate: -45, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 45, opacity: 0 }}
-                      transition={{ duration: 0.15 }}
-                      className="block"
-                    >
-                      <X className="h-4 w-4" />
-                    </motion.span>
-                  ) : (
-                    <motion.span
-                      key="menu"
-                      initial={{ rotate: 45, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: -45, opacity: 0 }}
-                      transition={{ duration: 0.15 }}
-                      className="block"
-                    >
-                      <Menu className="h-4 w-4" />
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </button>
+            </motion.div>
+          </div>
 
-              {/* Login + theme */}
-              <div className="flex items-center gap-2 p-4 py-[11px]">
-                <AuthDialog />
-              </div>
-            </div>
-
-            {/* Dropdown */}
-            <AnimatePresence>
-              {menuOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
-                  className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 bg-muted/80 backdrop-blur-sm text-foreground rounded-sm overflow-hidden min-w-36 shadow-lg"
-                >
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.name}
-                      href={link.path}
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center px-5 py-3 text-sm font-medium hover:bg-background/10 transition-colors border-b border-background/10 last:border-0"
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+          {/* Right: Actions */}
+          <motion.div className="flex-1 flex items-center justify-end gap-2 relative z-10">
+            <AuthDialog />
+            <motion.div
+              style={{ width: themeToggleWidth, opacity: themeToggleOpacity }}
+              className="flex items-center justify-center overflow-hidden shrink-0"
+            >
+              <ThemeToggle />
+            </motion.div>
           </motion.div>
+        </motion.nav>
 
-        </div>
-      </nav>
+        {/* Dropdown Menu */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="absolute top-[80px] pointer-events-auto bg-muted/90 backdrop-blur-md border border-border/50 rounded-sm min-w-[200px] shadow-xl overflow-hidden"
+            >
+              <div className="flex flex-col">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.path}
+                    onClick={() => setMenuOpen(false)}
+                    className="px-6 py-3 text-sm font-medium hover:bg-foreground/5 transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
-      {/* ── MOBILE ── */}
+
       <nav className="fixed top-0 left-0 right-0 z-50 md:hidden bg-background/80 backdrop-blur-sm">
         <div className="mx-auto w-full px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="inline-flex items-center gap-2">
+            <Link href="/" onClick={handleLogoClick} className="inline-flex items-center gap-2">
               <span className="flex h-7 w-7 items-center justify-center rounded-sm border bg-foreground font-heading text-xs text-primary-foreground">
                 R
               </span>
@@ -241,9 +243,6 @@ const HomeNavbar = () => {
           </AnimatePresence>
         </div>
       </nav>
-
-      {/* Spacer */}
-      <div className="h-20" />
     </>
   );
 };
@@ -252,18 +251,16 @@ export default HomeNavbar;
 
 const ThemeToggle = ({ iconClassName }: { iconClassName?: string }) => {
   const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
   return (
     <Button
       variant="ghost"
       size="icon"
-      aria-label="Toggle theme"
-      className="px-5!"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="rounded-full"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >
-      <Sun className={`h-5 w-5 dark:hidden ${iconClassName || "text-foreground!"}`} />
-      <Moon className={`hidden h-5 w-5 dark:block ${iconClassName || "text-foreground!"}`} />
+      <Sun className={`${iconClassName} h-5 w-5 dark:hidden`} />
+      <Moon className={`${iconClassName} hidden h-5 w-5 dark:block`} />
     </Button>
   );
 };
-export { ThemeToggle };
+export { ThemeToggle }

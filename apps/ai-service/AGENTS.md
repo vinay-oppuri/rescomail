@@ -49,6 +49,19 @@ The core responsibilities of this service are divided into three main pipelines:
 
 ---
 
+## 🧠 Hybrid Architecture: LLM + Local Embeddings
+
+A frequent question is: *"If we use Gemini for ATS analysis and writing, why do we still have local embedding models?"*
+
+We use a **Hybrid Architecture** to balance cost, speed, and reasoning capability. 
+
+- **The LLM (Gemini)** is powerful but slow and token-expensive. It is reserved for complex reasoning (e.g., scoring a resume against a JD, drafting a personalized email, summarizing a job match).
+- **Local Embeddings (Sentence-Transformers)** are cheap and extremely fast. They act as a high-throughput funnel:
+  1. **Job Relevance Matching**: We embed the user's resume and hundreds of job descriptions locally to rapidly calculate cosine similarity. We only pass the **Top 10** jobs to Gemini to write summaries, saving massive token costs.
+  2. **RAG Context Filtering**: When scraping a massive company website, we chunk the text and use local embeddings to find the top 3 most relevant chunks. We only send those 3 chunks to Gemini to write the cold email, preventing context-window overflow.
+
+---
+
 ## 📂 Recommended Production Folder Structure
 
 The structure below keeps the existing architecture intact and layers in missing production concerns: a `core/` infrastructure module, proper `tasks/` for async workers, a `jobs/` service module, and a `tests/` suite.

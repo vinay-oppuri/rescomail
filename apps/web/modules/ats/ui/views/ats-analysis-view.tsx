@@ -49,7 +49,7 @@ const AtsAnalysisView = ({ analyses, resumes, initialResumeId }: AtsAnalysisView
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="outline" className="gap-1">
               <BrainCircuit className="h-3 w-3" />
-              BGE + cross-encoder
+              LLM + Semantic Match
             </Badge>
             <Badge variant="outline">{parsedResumes} parsed resumes</Badge>
           </div>

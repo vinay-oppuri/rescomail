@@ -6,6 +6,7 @@ the candidate's profile. Then produces a complete digest email body.
 """
 
 import logging
+import concurrent.futures
 
 from app.llm.gemini import generate_gemini_json
 from app.prompts.jobs import DIGEST_PROMPT, RELEVANCE_SUMMARY_PROMPT
@@ -43,8 +44,7 @@ def generate_job_summaries(
     Returns:
         Jobs list with an added ``match_summary`` field on each item.
     """
-    annotated = []
-    for job in jobs:
+    def _process_job(job: dict) -> dict:
         prompt = RELEVANCE_SUMMARY_PROMPT.format(
             resume_summary=resume_summary,
             job_title=job.get("title", ""),
@@ -59,9 +59,10 @@ def generate_job_summaries(
             logger.warning("Failed to generate summary for job %s: %s", job.get("id"), exc)
             match_summary = ""
 
-        annotated.append({**job, "match_summary": match_summary})
+        return {**job, "match_summary": match_summary}
 
-    return annotated
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        return list(executor.map(_process_job, jobs))
 
 
 def generate_digest_email(

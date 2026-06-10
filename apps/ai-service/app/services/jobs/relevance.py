@@ -37,6 +37,32 @@ def _get_embedding(text: str) -> np.ndarray:
     return vector
 
 
+def _get_embeddings(texts: list[str]) -> list[np.ndarray]:
+    """Return embeddings for multiple texts, utilizing the cache."""
+    from app.embeddings.cache import get_cached_embedding, set_cached_embedding
+    
+    results = [None] * len(texts)
+    missing_indices = []
+    missing_texts = []
+    
+    for i, text in enumerate(texts):
+        cached = get_cached_embedding(text)
+        if cached is not None:
+            results[i] = cached
+        else:
+            missing_indices.append(i)
+            missing_texts.append(text)
+            
+    if missing_texts:
+        from app.embeddings.semantic import embed_texts  # type: ignore
+        new_vectors = embed_texts(missing_texts)
+        for idx, text, vec in zip(missing_indices, missing_texts, new_vectors):
+            results[idx] = vec
+            set_cached_embedding(text, vec)
+            
+    return results
+
+
 def filter_by_relevance(
     jobs: list[dict],
     resume_text: str,
@@ -65,15 +91,20 @@ def filter_by_relevance(
         return jobs[:top_n]  # Degrade gracefully — return unfiltered jobs
 
     scored: list[tuple[float, dict]] = []
+    
+    jd_texts = [f"{job.get('title', '')} {job.get('description', '')}" for job in jobs]
+    
+    try:
+        job_vecs = _get_embeddings(jd_texts)
+    except Exception as exc:
+        logger.error("Failed to batch embed job texts: %s", exc)
+        job_vecs = [None] * len(jobs)
 
-    for job in jobs:
-        jd_text = f"{job.get('title', '')} {job.get('description', '')}"
-        try:
-            job_vec = _get_embedding(jd_text)
-            score = _cosine_similarity(resume_vec, job_vec)
-        except Exception as exc:
-            logger.debug("Failed to embed job %s: %s", job.get("id"), exc)
+    for job, job_vec in zip(jobs, job_vecs):
+        if job_vec is None:
             score = 0.0
+        else:
+            score = _cosine_similarity(resume_vec, job_vec)
 
         if score >= min_score:
             scored.append((score, {**job, "relevance_score": round(score, 4)}))

@@ -7,7 +7,7 @@ const HomeView = () => {
   return (
     <main className="min-h-screen bg-background selection:bg-primary/20">
       {/* Split Hero Section */}
-      <section className="relative overflow-hidden lg:min-h-[calc(100vh-4rem)] flex items-center">
+      <section className="relative overflow-hidden lg:min-h-screen flex items-center">
         {/* Background Gradients */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full overflow-hidden -z-10 pointer-events-none">
           <div className="absolute top-[-40%] left-[-10%] w-[70%] h-[70%] bg-primary/10 blur-[120px]" />
@@ -18,7 +18,7 @@ const HomeView = () => {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
             
             {/* Left Column: Title & Description */}
-            <div className="max-w-2xl min-h-[calc(100vh-4rem)] lg:min-h-0 flex flex-col justify-center pb-12 lg:py-0">
+            <div className="max-w-2xl min-h-screen lg:min-h-0 flex flex-col justify-center pb-12 lg:py-0">
               <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl leading-[1.1]">
                 Land Your Dream Job with{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-500">
@@ -29,7 +29,7 @@ const HomeView = () => {
                 The ultimate AI assistant for your career. Discover relevant jobs, optimize your resume for ATS, track your pipeline, and generate personalized cold emails—all in one place.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <Button size="lg" className="w-[75%] sm:w-auto h-10 md:h-12 px-6 text-sm shadow-lg shadow-primary/20 transition-all hover:scale-105 " asChild>
+                <Button size="lg" className="w-[75%] sm:w-auto h-10 md:h-12 px-6 text-sm shadow-md shadow-primary/20 transition-all hover:scale-105 " asChild>
                   <Link href="/signup">
                     Get Started Free <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -259,7 +259,7 @@ const HomeView = () => {
             {[
               {
                 q: "How accurate is the ATS analysis?",
-                a: "Rescomail uses advanced embedding models and cross-encoders (the same tech powering modern search engines) to understand semantics, not just exact keyword matches. This provides highly accurate and realistic ATS scoring.",
+                a: "Rescomail's core analysis is completely LLM-based, allowing our models to read your resume like a human recruiter for deep reasoning. We also pair this with advanced embedding models (the same tech powering modern search engines) to rapidly filter semantics, providing highly accurate and realistic ATS scoring.",
               },
               {
                 q: "Can I generate cold emails automatically?",

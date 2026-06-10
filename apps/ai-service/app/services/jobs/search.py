@@ -6,6 +6,7 @@ which source is queried. Source is selected based on available API keys.
 """
 
 import logging
+import concurrent.futures
 from typing import Any
 
 import requests
@@ -117,9 +118,27 @@ def search_adzuna(query: str, location: str, country: str = "us", page: int = 1)
 # ---------------------------------------------------------------------------
 
 def search_jobs(query: str, location: str, max_results: int = 20) -> list[dict]:
-    """Search for jobs via the best available source."""
-    jobs = search_jsearch(query, location)
-    if not jobs:
-        jobs = search_adzuna(query, location)
+    """Search for jobs concurrently via all available sources and combine results."""
+    jobs = []
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        future_jsearch = executor.submit(search_jsearch, query, location)
+        future_adzuna = executor.submit(search_adzuna, query, location)
+        
+        for future in concurrent.futures.as_completed([future_jsearch, future_adzuna]):
+            try:
+                jobs.extend(future.result())
+            except Exception as exc:
+                logger.error("A search job future failed: %s", exc)
 
-    return jobs[:max_results]
+    seen_links = set()
+    unique_jobs = []
+    for job in jobs:
+        link = job.get("apply_link", "")
+        if link and link not in seen_links:
+            seen_links.add(link)
+            unique_jobs.append(job)
+        elif not link:
+            unique_jobs.append(job)
+
+    return unique_jobs[:max_results]

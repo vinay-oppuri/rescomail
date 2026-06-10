@@ -54,7 +54,11 @@ const serverEnvSchema = z
       });
     }
 
-    if (env.NODE_ENV === "production") {
+    const skipValidation =
+      process.env.SKIP_ENV_VALIDATION === "1" ||
+      process.env.SKIP_ENV_VALIDATION === "true";
+
+    if (env.NODE_ENV === "production" && !skipValidation) {
       const publicUrls = [
         ["BETTER_AUTH_URL", env.BETTER_AUTH_URL],
         ["NEXT_PUBLIC_BETTER_AUTH_URL", env.NEXT_PUBLIC_BETTER_AUTH_URL],

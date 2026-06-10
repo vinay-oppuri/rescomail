@@ -35,6 +35,16 @@ def embed_text(text: str, dimensions: int = DEFAULT_DIMENSIONS) -> list[float]:
     return _embed_hashed_text(text, dimensions)
 
 
+def embed_texts(texts: list[str], dimensions: int = DEFAULT_DIMENSIONS) -> list[list[float]]:
+    if not texts:
+        return []
+
+    if not _should_use_hashed_fallback():
+        return _encode_sentence_transformer(texts, input_type="document")
+
+    return [_embed_hashed_text(text, dimensions) for text in texts]
+
+
 def semantic_search_scores(query: str, documents: list[str]) -> list[int]:
     if not documents:
         return []

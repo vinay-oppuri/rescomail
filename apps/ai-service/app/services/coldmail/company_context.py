@@ -33,6 +33,65 @@ def _is_public_website_url(value: str) -> bool:
         return False
 
 
+def _fetch_tavily_search(api_key: str, query: str, company_website_url: str) -> list[str]:
+    payload = {
+        "query": query,
+        "search_depth": "advanced",
+        "include_answer": False,
+        "include_images": False,
+        "include_raw_content": True,
+        "max_results": 5,
+    }
+    if company_website_url:
+        parsed = urlparse(company_website_url)
+        domain = parsed.hostname or company_website_url
+        if domain.startswith("www."):
+            domain = domain[4:]
+        payload["include_domains"] = [domain]
+
+    try:
+        response = requests.post(
+            TAVILY_SEARCH_ENDPOINT,
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json=payload,
+            timeout=TAVILY_TIMEOUT_MS / 1000.0,
+        )
+        response.raise_for_status()
+        data = response.json()
+        
+        blocks = []
+        for result in data.get("results", []):
+            content = result.get("raw_content") or result.get("content")
+            if isinstance(content, str) and content.strip():
+                blocks.append(content.strip())
+        return blocks
+    except Exception as exc:
+        logger.error("Company context search FAILED: %s", exc)
+        return []
+
+
+def _fetch_tavily_extract(api_key: str, url: str) -> list[str]:
+    try:
+        response = requests.post(
+            "https://api.tavily.com/extract",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"urls": url},
+            timeout=TAVILY_TIMEOUT_MS / 1000.0,
+        )
+        response.raise_for_status()
+        data = response.json()
+        
+        blocks = []
+        for res in data.get("results", []):
+            content = res.get("raw_content")
+            if isinstance(content, str) and content.strip():
+                blocks.append(content.strip())
+        return blocks
+    except Exception as exc:
+        logger.error("Fallback extract FAILED for '%s': %s", url, exc)
+        return []
+
+
 def get_rag_company_context(
     company_name: str,
     job_title: str,
@@ -65,66 +124,11 @@ def get_rag_company_context(
     )
 
     query = f"{target_name} recent news blog products mission {job_title}".strip()
-    
-    payload = {
-        "query": query,
-        "search_depth": "advanced",
-        "include_answer": False,
-        "include_images": False,
-        "include_raw_content": True,
-        "max_results": 5,
-    }
-    if company_website_url:
-        parsed = urlparse(company_website_url)
-        domain = parsed.hostname or company_website_url
-        if domain.startswith("www."):
-            domain = domain[4:]
-        payload["include_domains"] = [domain]
+    raw_text_blocks = _fetch_tavily_search(api_key, query, company_website_url)
 
-    data = {}
-    try:
-        response = requests.post(
-            TAVILY_SEARCH_ENDPOINT,
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            },
-            json=payload,
-            timeout=TAVILY_TIMEOUT_MS / 1000.0,
-        )
-        response.raise_for_status()
-        data = response.json()
-    except Exception as exc:
-        logger.error("Company context search FAILED for '%s': %s", target_name, exc)
-
-    # Aggregate text
-    raw_text_blocks = []
-    for result in data.get("results", []):
-        content = result.get("raw_content") or result.get("content")
-        if isinstance(content, str) and content.strip():
-            raw_text_blocks.append(content.strip())
-            
-    # Fallback to Extract API if search returned nothing but we have a URL
     if not raw_text_blocks and company_website_url:
         logger.info("Search returned nothing. Falling back to extract for %s", company_website_url)
-        try:
-            extract_response = requests.post(
-                "https://api.tavily.com/extract",
-                headers={
-                    "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json",
-                },
-                json={"urls": company_website_url},
-                timeout=TAVILY_TIMEOUT_MS / 1000.0,
-            )
-            extract_response.raise_for_status()
-            extract_data = extract_response.json()
-            for res in extract_data.get("results", []):
-                content = res.get("raw_content")
-                if isinstance(content, str) and content.strip():
-                    raw_text_blocks.append(content.strip())
-        except Exception as exc:
-            logger.error("Fallback extract FAILED for '%s': %s", company_website_url, exc)
+        raw_text_blocks = _fetch_tavily_extract(api_key, company_website_url)
 
     if not raw_text_blocks:
         logger.warning("No usable text returned from Tavily Search for '%s'.", target_name)
@@ -134,11 +138,9 @@ def get_rag_company_context(
     normalized_text = _normalize_extracted_text(full_text)
     
     chunks = _chunk_text(normalized_text, chunk_size=500)
-    
     if not chunks:
         return ""
 
-    # Perform RAG retrieval
     rag_query = f"{job_title} {job_description}".strip()
     if not rag_query:
         rag_query = f"{company_name} news and context"
@@ -148,7 +150,6 @@ def get_rag_company_context(
     ranked = list(zip(chunks, scores))
     ranked.sort(key=lambda item: -item[1])
     
-    # Take top 3 chunks
     top_chunks = [chunk for chunk, score in ranked[:3]]
     
     context = "\n\n".join(top_chunks)
@@ -160,13 +161,11 @@ def get_rag_company_context(
     elif company_name:
         prefix = f"Company: {company_name}\n"
         
-    final_result = f"{prefix}Extracted company context:\n{result_text}"
-
     logger.info(
         "Company context RAG completed successfully for '%s' — extracted top chunks.",
         target_name,
     )
-    return final_result
+    return f"{prefix}Extracted company context:\n{result_text}"
 
 
 def _chunk_text(text: str, chunk_size: int = 500) -> list[str]:

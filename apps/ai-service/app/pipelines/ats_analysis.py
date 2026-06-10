@@ -1,6 +1,6 @@
 from app.schemas.ats import AtsAnalysisResponse, AtsAnalyzeRequest
 from app.schemas.resume import StructuredResume
-from app.services.ats.scoring import analyze_resume_fit
+from app.services.ats import analyze_resume_fit
 from app.services.resume.document_extraction import extract_text_from_url
 from app.services.resume.text import structured_resume_to_text
 from app.services.resume.cleaning import clean_resume_text
