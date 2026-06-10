@@ -8,6 +8,7 @@ import { coldEmails } from "./coldmail";
 import { organizationMembers, organizations } from "./organizations";
 import { resumes } from "./resumes";
 import { usageEvents } from "./usage";
+import { userPreferences } from "./auth";
 
 export const organizationsRelations = relations(
   organizations,
@@ -112,5 +113,12 @@ export const applicationsRelations = relations(applications, ({ one }) => ({
   resume: one(resumes, {
     fields: [applications.resumeId],
     references: [resumes.id],
+  }),
+}));
+
+export const userPreferencesRelations = relations(userPreferences, ({ one }) => ({
+  user: one(user, {
+    fields: [userPreferences.userId],
+    references: [user.id],
   }),
 }));

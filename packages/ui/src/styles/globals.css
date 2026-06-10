@@ -133,3 +133,34 @@
     @apply font-mono;
   }
 }
+
+/* BackgroundRippleEffect — cell ripple animation */
+@keyframes cell-ripple {
+  0% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  40% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+}
+
+.animate-cell-ripple {
+  animation: cell-ripple var(--duration, 400ms) var(--delay, 0ms) ease-in-out both;
+}
+
+/* Radial mask utility used by BackgroundRippleEffect */
+.mask-radial-from-20\% {
+  -webkit-mask-image: radial-gradient(ellipse at top, black 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse at top, black 20%, transparent 75%);
+}
+.mask-radial-at-top {
+  -webkit-mask-position: top;
+  mask-position: top;
+}
+

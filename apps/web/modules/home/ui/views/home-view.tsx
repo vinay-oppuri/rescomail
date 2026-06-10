@@ -1,20 +1,24 @@
 import { Button } from "@repo/ui/components/button";
+import { BackgroundRippleEffect } from "@repo/ui/components/background-ripple-effect";
 import { CheckCircle, Zap, FileText, Mail, ArrowRight, Sparkles, Target, Briefcase, Search } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@repo/ui/lib/utils";
 
 const HomeView = () => {
   return (
-    <main className="min-h-screen bg-background selection:bg-primary/20">
+    <main className="min-h-screen  selection:bg-primary/20">
       {/* Split Hero Section */}
       <section className="relative overflow-hidden lg:min-h-screen flex items-center">
         {/* Background Gradients */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
           <div className="absolute top-[-40%] left-[-10%] w-[70%] h-[70%] bg-primary/10 blur-[120px]" />
           <div className="absolute top-[20%] right-[-20%] w-[60%] h-[60%] bg-blue-500/10 blur-[120px]" />
+          <div className="absolute inset-0 pointer-events-auto flex items-center justify-center">
+            <BackgroundRippleEffect rows={20} cols={40} cellSize={50} />
+          </div>
         </div>
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 w-full">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 w-full relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
             
             {/* Left Column: Title & Description */}

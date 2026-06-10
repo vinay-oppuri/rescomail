@@ -1,80 +1,111 @@
-import hashlib
+"""
+app/embeddings/semantic.py — Gemini text-embedding-004 backed semantic search.
+
+Uses the Gemini REST API directly (same pattern as app/llm/gemini.py) —
+no extra SDK, no local models, no Redis.
+
+Embedding task types (Gemini recommended):
+  - "RETRIEVAL_DOCUMENT" — for job descriptions, resume text being indexed
+  - "RETRIEVAL_QUERY"    — for query (resume when searching for jobs)
+  - "SEMANTIC_SIMILARITY" — for pairwise comparisons
+
+Docs: https://ai.google.dev/api/embeddings#method:-models.batchembedcontents
+"""
+
+import logging
 import math
 from collections import Counter
-from collections.abc import Iterable
-from functools import lru_cache
-from typing import Any
+from typing import Literal
+
+import requests
 
 from app.core.config import settings
-
 from app.models.ats_semantics import SEMANTIC_ALIASES
 from app.utils.text import normalize_keyword, tokenize
 
-DEFAULT_EMBEDDING_MODEL = "BAAI/bge-base-en-v1.5"
-EMBEDDING_MODEL_ENV = "RESCOMAIL_EMBEDDING_MODEL"
-FALLBACK_ENV = "RESCOMAIL_ALLOW_HASHED_EMBEDDING_FALLBACK"
-DEFAULT_DIMENSIONS = 256
-BGE_QUERY_INSTRUCTION = "Represent this sentence for searching relevant passages: "
+logger = logging.getLogger("rescomail.ai-service.embeddings.semantic")
+
+GEMINI_EMBEDDING_MODEL = "text-embedding-004"
+_EMBED_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
+_REQUEST_TIMEOUT = (5, 30)
+
+TaskType = Literal[
+    "RETRIEVAL_DOCUMENT",
+    "RETRIEVAL_QUERY",
+    "SEMANTIC_SIMILARITY",
+]
 
 
-def embedding_model_name() -> str:
-    if _should_use_hashed_fallback():
-        return "rescomail-hashed-semantic-dev-fallback"
-
-    return settings.rescomail_embedding_model
+def embed_text(text: str, task_type: TaskType = "RETRIEVAL_DOCUMENT") -> list[float]:
+    """Embed a single text string."""
+    return embed_texts([text], task_type=task_type)[0]
 
 
-def embedding_backend() -> str:
-    return "hashed-dev-fallback" if _should_use_hashed_fallback() else "sentence-transformers"
+def embed_texts(
+    texts: list[str], task_type: TaskType = "RETRIEVAL_DOCUMENT"
+) -> list[list[float]]:
+    """Batch-embed texts using Gemini batchEmbedContents (max 100 per call).
 
-
-def embed_text(text: str, dimensions: int = DEFAULT_DIMENSIONS) -> list[float]:
-    if not _should_use_hashed_fallback():
-        return _encode_sentence_transformer([text], input_type="document")[0]
-
-    return _embed_hashed_text(text, dimensions)
-
-
-def embed_texts(texts: list[str], dimensions: int = DEFAULT_DIMENSIONS) -> list[list[float]]:
+    Uses the REST batchEmbedContents endpoint which is cheaper and faster
+    than calling embedContent N times.
+    """
     if not texts:
         return []
 
-    if not _should_use_hashed_fallback():
-        return _encode_sentence_transformer(texts, input_type="document")
+    api_key = settings.gemini_api_key
+    url = f"{_EMBED_BASE_URL}/{GEMINI_EMBEDDING_MODEL}:batchEmbedContents?key={api_key}"
+    results: list[list[float]] = []
 
-    return [_embed_hashed_text(text, dimensions) for text in texts]
+    # Gemini batch limit is 100 per call
+    for i in range(0, len(texts), 100):
+        batch = texts[i : i + 100]
+        payload = {
+            "requests": [
+                {
+                    "model": f"models/{GEMINI_EMBEDDING_MODEL}",
+                    "content": {"parts": [{"text": t}]},
+                    "taskType": task_type,
+                }
+                for t in batch
+            ]
+        }
+
+        response = requests.post(url, json=payload, timeout=_REQUEST_TIMEOUT)
+
+        if response.status_code != 200:
+            raise RuntimeError(
+                f"Gemini Embeddings API error {response.status_code}: {response.text[:400]}"
+            )
+
+        data = response.json()
+        for embedding in data.get("embeddings", []):
+            results.append(embedding.get("values", []))
+
+    return results
 
 
 def semantic_search_scores(query: str, documents: list[str]) -> list[int]:
+    """Score each document against the query. Returns 0-100 int scores."""
     if not documents:
         return []
 
-    if _should_use_hashed_fallback():
-        return [semantic_similarity_score(query, document) for document in documents]
+    query_vec = embed_text(query, task_type="RETRIEVAL_QUERY")
+    doc_vecs = embed_texts(documents, task_type="RETRIEVAL_DOCUMENT")
 
-    query_embedding = _encode_sentence_transformer([query], input_type="query")[0]
-    document_embeddings = _encode_sentence_transformer(documents, input_type="document")
     return [
-        _calibrate_transformer_similarity(cosine_similarity(query_embedding, embedding))
-        for embedding in document_embeddings
+        _calibrate_similarity(cosine_similarity(query_vec, doc_vec))
+        for doc_vec in doc_vecs
     ]
 
 
 def semantic_similarity_score(left: str, right: str) -> int:
-    if not _should_use_hashed_fallback():
-        embeddings = _encode_sentence_transformer([left, right], input_type="document")
-        return _calibrate_transformer_similarity(
-            cosine_similarity(embeddings[0], embeddings[1])
-        )
-
-    similarity = cosine_similarity(_embed_hashed_text(left), _embed_hashed_text(right))
-    calibrated_vector = max(0.0, min(1.0, (similarity + 0.12) / 0.82))
-    lexical_overlap = _lexical_overlap(left, right)
-    blended = calibrated_vector * 0.72 + lexical_overlap * 0.28
-    return round(100 * blended)
+    """Return a 0-100 similarity score between two texts."""
+    vecs = embed_texts([left, right], task_type="SEMANTIC_SIMILARITY")
+    return _calibrate_similarity(cosine_similarity(vecs[0], vecs[1]))
 
 
 def shared_concepts(left: str, right: str, limit: int = 10) -> list[str]:
+    """Return shared keyword concepts between two texts (lexical — no embeddings)."""
     left_features = _weighted_features(left)
     right_features = _weighted_features(right)
     shared = []
@@ -90,114 +121,53 @@ def shared_concepts(left: str, right: str, limit: int = 10) -> list[str]:
 
     for _, concept in shared:
         normalized = normalize_keyword(concept)
-
         if not normalized or normalized in seen or len(normalized) <= 2:
             continue
-
         seen.add(normalized)
         concepts.append(normalized)
-
         if len(concepts) >= limit:
             break
 
     return concepts
 
 
-def _embed_hashed_text(text: str, dimensions: int = DEFAULT_DIMENSIONS) -> list[float]:
-    vector = [0.0] * dimensions
-    features = _weighted_features(text)
-
-    for feature, weight in features.items():
-        index = _feature_index(feature, dimensions)
-        sign = 1 if _feature_index(f"{feature}:sign", 2) == 0 else -1
-        vector[index] += sign * weight
-
-    norm = math.sqrt(sum(value * value for value in vector))
-
-    if norm == 0:
-        return vector
-
-    return [value / norm for value in vector]
-
-
-def _encode_sentence_transformer(
-    texts: list[str],
-    input_type: str,
-) -> list[list[float]]:
-    model = _load_sentence_transformer()
-    prepared_texts = [
-        _prepare_text_for_model(text, input_type=input_type) for text in texts
-    ]
-    embeddings = model.encode(
-        prepared_texts,
-        convert_to_numpy=True,
-        normalize_embeddings=True,
-        show_progress_bar=False,
-    )
-    return embeddings.tolist()
-
-
-def cosine_similarity(left: Iterable[float], right: Iterable[float]) -> float:
-    left_values = list(left)
-    right_values = list(right)
-
-    if not left_values or not right_values:
+def cosine_similarity(left: list[float], right: list[float]) -> float:
+    if not left or not right:
         return 0.0
+    length = min(len(left), len(right))
+    dot = sum(left[i] * right[i] for i in range(length))
+    norm_left = math.sqrt(sum(v * v for v in left[:length]))
+    norm_right = math.sqrt(sum(v * v for v in right[:length]))
+    if norm_left == 0 or norm_right == 0:
+        return 0.0
+    return dot / (norm_left * norm_right)
 
-    length = min(len(left_values), len(right_values))
-    return sum(left_values[index] * right_values[index] for index in range(length))
 
-
-def _calibrate_transformer_similarity(similarity: float) -> int:
+def _calibrate_similarity(similarity: float) -> int:
+    """Map cosine similarity [-1, 1] to a 0-100 score."""
     calibrated = (similarity + 1.0) / 2.0
     return round(100 * max(0.0, min(1.0, calibrated)))
 
 
-def _prepare_text_for_model(text: str, input_type: str) -> str:
-    value = (text or "").strip()
+# ---------------------------------------------------------------------------
+# Lexical helpers — kept for shared_concepts (no API call needed)
+# ---------------------------------------------------------------------------
 
-    if input_type == "query":
-        return f"{BGE_QUERY_INSTRUCTION}{value}"
-
-    return value
-
-
-@lru_cache(maxsize=1)
-def _load_sentence_transformer() -> Any:
-    try:
-        from sentence_transformers import SentenceTransformer
-    except ImportError as error:
-        raise RuntimeError(
-            "sentence-transformers is required for production embeddings. "
-            "Install apps/ai-service/requirements.txt or set "
-            "RESCOMAIL_ALLOW_HASHED_EMBEDDING_FALLBACK=1 only for local development."
-        ) from error
-
-    return SentenceTransformer(settings.rescomail_embedding_model)
-
-
-def _should_use_hashed_fallback() -> bool:
-    return settings.rescomail_allow_hashed_embedding_fallback
-
-
-def _weighted_features(text: str) -> Counter[str]:
+def _weighted_features(text: str) -> Counter:
     tokens = [token for token in tokenize(text) if len(token) > 1]
-    features: Counter[str] = Counter()
+    features: Counter = Counter()
 
     for token in tokens:
         features[f"token:{token}"] += 1.0
-
         if len(token) >= 5:
             for ngram in _character_ngrams(token):
                 features[f"ngram:{ngram}"] += 0.25
-
         for alias in SEMANTIC_ALIASES.get(normalize_keyword(token), set()):
             features[f"alias:{normalize_keyword(alias)}"] += 0.55
 
     for first, second in zip(tokens, tokens[1:]):
         phrase = normalize_keyword(f"{first} {second}")
         features[f"phrase:{phrase}"] += 1.4
-
         for alias in SEMANTIC_ALIASES.get(phrase, set()):
             features[f"alias:{normalize_keyword(alias)}"] += 0.7
 
@@ -206,22 +176,4 @@ def _weighted_features(text: str) -> Counter[str]:
 
 def _character_ngrams(token: str) -> list[str]:
     padded = f"_{token}_"
-    return [padded[index : index + 3] for index in range(len(padded) - 2)]
-
-
-def _lexical_overlap(left: str, right: str) -> float:
-    left_tokens = {token for token in tokenize(left) if len(token) > 2}
-    right_tokens = {token for token in tokenize(right) if len(token) > 2}
-
-    if not left_tokens or not right_tokens:
-        return 0.0
-
-    overlap = len(left_tokens & right_tokens) / math.sqrt(
-        len(left_tokens) * len(right_tokens)
-    )
-    return max(0.0, min(1.0, overlap * 2.2))
-
-
-def _feature_index(feature: str, dimensions: int) -> int:
-    digest = hashlib.blake2b(feature.encode("utf-8"), digest_size=8).digest()
-    return int.from_bytes(digest, "big") % dimensions
+    return [padded[i : i + 3] for i in range(len(padded) - 2)]

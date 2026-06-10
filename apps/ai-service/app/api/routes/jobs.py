@@ -55,12 +55,14 @@ async def subscribe_to_jobs(
     # In production: persist preferences to DB via main web app callback.
     # For now, enqueue an immediate digest task.
     try:
-        from app.tasks.job_tasks import run_job_digest
+        from app.pipelines.job_search import run_job_search_pipeline
+        import asyncio
 
-        task = run_job_digest.delay(request.model_dump())
-        return {"subscribed": True, "task_id": task.id, "message": "First digest enqueued."}
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(None, run_job_search_pipeline, request.model_dump())
+        return {"subscribed": True, "result": result, "message": "First digest delivered."}
     except Exception as exc:
-        logger.exception("Failed to enqueue job digest for user %s", request.user_id)
+        logger.exception("Failed to run job digest for user %s", request.user_id)
         raise HTTPException(
             status_code=500,
             detail="Job search failed. Please retry.",
@@ -75,12 +77,14 @@ async def trigger_digest(
     """Trigger an on-demand job digest (useful for testing or manual runs)."""
     logger.info("On-demand digest requested for user %s", request.user_id)
     try:
-        from app.tasks.job_tasks import run_job_digest
+        from app.pipelines.job_search import run_job_search_pipeline
+        import asyncio
 
-        task = run_job_digest.delay(request.model_dump())
-        return {"task_id": task.id, "message": "Digest task enqueued."}
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(None, run_job_search_pipeline, request.model_dump())
+        return {"result": result, "message": "Digest task completed."}
     except Exception as exc:
-        logger.exception("Failed to enqueue on-demand digest for user %s", request.user_id)
+        logger.exception("Failed to run on-demand digest for user %s", request.user_id)
         raise HTTPException(
             status_code=500,
             detail="Job digest generation failed. Please retry.",

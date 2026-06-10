@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    # --- LLM ---
+    # --- LLM + Embeddings (same API key) ---
     gemini_api_key: str
     gemini_model: str = "gemini-2.5-flash"
 
@@ -18,9 +18,6 @@ class Settings(BaseSettings):
     # --- Resume file restrictions ---
     resume_file_allowed_hosts: str = "utfs.io,ufs.sh"
     resume_max_download_bytes: int = 10 * 1024 * 1024  # 10 MB
-
-    # --- Redis (Celery broker + embedding cache) ---
-    redis_url: str = "redis://localhost:6379/0"
 
     # --- Rate limiting ---
     rate_limit_per_minute: int = 60
@@ -34,11 +31,6 @@ class Settings(BaseSettings):
     adzuna_api_key: str = ""
     resend_api_key: str = ""
     tavily_api_key: str = ""
-
-    # --- Embeddings ---
-    rescomail_allow_hashed_embedding_fallback: bool = False
-    rescomail_embedding_model: str = "BAAI/bge-base-en-v1.5"
-    rescomail_reranker_model: str = "cross-encoder/ms-marco-MiniLM-L12-v2"
 
     class Config:
         env_file = ".env"
