@@ -4,11 +4,11 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, Badge, Button } from "@repo/ui";
 import { FileText, Activity, Sparkles, Upload, Award, Briefcase, ChevronRight, BarChart2 } from "lucide-react";
-import { 
-  getResumesCount, 
-  getAtsAnalysesCount, 
-  getAverageAtsScore, 
-  getRecentScans 
+import {
+    getResumesCount,
+    getAtsAnalysesCount,
+    getTrackedJobsStats,
+    getRecentScans
 } from "../../server/procedures";
 
 const DashboardView = async () => {
@@ -22,10 +22,10 @@ const DashboardView = async () => {
 
     const userId = session.user.id;
 
-    const [resumesCount, atsCount, averageAtsScore, recentScans] = await Promise.all([
+    const [resumesCount, atsCount, trackedJobsStats, recentScans] = await Promise.all([
         getResumesCount(userId),
         getAtsAnalysesCount(userId),
-        getAverageAtsScore(userId),
+        getTrackedJobsStats(userId),
         getRecentScans(userId, 5)
     ]);
 
@@ -81,7 +81,7 @@ const DashboardView = async () => {
                     </div>
                 </div>
             </div>
-            
+
             {/* Statistics Cards Grid */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <Card className="group relative border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
@@ -100,7 +100,7 @@ const DashboardView = async () => {
                         </p>
                     </CardContent>
                 </Card>
-                
+
                 <Card className="group relative border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
@@ -121,26 +121,43 @@ const DashboardView = async () => {
                 <Card className="group relative border border-border/50 bg-card/80 backdrop-blur-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                            Average Match
+                            Tracked Jobs
                         </CardTitle>
                         <div className="p-2 rounded-sm bg-emerald-500/10 text-emerald-500 shrink-0">
-                            <Award className="h-5 w-5" />
+                            <Briefcase className="h-5 w-5" />
                         </div>
                     </CardHeader>
-                    <CardContent className="space-y-1">
+                    <CardContent className="space-y-2">
                         <div className="flex items-baseline gap-2">
-                            <div className={`text-2xl font-extrabold tracking-tight ${getScoreColor(averageAtsScore)}`}>
-                                {averageAtsScore > 0 ? `${averageAtsScore}%` : "—"}
-                            </div>
-                            {averageAtsScore > 0 && (
-                                <Badge variant="outline" className={`px-2 py-0.5 text-[10px] font-bold uppercase border ${getScoreBadgeColor(averageAtsScore)}`}>
-                                    {averageAtsScore >= 85 ? "Excellent" : averageAtsScore >= 70 ? "Good" : "Needs Work"}
+                            <div className="text-2xl font-extrabold tracking-tight text-foreground">{trackedJobsStats.total}</div>
+                            {trackedJobsStats.total === 0 && (
+                                <Badge variant="outline" className="px-2 py-0.5 text-[10px] font-bold uppercase border bg-muted text-muted-foreground">
+                                    No Pipeline
                                 </Badge>
                             )}
                         </div>
-                        <p className="text-xs text-muted-foreground font-medium">
-                            Overall fit across historical analyses
-                        </p>
+                        <div className="flex flex-wrap gap-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                            {trackedJobsStats.applied > 0 && (
+                                <span className="px-1.5 py-0.5 rounded-sm bg-blue-500/10 text-blue-500 border border-blue-500/20">
+                                    {trackedJobsStats.applied} Applied
+                                </span>
+                            )}
+                            {trackedJobsStats.interviewing > 0 && (
+                                <span className="px-1.5 py-0.5 rounded-sm bg-purple-500/10 text-purple-500 border border-purple-500/20">
+                                    {trackedJobsStats.interviewing} Interviewing
+                                </span>
+                            )}
+                            {trackedJobsStats.offer > 0 && (
+                                <span className="px-1.5 py-0.5 rounded-sm bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                                    {trackedJobsStats.offer} Offers
+                                </span>
+                            )}
+                            {trackedJobsStats.total > 0 && trackedJobsStats.applied === 0 && trackedJobsStats.interviewing === 0 && trackedJobsStats.offer === 0 && (
+                                <span className="text-muted-foreground font-medium lowercase normal-case tracking-normal text-xs">
+                                    Pipeline tracked
+                                </span>
+                            )}
+                        </div>
                     </CardContent>
                 </Card>
             </div>
@@ -172,7 +189,7 @@ const DashboardView = async () => {
                                     partial_match: "Partial Match",
                                     needs_work: "Needs Work",
                                 };
-                                
+
                                 const verdictColorMap: Record<string, string> = {
                                     strong_match: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
                                     good_match: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
@@ -181,8 +198,8 @@ const DashboardView = async () => {
                                 };
 
                                 return (
-                                    <div 
-                                        key={scan.id} 
+                                    <div
+                                        key={scan.id}
                                         className="flex items-center justify-between p-4 rounded-sm border border-border/50 bg-card/80 backdrop-blur-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 "
                                     >
                                         <div className="flex items-center gap-4">
@@ -200,8 +217,8 @@ const DashboardView = async () => {
                                                     {scan.overallScore}%
                                                 </span>
                                             </div>
-                                            <Badge 
-                                                variant="outline" 
+                                            <Badge
+                                                variant="outline"
                                                 className={`px-2 py-1 text-[10px] font-bold border w-24 justify-center ${verdictColorMap[scan.verdict] || "bg-muted text-muted-foreground"}`}
                                             >
                                                 {verdictLabelMap[scan.verdict] || scan.verdict}
@@ -217,7 +234,7 @@ const DashboardView = async () => {
                     ) : (
                         <div className="flex flex-col items-center justify-center p-12 rounded-sm border border-border/50 border-dashed bg-card/50 backdrop-blur-sm text-center ">
                             <div className="p-4 rounded-sm bg-muted mb-4 text-muted-foreground/50 ">
-                               <Sparkles className="h-8 w-8" />
+                                <Sparkles className="h-8 w-8" />
                             </div>
                             <p className="text-sm font-semibold text-foreground">No recent scans yet</p>
                             <p className="text-sm text-muted-foreground mt-2 max-w-sm leading-relaxed">

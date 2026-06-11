@@ -1,4 +1,4 @@
-import { db, resumes, atsAnalyses } from "@repo/db";
+import { db, resumes, atsAnalyses, applications } from "@repo/db";
 import { and, avg, count, desc, eq, isNotNull } from "drizzle-orm";
 
 export { getMonthlyUsageSummary } from "./usage-limits";
@@ -34,6 +34,35 @@ export const getAverageAtsScore = async (userId: string): Promise<number> => {
     );
   const average = result[0]?.avg ? parseFloat(result[0].avg) : 0;
   return Math.round(average);
+};
+
+export const getTrackedJobsStats = async (userId: string) => {
+  const result = await db
+    .select({ stage: applications.stage, count: count() })
+    .from(applications)
+    .where(eq(applications.userId, userId))
+    .groupBy(applications.stage);
+
+  const stats = {
+    total: 0,
+    saved: 0,
+    applied: 0,
+    interviewing: 0, // phone_screen + interview
+    offer: 0,
+    rejected: 0,
+  };
+
+  result.forEach((row) => {
+    const c = parseInt(row.count as any, 10);
+    stats.total += c;
+    if (row.stage === 'saved') stats.saved += c;
+    if (row.stage === 'applied') stats.applied += c;
+    if (row.stage === 'phone_screen' || row.stage === 'interview') stats.interviewing += c;
+    if (row.stage === 'offer') stats.offer += c;
+    if (row.stage === 'rejected') stats.rejected += c;
+  });
+
+  return stats;
 };
 
 export const getRecentScans = async (userId: string, limit = 5) => {

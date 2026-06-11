@@ -4,6 +4,7 @@ import { Button } from "@repo/ui/components/button";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { cn } from "@repo/ui/lib/utils";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import {
@@ -129,7 +130,7 @@ const HomeNavbar = () => {
             {/* Compact Menu Trigger (Centered vertically in compact mode) */}
             <motion.div
               style={{ width: menuWidth, opacity: menuOpacity }}
-              className="flex items-center justify-center h-full"
+              className="flex items-center justify-center h-full overflow-hidden shrink-0"
             >
               <button
                 onClick={() => setMenuOpen((o) => !o)}
@@ -258,8 +259,8 @@ const ThemeToggle = ({ iconClassName }: { iconClassName?: string }) => {
       className="rounded-full"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >
-      <Sun className={`${iconClassName} h-5 w-5 dark:hidden`} />
-      <Moon className={`${iconClassName} hidden h-5 w-5 dark:block`} />
+      <Sun className={cn("h-5 w-5 dark:hidden", iconClassName)} />
+      <Moon className={cn("hidden h-5 w-5 dark:block", iconClassName)} />
     </Button>
   );
 };
