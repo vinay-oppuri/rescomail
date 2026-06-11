@@ -8,10 +8,10 @@ export function HomeCta() {
       <div className="mx-auto max-w-7xl">
         <div className="relative overflow-hidden rounded-sm border border-border/50 bg-card shadow-xl">
           {/* Content */}
-          <div className="relative z-10 px-5 py-10 md:px-16 md:py-8 text-center">
+          <div className="relative z-10 px-5 py-10 md:px-16 md:py-8 text-center bg-blue-400/20 dark:bg-card/20">
 
             {/* Badge */}
-            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-[9px] md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6">
+            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 rounded-full border border-foreground/5 bg-primary/5 text-primary text-[9px] md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6">
               <Zap className="h-2.5 w-2.5 md:h-3 md:w-3" />
               Start for free
             </div>
