@@ -9,6 +9,7 @@ import { organizationMembers, organizations } from "./organizations";
 import { resumes } from "./resumes";
 import { usageEvents } from "./usage";
 import { userPreferences } from "./auth";
+import { jobNotifications } from "./notifications";
 
 export const organizationsRelations = relations(
   organizations,
@@ -119,6 +120,13 @@ export const applicationsRelations = relations(applications, ({ one }) => ({
 export const userPreferencesRelations = relations(userPreferences, ({ one }) => ({
   user: one(user, {
     fields: [userPreferences.userId],
+    references: [user.id],
+  }),
+}));
+
+export const jobNotificationsRelations = relations(jobNotifications, ({ one }) => ({
+  user: one(user, {
+    fields: [jobNotifications.userId],
     references: [user.id],
   }),
 }));

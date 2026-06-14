@@ -12,9 +12,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/select";
-import { Briefcase, Check, Loader2, MapPin } from "lucide-react";
+import { Briefcase, Check, Loader2, MapPin, X } from "lucide-react";
 
-const seniorityOptions = [
+const predefinedRoles = [
+  "Software Engineer",
+  "Frontend Developer",
+  "Backend Developer",
+  "Full Stack Engineer",
+  "Product Manager",
+  "Data Scientist",
+  "UI/UX Designer",
+  "DevOps Engineer",
+  "Machine Learning Engineer",
+  "Mobile Developer"
+];const seniorityOptions = [
   { value: "intern", label: "Intern" },
   { value: "new_grad", label: "New Grad" },
   { value: "junior", label: "Junior" },
@@ -42,8 +53,21 @@ export function ProfileDefaults() {
   const [workMode, setWorkMode] = useState("");
   const [employmentType, setEmploymentType] = useState("");
   const [location, setLocation] = useState("");
-  const [targetRole, setTargetRole] = useState("");
+  const [targetRoles, setTargetRoles] = useState<string[]>([]);
+  const [roleInput, setRoleInput] = useState("");
 
+  const addRole = (role: string) => {
+    const trimmed = role.trim();
+    if (trimmed && !targetRoles.includes(trimmed)) {
+      setTargetRoles([...targetRoles, trimmed]);
+    }
+    setRoleInput("");
+    // Keep suggestions open so user can select more roles without re-focusing
+  };
+
+  const removeRole = (roleToRemove: string) => {
+    setTargetRoles(targetRoles.filter(role => role !== roleToRemove));
+  };
   const [isSavingPrefs, setIsSavingPrefs] = useState(false);
   const [prefsSaved, setPrefsSaved] = useState(false);
 
@@ -51,7 +75,7 @@ export function ProfileDefaults() {
     setIsSavingPrefs(true);
     try {
       const result = await EditPreferenceAction({
-        targetRoles: targetRole ? [targetRole] : [],
+        targetRoles: targetRoles.length > 0 ? targetRoles : undefined,
         targetSeniority: (seniority as "intern" | "new_grad" | "junior" | "mid" | "senior" | "lead") || undefined,
         workModes: workMode ? [workMode as "remote" | "hybrid" | "onsite"] : [],
         employmentTypes: employmentType ? [employmentType as "internship" | "full_time" | "part_time" | "contract" | "freelance"] : [],
@@ -65,6 +89,9 @@ export function ProfileDefaults() {
 
       setPrefsSaved(true);
       setTimeout(() => setPrefsSaved(false), 2500);
+      
+      // Notify other components (like the navbar) to refresh their data
+      window.dispatchEvent(new Event("preferences-updated"));
     } catch (error) {
       console.error(error);
     } finally {
@@ -150,16 +177,70 @@ export function ProfileDefaults() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="target-role">Target Role</Label>
+            <Label htmlFor="target-roles">Target Roles</Label>
+            {targetRoles.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {targetRoles.map((role) => (
+                  <div key={role} className="flex items-center gap-1 bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded-sm text-xs font-medium">
+                    {role}
+                    <button 
+                      type="button" 
+                      onClick={() => removeRole(role)}
+                      className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="relative">
-              <Briefcase className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="target-role"
-                className="h-9 pl-8 bg-muted/20! border-foreground/5! rounded-sm"
-                placeholder="e.g. Software Engineer"
-                value={targetRole}
-                onChange={(e) => setTargetRole(e.target.value)}
-              />
+              <div className="relative flex items-center w-full">
+                <Briefcase className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="target-roles"
+                  className="h-9! pl-8! bg-muted/20! border-foreground/5! rounded-sm! w-full"
+                  value={roleInput}
+                  onChange={(e) => setRoleInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addRole(roleInput);
+                    }
+                  }}
+                  placeholder={targetRoles.length === 0 ? "e.g. Software Engineer" : "Add another role..."}
+                />
+              </div>
+
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                  {predefinedRoles
+                    .filter(
+                      (r) =>
+                        r.toLowerCase().includes(roleInput.toLowerCase()) &&
+                        !targetRoles.includes(r)
+                    )
+                    .map((role) => (
+                      <button
+                        key={role}
+                        type="button"
+                        onClick={() => addRole(role)}
+                        className="flex items-center gap-1 bg-muted/30 hover:bg-primary/10 text-muted-foreground hover:text-primary border border-foreground/5 hover:border-primary/20 px-2 py-0.5 rounded-sm text-xs font-medium transition-colors"
+                      >
+                        + {role}
+                      </button>
+                    ))}
+                  {roleInput.trim() &&
+                    !predefinedRoles.find((r) => r.toLowerCase() === roleInput.trim().toLowerCase()) &&
+                    !targetRoles.find((r) => r.toLowerCase() === roleInput.trim().toLowerCase()) && (
+                      <button
+                        type="button"
+                        onClick={() => addRole(roleInput)}
+                        className="flex items-center gap-1 bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-sm text-xs font-medium transition-colors"
+                      >
+                        + Add "{roleInput.trim()}"
+                      </button>
+                    )}
+                </div>
             </div>
           </div>
         </div>

@@ -8,3 +8,4 @@ export * from "./schema/organizations";
 export * from "./schema/relations";
 export * from "./schema/resumes";
 export * from "./schema/usage";
+export * from "./schema/notifications";

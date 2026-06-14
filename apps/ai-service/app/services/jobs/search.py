@@ -49,10 +49,7 @@ def _normalise_adzuna(job: dict) -> dict:
         "apply_link": job.get("redirect_url", ""),
         "posted_at": job.get("created", ""),
         "source": "adzuna",
-    }
-
-
-# ---------------------------------------------------------------------------
+    }# ---------------------------------------------------------------------------
 # JSearch client
 # ---------------------------------------------------------------------------
 
@@ -111,6 +108,7 @@ def search_adzuna(query: str, location: str, country: str = "us", page: int = 1)
     except Exception as exc:
         logger.error("Adzuna request failed: %s", exc)
         return []
+
 
 
 # ---------------------------------------------------------------------------
