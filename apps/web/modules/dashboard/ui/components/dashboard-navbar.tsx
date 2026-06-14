@@ -47,12 +47,12 @@ const DashboardNavbar = () => {
         <div className="flex flex-1 items-center gap-4 md:gap-8">
           <Button
             variant="outline"
-            className="hidden md:flex relative h-9 w-full justify-start rounded-[0.5rem] bg-background/50 text-sm text-muted-foreground sm:pr-12 md:max-w-sm shadow-sm border-border/50"
+            className="hidden md:flex relative h-8! w-full justify-start rounded-sm bg-muted/60 text-xs text-muted-foreground sm:pr-12 md:max-w-xs shadow-sm border-foreground/5"
             onClick={() => setOpen(true)}
           >
             <Search className="mr-2 h-4 w-4" />
             <span>Search applications...</span>
-            <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+            <kbd className="pointer-events-none absolute right-1.5 hidden h-5 select-none items-center gap-1 rounded-sm border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
               <span className="text-xs">⌘</span>K
             </kbd>
           </Button>
@@ -143,7 +143,7 @@ const Notification = () => {
         )}
         <Bell className="h-4 w-4 text-muted-foreground transition-transform group-hover:rotate-12 group-hover:text-foreground outline-hidden" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="flex flex-col p-1 gap-1 w-80 mt-4 rounded-sm shadow-lg border-foreground/5 bg-background/95 backdrop-blur-md">
+      <DropdownMenuContent align="end" className="flex flex-col p-1 gap-1 w-80 mt-4 rounded-sm shadow-lg bg-card/80 backdrop-blur-md border-foreground/5">
         <div className="flex items-center justify-between p-2 border-b border-border/50">
           <h1 className="text-xs font-semibold text-foreground">Job Matches</h1>
           {unreadCount > 0 && <span className="text-[10px] text-muted-foreground">{unreadCount} new</span>}

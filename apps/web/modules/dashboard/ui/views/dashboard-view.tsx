@@ -52,7 +52,7 @@ const DashboardView = async () => {
             </div>
 
             {/* Minimalist Welcome Header */}
-            <div className="relative overflow-hidden rounded-sm border border-border/50 bg-card/80 backdrop-blur-xl p-4 md:p-8 shadow-xl">
+            <div className="relative overflow-hidden rounded-sm border border-border/50 bg-card/80 backdrop-blur-xl p-4 md:p-8 shadow-sm">
                 <div className="absolute -inset-0.5 bg-linear-to-br from-primary/10 to-blue-500/10 blur-xl opacity-50 -z-10" />
                 <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">

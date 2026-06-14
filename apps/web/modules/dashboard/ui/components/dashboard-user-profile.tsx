@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@repo/ui";
-import { LogOut, User, Sparkles, Monitor, CreditCard, Settings, ChevronsUpDown } from "lucide-react";
+import { LogOut, User, Monitor, Settings, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const DashboardUserProfile = () => {
@@ -64,7 +64,7 @@ const DashboardUserProfile = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-64 border-foreground/5 shadow-xl bg-card/80 backdrop-blur-md p-2">
+      <DropdownMenuContent align="end" className="w-64 border-foreground/5 shadow-lg bg-card/80 backdrop-blur-md p-2">
         <div className="flex items-center justify-start gap-3 p-2">
           <Avatar className="h-10 w-10 border border-primary/20 bg-primary/10">
             <AvatarImage

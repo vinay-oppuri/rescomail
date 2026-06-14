@@ -1,12 +1,16 @@
 "use client";
 
-import { Label, Textarea } from "@repo/ui";
+import { Label, Textarea, Input } from "@repo/ui";
 import { useAtsStore } from "../../../store/ats-store";
 
 const AtsJobFields = () => {
   const {
+    jobTitle,
+    companyName,
     jobDescription,
     keywordText,
+    setJobTitle,
+    setCompanyName,
     setJobDescription,
     setKeywordText,
   } = useAtsStore();
@@ -17,6 +21,29 @@ const AtsJobFields = () => {
 
   return (
     <>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center mb-4">
+        <div className="flex-1 space-y-2">
+          <Label htmlFor="job-title">Job Title</Label>
+          <Input
+            id="job-title"
+            value={jobTitle}
+            onChange={(event) => setJobTitle(event.target.value)}
+            placeholder="e.g. Software Engineer"
+            className="bg-muted/20! border-foreground/5! rounded-sm"
+          />
+        </div>
+        <div className="flex-1 space-y-2">
+          <Label htmlFor="company-name">Company Name</Label>
+          <Input
+            id="company-name"
+            value={companyName}
+            onChange={(event) => setCompanyName(event.target.value)}
+            placeholder="e.g. Acme Corp"
+            className="bg-muted/20! border-foreground/5! rounded-sm"
+          />
+        </div>
+      </div>
+
       <div className="space-y-2">
         <Label htmlFor="job-description">Job Description</Label>
         <Textarea

@@ -91,7 +91,7 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
                     className={cn(
                       "h-10 px-3 py-2 rounded-sm transition-all duration-200",
                       pathname === item.href
-                        ? "bg-primary/10 text-primary font-semibold"
+                        ? "bg-primary/10 text-primary font-semibold border-l-2 border-blue-400!"
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                     onClick={() => {
@@ -121,7 +121,7 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
         <div>{creditsSlot}</div>
         <div className="rounded-sm border border-border/50 bg-muted/30 p-2 shadow-sm transition-colors hover:bg-muted/50">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 px-2">
+            <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-background/40 shadow-sm border border-border/50">
                 <Settings className="h-4 w-4 text-foreground" />
               </div>
