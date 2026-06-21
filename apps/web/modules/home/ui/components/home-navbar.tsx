@@ -13,6 +13,7 @@ import {
   useTransform,
   useSpring,
   useScroll,
+  useMotionValueEvent,
 } from "motion/react";
 import AuthDialog from "@/modules/auth/ui/auth-dialog";
 
@@ -29,8 +30,14 @@ const HomeNavbar = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const { scrollY } = useScroll();
+  
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setIsScrolled(latest > 50);
+  });
+
   const rawProgress = useTransform(scrollY, [0, SCROLL_THRESHOLD], [0, 1]);
   const progress = useSpring(rawProgress, { stiffness: 60, damping: 20, mass: 1 });
 
@@ -80,7 +87,7 @@ const HomeNavbar = () => {
         >
           {/* Scrolled Background Layer (Glass effect) */}
           <motion.div
-            className="absolute inset-0 bg-muted/80 backdrop-blur-md border border-border/50 shadow-sm rounded-sm"
+            className="absolute inset-0 bg-muted/80 backdrop-blur-sm border border-border/50 shadow-sm rounded-full"
             style={{ opacity: compactBgOpacity }}
           />
 
@@ -89,7 +96,7 @@ const HomeNavbar = () => {
             <Link href="/" onClick={handleLogoClick} className="inline-flex items-center pl-2">
               <motion.div
                 style={{ width: logoIconWidth, opacity: logoIconOpacity }}
-                className="overflow-hidden shrink-0 flex items-center justify-start"
+                className="ml-2 overflow-hidden shrink-0 flex items-center justify-start"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-sm border bg-foreground font-heading text-sm text-primary-foreground shrink-0">
                   R
@@ -143,7 +150,7 @@ const HomeNavbar = () => {
 
           {/* Right: Actions */}
           <motion.div className="flex-1 flex items-center justify-end gap-2 relative z-10">
-            <AuthDialog />
+            <AuthDialog className={cn("transition-all duration-300", isScrolled ? "rounded-full" : "rounded-sm")} />
             <motion.div
               style={{ width: themeToggleWidth, opacity: themeToggleOpacity }}
               className="flex items-center justify-center overflow-hidden shrink-0"
@@ -157,10 +164,11 @@ const HomeNavbar = () => {
         <AnimatePresence>
           {menuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="absolute top-[80px] pointer-events-auto bg-muted/90 backdrop-blur-md border border-border/50 rounded-sm min-w-[200px] shadow-xl overflow-hidden"
+              initial={{ opacity: 0, y: -10, x: "-50%" }}
+              animate={{ opacity: 1, y: 0, x: "-50%" }}
+              exit={{ opacity: 0, y: -10, x: "-50%" }}
+              style={{ width: navMaxWidth }}
+              className="absolute top-[80px] left-1/2 pointer-events-auto bg-muted/90 backdrop-blur-sm border border-border/50 rounded-[1rem] shadow-xl overflow-hidden"
             >
               <div className="flex flex-col">
                 {navLinks.map((link) => (

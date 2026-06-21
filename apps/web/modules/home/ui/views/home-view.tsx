@@ -12,7 +12,7 @@ const HomeView = () => {
   return (
     <main className="min-h-screen bg-background selection:bg-primary/20">
       {/* Split Hero Section */}
-      <section className="relative overflow-visible min-h-screen lg:min-h-[85vh] flex items-center pt-0 lg:pt-20">
+      <section className="relative overflow-visible min-h-screen lg:min-h-[85vh] flex items-center pt-0 lg:pt-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 w-full relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
 

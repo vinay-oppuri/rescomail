@@ -5,8 +5,15 @@ import { SiGoogle } from "react-icons/si";
 import { SiGithub } from "react-icons/si";
 import Link from "next/link";
 import { signIn, useSession } from "@repo/auth/client";
+import { cn } from "@repo/ui/lib/utils";
 
-const AuthDialog = () => {
+interface AuthProps {
+    className?: string
+}
+
+const AuthDialog = ({
+    className
+}: AuthProps) => {
     const { data: session } = useSession();
 
     const onGoogle = async () => {
@@ -18,7 +25,7 @@ const AuthDialog = () => {
 
     if (session?.user) {
         return (
-            <Button asChild className="font-semibold gap-2 px-4 h-8 bg-foreground! text-background! transition-all duration-300 ease-out hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5">
+            <Button asChild className={cn("-mr-1 font-semibold gap-2 px-4 h-8 bg-foreground! text-background! transition-all duration-300 ease-out hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5", className)}>
                 <Link href="/dashboard">
                     <LogIn className="h-4 w-4" />
                     <span>Login</span>
@@ -30,7 +37,7 @@ const AuthDialog = () => {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="font-semibold gap-2 px-4 h-8 bg-foreground! text-background! transition-all duration-300 ease-out hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5">
+                <Button className={cn("-mr-1 font-semibold gap-2 px-4 h-8 bg-foreground! text-background! transition-all duration-300 ease-out hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5", className)}>
                     <LogIn className="h-4 w-4" />
                     <span>Login</span>
                 </Button>
