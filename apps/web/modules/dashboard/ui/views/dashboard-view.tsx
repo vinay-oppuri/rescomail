@@ -10,6 +10,7 @@ import {
     getTrackedJobsStats,
     getRecentScans
 } from "../../server/procedures";
+import DashboardClient from "../components/dashboard-client";
 
 const DashboardView = async () => {
     const session = await auth.api.getSession({
@@ -68,6 +69,7 @@ const DashboardView = async () => {
                         </p>
                     </div>
                     <div className="flex flex-col md:flex-row gap-3 shrink-0">
+                        <DashboardClient />
                         <Button asChild size="default" className="h-9 md:h-11 px-3 md:px-5 shadow-lg shadow-primary/20 hover:scale-105 transition-all text-xs md:text-sm font-medium">
                             <Link href="/dashboard/resumes">
                                 <Upload className="mr-2 h-4 w-4" /> Upload Resume

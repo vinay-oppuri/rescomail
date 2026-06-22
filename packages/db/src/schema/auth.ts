@@ -1,4 +1,4 @@
-import { jsonb } from "drizzle-orm/pg-core";
+import { jsonb, uuid } from "drizzle-orm/pg-core";
 import { boolean, text, timestamp, pgTable, integer, bigint } from "drizzle-orm/pg-core";
 import { companyStageEnum, employmentTypeEnum, seniorityEnum, workModeEnum } from "./enums";
 
@@ -81,4 +81,24 @@ export const rateLimit = pgTable("rate_limit", {
   key: text("key"),
   count: integer("count"),
   lastRequest: bigint("last_request", { mode: "number" }),
+});
+
+export const userProfile = pgTable("user_profile", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .unique()
+    .references(() => user.id, { onDelete: "cascade" }),
+  fullName: text("full_name"),
+  email: text("email"),
+  phone: text("phone"),
+  location: text("location"),
+  portfolioUrl: text("portfolio_url"),
+  githubUrl: text("github_url"),
+  linkedinUrl: text("linkedin_url"),
+  extraLinks: jsonb("extra_links").$type<{ label: string; url: string }[]>(),
+  isComplete: boolean("is_complete").default(false).notNull(),
+  lastPromptedAt: timestamp("last_prompted_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
