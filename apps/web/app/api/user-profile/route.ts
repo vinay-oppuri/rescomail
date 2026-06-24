@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@repo/auth";
-import { db, userProfile } from "@repo/db";
+import { db, userProfile, userPreferences } from "@repo/db";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
@@ -20,12 +20,23 @@ export async function GET(req: NextRequest) {
       where: eq(userProfile.userId, userId),
     });
 
+    const prefs = await db.query.userPreferences.findFirst({
+      where: eq(userPreferences.userId, userId),
+    });
+
+    const preferences = {
+      primaryProvider: prefs?.primaryProvider || "gemini",
+      hasGeminiKey: !!prefs?.geminiApiKey,
+      hasGroqKey: !!prefs?.groqApiKey,
+    };
+
     if (!profile) {
       return NextResponse.json({
         exists: false,
         is_complete: false,
         should_prompt: true,
         profile: null,
+        preferences,
       });
     }
 
@@ -47,6 +58,7 @@ export async function GET(req: NextRequest) {
       exists: true,
       is_complete: profile.isComplete,
       should_prompt,
+      preferences,
       profile: {
         id: profile.id,
         user_id: profile.userId,
@@ -62,6 +74,7 @@ export async function GET(req: NextRequest) {
         last_prompted_at: profile.lastPromptedAt,
         created_at: profile.createdAt,
         updated_at: profile.updatedAt,
+        preferences,
       },
     });
   } catch (error) {

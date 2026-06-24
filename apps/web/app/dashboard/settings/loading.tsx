@@ -1,6 +1,4 @@
 import { Skeleton } from "@repo/ui";
-import { ApiKeysSkeleton } from "../../../modules/settings/ui/components/api-keys-skeleton";
-
 export default function SettingsLoading() {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">
@@ -44,8 +42,6 @@ export default function SettingsLoading() {
              <Skeleton className="h-9 w-[100px] sm:w-28 rounded-sm" />
           </div>
         </section>
-
-        <ApiKeysSkeleton />
       </div>
       
       {/* Profile Defaults Skeleton */}

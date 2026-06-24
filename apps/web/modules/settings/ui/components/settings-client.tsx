@@ -3,7 +3,7 @@
 import { AccountDetails } from "./account-details";
 import { ProfileDefaults } from "./profile-defaults";
 import { DangerActions } from "./danger-actions";
-import { ApiKeys } from "./api-keys";
+import { UserProfileSettings } from "./user-profile-settings";
 
 interface SettingsClientProps {
   user: {
@@ -16,12 +16,29 @@ interface SettingsClientProps {
   };
   geminiApiKey?: string | null;
   groqApiKey?: string | null;
+  primaryProvider?: string;
+  profile?: {
+    fullName: string;
+    email: string;
+    phone: string;
+    location: string;
+    portfolioUrl: string;
+    githubUrl: string;
+    linkedinUrl: string;
+    extraLinks: { label: string; url: string }[];
+  };
 }
 
-export default function SettingsClient({ user, geminiApiKey, groqApiKey }: SettingsClientProps) {
+export default function SettingsClient({
+  user,
+  geminiApiKey,
+  groqApiKey,
+  primaryProvider,
+  profile,
+}: SettingsClientProps) {
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 md:gap-8">
       {/* Page Header */}
       <div className="flex flex-col gap-4 border-b border-border/50 pb-6">
         <div className="space-y-2 max-w-3xl">
@@ -32,10 +49,14 @@ export default function SettingsClient({ user, geminiApiKey, groqApiKey }: Setti
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6 w-full">
-        <AccountDetails user={user} />
-        <ApiKeys geminiApiKey={geminiApiKey} groqApiKey={groqApiKey} />
-      </div>
+      <AccountDetails
+        user={user}
+        profile={profile}
+        geminiApiKey={geminiApiKey}
+        groqApiKey={groqApiKey}
+        primaryProvider={primaryProvider}
+      />
+      {/* <UserProfileSettings profile={profile} /> */}
       <ProfileDefaults />
       <DangerActions />
     </div>

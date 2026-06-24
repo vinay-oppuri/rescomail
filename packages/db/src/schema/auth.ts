@@ -73,6 +73,7 @@ export const userPreferences = pgTable("user_preferences", {
   excludedCompanies: text("excluded_companies").array().default([]),
   geminiApiKey: text("gemini_api_key"),
   groqApiKey: text("groq_api_key"),
+  primaryProvider: text("primary_provider").default("gemini"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

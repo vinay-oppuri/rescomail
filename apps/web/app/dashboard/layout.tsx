@@ -11,7 +11,6 @@ import { hasUsableSecret } from "@/lib/server/secrets";
 import DashboardNavbar from "@/modules/dashboard/ui/components/dashboard-navbar";
 import DashboardSidebar from "@/modules/dashboard/ui/components/dashboard-sidebar";
 import DashboardCredits from "@/modules/dashboard/ui/components/dashboard-credits";
-import ApiKeyPromptDialog from "@/modules/dashboard/ui/components/api-key-dialog";
 
 interface Props {
   children: React.ReactNode;
@@ -41,7 +40,6 @@ const Layout = async ({ children }: Props) => {
 
   return (
     <div className="min-h-screen w-full bg-background font-sans antialiased">
-      <ApiKeyPromptDialog hasApiKey={hasApiKey} />
       <SidebarProvider>
         <DashboardSidebar
           creditsSlot={

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { EditProfileActions } from "../../server/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
 import { Badge } from "@repo/ui/components/badge";
@@ -8,7 +9,25 @@ import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
 import { Separator } from "@repo/ui/components/separator";
-import { Camera, Check, Loader2, Mail, Shield, Calendar, User } from "lucide-react";
+import {
+  Camera,
+  Check,
+  Loader2,
+  Mail,
+  Shield,
+  Calendar,
+  User,
+  FileText,
+  Phone,
+  MapPin,
+  Globe,
+  Github,
+  Linkedin,
+  Link2,
+  Brain,
+  Zap,
+} from "lucide-react";
+import UserProfileDialog from "@/modules/dashboard/ui/components/user-profile-dialog";
 
 interface AccountDetailsProps {
   user: {
@@ -19,12 +38,39 @@ interface AccountDetailsProps {
     createdAt: Date;
     emailVerified: boolean;
   };
+  profile?: {
+    fullName: string;
+    email: string;
+    phone: string;
+    location: string;
+    portfolioUrl: string;
+    githubUrl: string;
+    linkedinUrl: string;
+    extraLinks: { label: string; url: string }[];
+  } | null;
+  geminiApiKey?: string | null;
+  groqApiKey?: string | null;
+  primaryProvider?: string;
 }
 
-export function AccountDetails({ user }: AccountDetailsProps) {
+export function AccountDetails({
+  user,
+  profile,
+  geminiApiKey,
+  groqApiKey,
+  primaryProvider,
+}: AccountDetailsProps) {
+  const router = useRouter();
   const [name, setName] = useState(user.name || "");
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [profileSaved, setProfileSaved] = useState(false);
+  const [resumeDialogOpen, setResumeDialogOpen] = useState(false);
+  const [dialogStep, setDialogStep] = useState(1);
+
+  const openDialogAtStep = (stepNumber: number) => {
+    setDialogStep(stepNumber);
+    setResumeDialogOpen(true);
+  };
 
   const initials =
     user.name
@@ -63,6 +109,15 @@ export function AccountDetails({ user }: AccountDetailsProps) {
             Your personal information and account details.
           </p>
         </div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => openDialogAtStep(1)}
+          className="h-8 text-xs font-semibold gap-1.5 border-foreground/10 bg-background/50 hover:bg-muted/60 shrink-0"
+        >
+          <FileText className="h-3.5 w-3.5" />
+          Edit Resume Profile
+        </Button>
       </div>
 
       <div className="flex flex-col gap-6 p-3 sm:p-6">
@@ -131,14 +186,202 @@ export function AccountDetails({ user }: AccountDetailsProps) {
               <span className="truncate">{user.email}</span>
             </div>
           </div>
+        </div>
 
-          <div className="space-y-2">
-            <Label>Account Status</Label>
-            <div className="flex h-9 items-center gap-2.5 bg-muted/20! border border-foreground/5! px-2.5 text-xs rounded-sm">
-              <Shield className="h-4 w-4 text-green-500 shrink-0" />
-              <span className="font-medium">Active &amp; Secure</span>
+        <Separator className="bg-foreground/5" />
+
+        {/* Resume Profile Details */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-foreground/80">
+                Resume Profile Details
+              </h3>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                These contact details are used to pre-fill generated resumes.
+              </p>
             </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openDialogAtStep(1)}
+              className="h-7 text-xs font-semibold text-primary hover:text-primary/80 hover:bg-primary/5 gap-1 px-2 shrink-0"
+            >
+              Edit Contact Details
+            </Button>
           </div>
+
+          {profile ? (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1">
+                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Full Name</span>
+                  <div className="flex items-center gap-2 text-sm text-foreground bg-muted/10 border border-foreground/5 px-2.5 py-1.5 rounded-sm">
+                    <User className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <span className="truncate font-medium">{profile.fullName || "—"}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Email</span>
+                  <div className="flex items-center gap-2 text-sm text-foreground bg-muted/10 border border-foreground/5 px-2.5 py-1.5 rounded-sm">
+                    <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <span className="truncate font-medium">{profile.email || "—"}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Phone</span>
+                  <div className="flex items-center gap-2 text-sm text-foreground bg-muted/10 border border-foreground/5 px-2.5 py-1.5 rounded-sm">
+                    <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <span className="truncate font-medium">{profile.phone || "—"}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Location</span>
+                  <div className="flex items-center gap-2 text-sm text-foreground bg-muted/10 border border-foreground/5 px-2.5 py-1.5 rounded-sm">
+                    <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <span className="truncate font-medium">{profile.location || "—"}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block">
+                    Links & Social Profiles
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => openDialogAtStep(2)}
+                    className="h-6 text-[10px] font-semibold text-primary hover:text-primary/80 hover:bg-primary/5 px-2 gap-1 shrink-0"
+                  >
+                    Edit Links
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {profile.portfolioUrl && (
+                    <a
+                      href={profile.portfolioUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline bg-primary/5 hover:bg-primary/10 px-2.5 py-1 rounded-sm border border-primary/10 transition-colors font-medium"
+                    >
+                      <Globe className="h-3.5 w-3.5" />
+                      Portfolio
+                    </a>
+                  )}
+                  {profile.githubUrl && (
+                    <a
+                      href={profile.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs text-foreground hover:underline bg-muted/40 hover:bg-muted/60 px-2.5 py-1 rounded-sm border border-foreground/5 transition-colors font-medium"
+                    >
+                      <Github className="h-3.5 w-3.5" />
+                      GitHub
+                    </a>
+                  )}
+                  {profile.linkedinUrl && (
+                    <a
+                      href={profile.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline bg-primary/5 hover:bg-primary/10 px-2.5 py-1 rounded-sm border border-primary/10 transition-colors font-medium"
+                    >
+                      <Linkedin className="h-3.5 w-3.5" />
+                      LinkedIn
+                    </a>
+                  )}
+                  {profile.extraLinks && profile.extraLinks.map((link, idx) => (
+                    <a
+                      key={idx}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground hover:underline bg-muted/20 hover:bg-muted/40 px-2.5 py-1 rounded-sm border border-foreground/5 transition-colors font-medium"
+                    >
+                      <Link2 className="h-3.5 w-3.5" />
+                      {link.label}
+                    </a>
+                  ))}
+                  {!profile.portfolioUrl && !profile.githubUrl && !profile.linkedinUrl && (!profile.extraLinks || profile.extraLinks.length === 0) && (
+                    <span className="text-xs text-muted-foreground italic">No links added yet.</span>
+                  )}
+                </div>
+              </div>
+
+              <Separator className="bg-foreground/5" />
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block">
+                    AI Engine Setup
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => openDialogAtStep(3)}
+                    className="h-6 text-[10px] font-semibold text-primary hover:text-primary/80 hover:bg-primary/5 px-2 gap-1 shrink-0"
+                  >
+                    Edit API Keys
+                  </Button>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="flex items-center justify-between px-3 py-2 bg-muted/10 border border-foreground/5 rounded-sm">
+                    <div className="flex items-center gap-2">
+                      <Brain className="h-4 w-4 text-blue-400 shrink-0" />
+                      <div className="flex flex-col">
+                        <span className="text-xs font-semibold">Google Gemini</span>
+                        <span className="text-[10px] text-muted-foreground">
+                          {geminiApiKey ? "API Key Configured" : "Not configured"}
+                        </span>
+                      </div>
+                    </div>
+                    {geminiApiKey && (
+                      <span className="text-[9px] bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded-sm border border-emerald-500/20 font-medium">
+                        Active
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between px-3 py-2 bg-muted/10 border border-foreground/5 rounded-sm">
+                    <div className="flex items-center gap-2">
+                      <Zap className="h-4 w-4 text-orange-400 shrink-0" />
+                      <div className="flex flex-col">
+                        <span className="text-xs font-semibold">Groq (Llama)</span>
+                        <span className="text-[10px] text-muted-foreground">
+                          {groqApiKey ? "API Key Configured" : "Not configured"}
+                        </span>
+                      </div>
+                    </div>
+                    {groqApiKey && (
+                      <span className="text-[9px] bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded-sm border border-emerald-500/20 font-medium">
+                        Active
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-6 text-center border border-dashed border-foreground/10 rounded-sm bg-muted/5">
+              <p className="text-xs text-muted-foreground">
+                No resume profile set up yet.
+              </p>
+              <Button
+                size="sm"
+                variant="link"
+                onClick={() => openDialogAtStep(1)}
+                className="mt-1 h-auto p-0 text-xs font-semibold text-primary"
+              >
+                Set up resume profile
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -157,6 +400,24 @@ export function AccountDetails({ user }: AccountDetailsProps) {
           {profileSaved ? "Saved!" : "Save Profile"}
         </Button>
       </div>
+
+      <UserProfileDialog
+        open={resumeDialogOpen}
+        onOpenChange={setResumeDialogOpen}
+        initialStep={dialogStep}
+        initialData={{
+          ...profile,
+          preferences: {
+            primaryProvider: primaryProvider,
+            hasGeminiKey: !!geminiApiKey,
+            hasGroqKey: !!groqApiKey,
+          }
+        }}
+        onSaveSuccess={() => {
+          setResumeDialogOpen(false);
+          router.refresh();
+        }}
+      />
     </section>
   );
 }
