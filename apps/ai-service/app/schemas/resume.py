@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ParseRequest(BaseModel):
@@ -12,6 +12,9 @@ class PersonalInfo(BaseModel):
     name: str
     email: str
     phone: str
+    portfolioUrl: str | None = None
+    githubUrl: str | None = None
+    linkedinUrl: str | None = None
 
 
 class Experience(BaseModel):
@@ -27,8 +30,16 @@ class Education(BaseModel):
     year: str
 
 
+class Project(BaseModel):
+    title: str
+    description: str
+    technologies: list[str]
+
+
 class StructuredResume(BaseModel):
     personalInfo: PersonalInfo
     skills: list[str]
     experience: list[Experience]
     education: list[Education]
+    projects: list[Project] = Field(default_factory=list)
+

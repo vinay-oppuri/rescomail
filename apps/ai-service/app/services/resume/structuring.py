@@ -19,8 +19,13 @@ def _fallback_resume(preprocessed: dict) -> dict:
             "name": preprocessed["name"],
             "email": preprocessed["email"],
             "phone": preprocessed["phone"],
+            "portfolioUrl": None,
+            "githubUrl": None,
+            "linkedinUrl": None,
         },
         "skills": [],
         "experience": [],
         "education": [],
+        "projects": [],
     }
+

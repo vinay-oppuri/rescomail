@@ -5,13 +5,15 @@ def structured_resume_to_text(resume: StructuredResume) -> str:
     parts: list[str] = []
     personal_info = resume.personalInfo
 
-    parts.append(
-        " ".join(
-            item
-            for item in [personal_info.name, personal_info.email, personal_info.phone]
-            if item
-        )
-    )
+    contact_items = [
+        personal_info.name,
+        personal_info.email,
+        personal_info.phone,
+        personal_info.portfolioUrl,
+        personal_info.githubUrl,
+        personal_info.linkedinUrl,
+    ]
+    parts.append(" ".join(item for item in contact_items if item))
 
     if resume.skills:
         parts.append("Skills: " + ", ".join(resume.skills))
@@ -33,6 +35,15 @@ def structured_resume_to_text(resume: StructuredResume) -> str:
                 )
             )
 
+    if resume.projects:
+        parts.append("Projects:")
+
+        for project in resume.projects:
+            project_text = f"{project.title}: {project.description}"
+            if project.technologies:
+                project_text += f" (Technologies: {', '.join(project.technologies)})"
+            parts.append(project_text)
+
     if resume.education:
         parts.append("Education:")
 
@@ -46,3 +57,4 @@ def structured_resume_to_text(resume: StructuredResume) -> str:
             )
 
     return "\n".join(part for part in parts if part.strip()).strip()
+
