@@ -16,7 +16,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 export const buildAiPayload = (
   input: AtsAnalyzeInput,
   resume: typeof resumes.$inferSelect,
-  geminiApiKey?: string
+  geminiApiKey?: string,
+  groqApiKey?: string,
 ) => {
   const payload: Record<string, unknown> = {
     resumeId: input.resumeId,
@@ -28,6 +29,10 @@ export const buildAiPayload = (
 
   if (geminiApiKey) {
     payload.geminiApiKey = geminiApiKey;
+  }
+
+  if (groqApiKey) {
+    payload.groqApiKey = groqApiKey;
   }
 
   if (isRecord(resume.parsedJson)) {
@@ -50,6 +55,7 @@ export const runAiAtsAnalysis = async (
   resume: typeof resumes.$inferSelect,
   userId: string,
   geminiApiKey?: string,
+  groqApiKey?: string,
 ): Promise<AtsAnalysisResponse> => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), AI_SERVICE_TIMEOUT_MS);
@@ -58,7 +64,7 @@ export const runAiAtsAnalysis = async (
     const response = await fetch(`${serverEnv.AI_SERVICE_URL}/ats/analyze`, {
       method: "POST",
       headers: aiServiceHeaders(userId),
-      body: JSON.stringify(buildAiPayload(input, resume, geminiApiKey)),
+      body: JSON.stringify(buildAiPayload(input, resume, geminiApiKey, groqApiKey)),
       signal: controller.signal,
     }).catch((err: unknown) => {
       if (err instanceof Error && err.name === "AbortError") {

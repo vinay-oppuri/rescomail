@@ -15,9 +15,10 @@ interface SettingsClientProps {
     emailVerified: boolean;
   };
   geminiApiKey?: string | null;
+  groqApiKey?: string | null;
 }
 
-export default function SettingsClient({ user, geminiApiKey }: SettingsClientProps) {
+export default function SettingsClient({ user, geminiApiKey, groqApiKey }: SettingsClientProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">
@@ -33,7 +34,7 @@ export default function SettingsClient({ user, geminiApiKey }: SettingsClientPro
 
       <div className="flex flex-col md:flex-row gap-6 w-full">
         <AccountDetails user={user} />
-        <ApiKeys geminiApiKey={geminiApiKey} />
+        <ApiKeys geminiApiKey={geminiApiKey} groqApiKey={groqApiKey} />
       </div>
       <ProfileDefaults />
       <DangerActions />

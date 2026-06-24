@@ -22,7 +22,7 @@ logger = logging.getLogger("rescomail.ai-service.gemini")
 REQUEST_TIMEOUT = (5, 60)
 _GEMINI_API_KEY_ENV = "GEMINI_API_KEY"
 _GEMINI_MODEL_ENV = "GEMINI_MODEL"
-_DEFAULT_MODEL = "gemini-2.5-flash"
+_DEFAULT_MODEL = "gemini-3.5-flash"
 
 # HTTP status codes that warrant a retry (transient overload / rate-limit).
 _RETRYABLE_STATUSES = {429, 500, 503}
@@ -109,7 +109,7 @@ def generate_gemini_json(
     Args:
         prompt: Full prompt text.
         response_schema: JSON Schema the model must conform to.
-        model: Gemini model to use (defaults to GEMINI_MODEL env or gemini-2.5-flash).
+        model: Gemini model to use (defaults to GEMINI_MODEL env or gemini-3.5-flash).
         temperature: Sampling temperature.
         api_key: Override the GEMINI_API_KEY env var (useful in tests).
 

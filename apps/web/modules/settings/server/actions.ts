@@ -41,6 +41,25 @@ const validateGeminiApiKey = async (apiKey: string) => {
   }
 };
 
+const validateGroqApiKey = async (apiKey: string) => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/models", {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+      signal: controller.signal,
+    });
+    return response.ok;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
+};
+
 export const EditProfileActions = async (name: string) => {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -80,6 +99,8 @@ export const EditPreferenceAction = async (input: SettingsPreferencesInput) => {
   const data = parsed.data;
   const geminiApiKey =
     data.geminiApiKey === null ? null : data.geminiApiKey?.trim();
+  const groqApiKey =
+    data.groqApiKey === null ? null : data.groqApiKey?.trim();
   const nextData = {
     ...data,
     geminiApiKey:
@@ -88,6 +109,12 @@ export const EditPreferenceAction = async (input: SettingsPreferencesInput) => {
         : geminiApiKey
           ? encryptSecret(geminiApiKey)
           : null,
+    groqApiKey:
+      groqApiKey === undefined
+        ? undefined
+        : groqApiKey
+          ? encryptSecret(groqApiKey)
+          : null,
   };
 
   if (geminiApiKey) {
@@ -95,6 +122,14 @@ export const EditPreferenceAction = async (input: SettingsPreferencesInput) => {
 
     if (!isValid) {
       return { error: "Invalid Gemini API Key. Please provide a valid key." };
+    }
+  }
+
+  if (groqApiKey) {
+    const isValid = await validateGroqApiKey(groqApiKey);
+
+    if (!isValid) {
+      return { error: "Invalid Groq API Key. Please provide a valid key." };
     }
   }
 
@@ -117,7 +152,6 @@ export const EditPreferenceAction = async (input: SettingsPreferencesInput) => {
       ...nextData,
     });
   }
-
   return { success: true };
 };
 

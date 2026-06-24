@@ -6,7 +6,7 @@ def preprocess_resume_text(text: str, filename: str | None = None) -> dict:
         r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+",
         text,
     )
-    phone_match = re.search(r"\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}", text)
+    phone_match = re.search(r"(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}", text)
     source_name = (filename or "resume").replace(".pdf", "").replace("-", " ")
 
     return {

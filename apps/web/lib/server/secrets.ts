@@ -54,7 +54,12 @@ export const decryptSecret = (storedSecret: string | null | undefined) => {
     return storedSecret;
   }
 
-  const payload = storedSecret.slice(ENCRYPTED_SECRET_PREFIX.length);
+  const prefixWithDot = `${ENCRYPTED_SECRET_PREFIX}.`;
+  if (!storedSecret.startsWith(prefixWithDot)) {
+    return null;
+  }
+
+  const payload = storedSecret.slice(prefixWithDot.length);
   const [iv, authTag, encrypted, ...extra] = payload.split(".");
 
   if (!iv || !authTag || !encrypted || extra.length > 0) {

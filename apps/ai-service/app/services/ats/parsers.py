@@ -57,7 +57,7 @@ def _build_response(result: dict, request: AtsAnalyzeRequest) -> AtsAnalysisResp
             ),
             compatibilityPrediction=AtsCompatibilityPrediction(
                 modelVersion="gemini-llm-ats-v1",
-                modelType="gemini-2.5-flash-llm-analysis",
+                modelType="gemini-3.5-flash-llm-analysis",
                 probability=_clamp(cp.get("probability", 50)),
                 confidence=cp.get("confidence", "medium"),
                 signals=cp.get("signals", []),

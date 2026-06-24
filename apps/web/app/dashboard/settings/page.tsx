@@ -23,6 +23,7 @@ const Page = async () => {
     <SettingsClient
       user={session.user}
       geminiApiKey={maskSecret(prefs?.geminiApiKey)}
+      groqApiKey={maskSecret(prefs?.groqApiKey)}
     />
   );
 };

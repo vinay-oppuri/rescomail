@@ -85,7 +85,8 @@ export const atsAnalysisTask = task({
       },
       resume,
       userId,
-      decryptSecret(prefs?.geminiApiKey) ?? undefined
+      decryptSecret(prefs?.geminiApiKey) ?? undefined,
+      decryptSecret(prefs?.groqApiKey) ?? undefined
     );
 
     await db.transaction(async (tx) => {

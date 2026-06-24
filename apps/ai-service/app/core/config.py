@@ -10,7 +10,8 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     # --- LLM + Embeddings (same API key) ---
     gemini_api_key: str
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.5-flash"
+    groq_api_key: str = ""
 
     # --- Auth ---
     ai_service_api_key: str

@@ -6,7 +6,7 @@ GEMINI_ATS_SCHEMA = {
             "type": "STRING",
             "enum": ["strong_match", "good_match", "partial_match", "needs_work"],
         },
-        "summary": {"type": "STRING", "description": "2-3 sentence professional summary"},
+        "summary": {"type": "STRING", "description": "A 2-3 sentence professional match summary evaluating how well the candidate fits the target role based on key alignments and gaps. Do NOT output contact information, name headers, emails, or phone numbers here."},
         "categoryScores": {
             "type": "OBJECT",
             "properties": {
@@ -72,12 +72,12 @@ GEMINI_ATS_SCHEMA = {
             "items": {
                 "type": "OBJECT",
                 "properties": {
-                    "target": {"type": "STRING"},
-                    "reason": {"type": "STRING"},
-                    "before": {"type": "STRING"},
-                    "after": {"type": "STRING"},
+                    "target": {"type": "STRING", "description": "The section or aspect of the resume to replace (e.g., 'Summary', 'Project Details', 'Work Experience bullet point')"},
+                    "reason": {"type": "STRING", "description": "Why this replacement is suggested and how it enhances the ATS score"},
+                    "before": {"type": "STRING", "description": "The exact original text from the candidate's resume that should be replaced"},
+                    "after": {"type": "STRING", "description": "The complete, optimized new text to insert instead"},
                 },
-                "required": ["target", "reason", "after"],
+                "required": ["target", "reason", "before", "after"],
             },
         },
         "semanticMatch": {
@@ -233,9 +233,8 @@ Analyze how well this resume matches the job description.
 
 6. **Suggestions**: 2-5 actionable items with priority levels.
 
-7. **Rewrite Suggestions**: 2-4 specific bullet/section rewrites.
-
-8. **Summary**: 2-3 professional sentences.
+7. **Rewrite Suggestions**: Provide 2-5 specific text replacements where a weak line, summary, or project description in the resume can be replaced by a stronger, more ATS-friendly line. For each item, you MUST include the target section, the reason for the change, the exact 'before' text from the resume, and the optimized 'after' text.
+8. **Summary**: A 2-3 sentence professional evaluation summarizing the overall fit of the candidate's profile for the target job description (e.g. highlighting key strengths and major gaps). Do NOT output raw contact details, emails, names, or phone headers here.
 
 IMPORTANT: The company name "{company_name}" must NOT be treated as a keyword match.
 IMPORTANT: If no specific resume section is identified, use "resume" as the sourceSection."""

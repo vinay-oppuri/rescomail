@@ -32,6 +32,7 @@ export const settingsPreferencesSchema = z
       .optional(),
     preferredLocations: z.array(preferredLocationSchema).max(20).optional(),
     geminiApiKey: z.string().trim().min(1).max(256).nullable().optional(),
+    groqApiKey: z.string().trim().min(1).max(256).nullable().optional(),
   })
   .strict();
 
