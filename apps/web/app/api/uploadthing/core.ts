@@ -9,11 +9,36 @@ import {
 } from "@/modules/resumes/server/resumes";
 import { parseResumeTask } from "@/trigger/parse-resume";
 
+import { db, user } from "@repo/db";
+import { eq } from "drizzle-orm";
+
 const f = createUploadthing();
 
 const resumeUploadInput = resumeUploadSchema;
 
 export const ourFileRouter = {
+  avatarUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
+    .middleware(async ({ req }) => {
+      const session = await auth.api.getSession({
+        headers: req.headers,
+      });
+
+      if (!session?.user?.id) {
+        throw new UploadThingError("Unauthorized");
+      }
+
+      return { userId: session.user.id };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      const fileUrl = file.ufsUrl || file.url;
+      await db
+        .update(user)
+        .set({ image: fileUrl })
+        .where(eq(user.id, metadata.userId));
+      
+      return { uploadedBy: metadata.userId, fileUrl };
+    }),
+
   resumeUploader: f(
     {
       pdf: {

@@ -2,6 +2,7 @@ import { auth } from "@repo/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { Suspense } from "react";
 import { getApplicationsForUser, getResumeOptions } from "@/modules/applications/server/queries";
 import ApplicationsView from "@/modules/applications/ui/views/applications-view";
 
@@ -20,10 +21,12 @@ const Page = async () => {
   ]);
 
   return (
-    <ApplicationsView
-      initialApplications={applications}
-      resumes={resumes}
-    />
+    <Suspense>
+      <ApplicationsView
+        initialApplications={applications}
+        resumes={resumes}
+      />
+    </Suspense>
   );
 };
 

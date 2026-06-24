@@ -70,7 +70,7 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
               if (isMobile) setOpenMobile(false);
             }}
           >
-            <Link href="/dashboard/applications">
+            <Link href="/dashboard/applications?new=true">
               <Plus className="h-4 w-4" />
               <span className="text-xs font-semibold">New Application</span>
             </Link>

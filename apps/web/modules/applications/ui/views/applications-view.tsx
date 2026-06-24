@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Briefcase, Search, Layout } from "lucide-react";
@@ -22,6 +23,16 @@ export default function ApplicationsView({
   const [activeTab, setActiveTab] = useState<"tracker" | "search">("tracker");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<ApplicationItem | null>(null);
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (searchParams.get("new") === "true") {
+      handleAddClick();
+      router.replace("/dashboard/applications");
+    }
+  }, [searchParams, router]);
 
   const refreshApplications = async () => {
     const { getApplicationsAction } = await import("../../server/actions");

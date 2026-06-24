@@ -1,123 +1,100 @@
 "use client";
 
 import { UseFormRegister, FieldErrors } from "react-hook-form";
-import {
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@repo/ui/components/dialog";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
 import { User, Mail, Phone, MapPin, Sparkles } from "lucide-react";
-import type { ProfileFormValues } from "./user-profile-dialog";
+import type { ProfileFormValues } from "../../server/user-profile-schema";
 
 interface Step1Props {
   register: UseFormRegister<ProfileFormValues>;
   errors: FieldErrors<ProfileFormValues>;
 }
 
+function FieldGroup({
+  id,
+  label,
+  icon: Icon,
+  error,
+  children,
+}: {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  error?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="grid gap-1.5">
+      <Label htmlFor={id} className="text-xs font-medium text-foreground/70 flex items-center gap-1.5">
+        <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+        {label}
+      </Label>
+      {children}
+      {error && (
+        <span className="text-[11px] text-destructive flex items-center gap-1">
+          {error}
+        </span>
+      )}
+    </div>
+  );
+}
+
 export default function UserDialogS1({ register, errors }: Step1Props) {
   return (
-    <div className="flex-1 flex flex-col gap-6">
-      <DialogHeader>
-        <div className="flex items-center gap-3 mb-1">
-          <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-primary/10 text-primary shrink-0">
-            <Sparkles className="h-4.5 w-4.5" />
-          </div>
-          <DialogTitle className="text-xl font-extrabold tracking-tight text-foreground">
-            Let&apos;s personalize your resume
-          </DialogTitle>
-        </div>
-        <DialogDescription className="text-xs text-muted-foreground leading-relaxed pl-12">
-          This information will be used to fill your generated resumes automatically. You can update it anytime.
-        </DialogDescription>
-      </DialogHeader>
+    <div className="flex-1 flex flex-col gap-5">
+      {/* Header */}
+      <div className="flex flex-col items-start gap-2 pb-4">
+        <h2 className="text-lg font-bold tracking-tight text-foreground leading-tight">
+          Let&apos;s personalize your resume
+        </h2>
+        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+          This info will pre-fill your generated resumes. You can update it anytime in Settings.
+        </p>
+      </div>
 
-      <div className="flex flex-col gap-4 mt-2">
-        {/* Full Name */}
-        <div className="grid gap-2">
-          <Label
-            htmlFor="fullName"
-            className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
-          >
-            <User className="h-3.5 w-3.5 text-muted-foreground" /> Full Name
-          </Label>
-          <Input
-            id="fullName"
-            placeholder="John Doe"
-            className="h-10 border-border/50 bg-background/50 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs"
-            {...register("fullName")}
-          />
-          {errors.fullName && (
-            <span className="text-[10px] font-semibold text-destructive">
-              {errors.fullName.message}
-            </span>
-          )}
+      {/* Form Fields */}
+      <div className="grid gap-3.5 sm:grid-cols-2">
+        <div className="sm:col-span-2">
+          <FieldGroup id="fullName" label="Full Name" icon={User} error={errors.fullName?.message}>
+            <Input
+              id="fullName"
+              placeholder="John Doe"
+              className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+              {...register("fullName")}
+            />
+          </FieldGroup>
         </div>
 
-        {/* Email */}
-        <div className="grid gap-2">
-          <Label
-            htmlFor="email"
-            className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
-          >
-            <Mail className="h-3.5 w-3.5 text-muted-foreground" /> Email Address
-          </Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="john@example.com"
-            className="h-10 border-border/50 bg-background/50 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs"
-            {...register("email")}
-          />
-          {errors.email && (
-            <span className="text-[10px] font-semibold text-destructive">
-              {errors.email.message}
-            </span>
-          )}
+        <div className="sm:col-span-2">
+          <FieldGroup id="email" label="Email Address" icon={Mail} error={errors.email?.message}>
+            <Input
+              id="email"
+              type="email"
+              placeholder="john@example.com"
+              className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+              {...register("email")}
+            />
+          </FieldGroup>
         </div>
 
-        {/* Phone */}
-        <div className="grid gap-2">
-          <Label
-            htmlFor="phone"
-            className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
-          >
-            <Phone className="h-3.5 w-3.5 text-muted-foreground" /> Phone Number (Optional)
-          </Label>
+        <FieldGroup id="phone" label="Phone (Optional)" icon={Phone} error={errors.phone?.message}>
           <Input
             id="phone"
             placeholder="+1 (555) 000-0000"
-            className="h-10 border-border/50 bg-background/50 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs"
+            className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
             {...register("phone")}
           />
-          {errors.phone && (
-            <span className="text-[10px] font-semibold text-destructive">
-              {errors.phone.message}
-            </span>
-          )}
-        </div>
+        </FieldGroup>
 
-        {/* Location */}
-        <div className="grid gap-2">
-          <Label
-            htmlFor="location"
-            className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
-          >
-            <MapPin className="h-3.5 w-3.5 text-muted-foreground" /> Location (Optional)
-          </Label>
+        <FieldGroup id="location" label="Location (Optional)" icon={MapPin} error={errors.location?.message}>
           <Input
             id="location"
-            placeholder="San Francisco, CA or Bangalore, India"
-            className="h-10 border-border/50 bg-background/50 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs"
+            placeholder="San Francisco, CA"
+            className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
             {...register("location")}
           />
-          {errors.location && (
-            <span className="text-[10px] font-semibold text-destructive">
-              {errors.location.message}
-            </span>
-          )}
-        </div>
+        </FieldGroup>
       </div>
     </div>
   );

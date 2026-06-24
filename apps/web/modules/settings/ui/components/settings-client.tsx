@@ -38,7 +38,7 @@ export default function SettingsClient({
 }: SettingsClientProps) {
 
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 md:gap-8">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 md:gap-8">
       {/* Page Header */}
       <div className="flex flex-col gap-4 border-b border-border/50 pb-6">
         <div className="space-y-2 max-w-3xl">

@@ -1,7 +1,7 @@
 import { Skeleton } from "@repo/ui";
 export default function SettingsLoading() {
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 md:gap-8">
       {/* Page Header */}
       <div className="flex flex-col gap-4 border-b border-border/50 pb-6">
         <div className="space-y-2 max-w-3xl w-full">
@@ -32,23 +32,67 @@ export default function SettingsLoading() {
               </div>
             </div>
             <Skeleton className="h-px w-full" />
-            <div className="grid gap-5 sm:grid-cols-2">
-               <div className="space-y-2"><Skeleton className="h-4 w-20"/><Skeleton className="h-9 w-full rounded-sm"/></div>
-               <div className="space-y-2"><Skeleton className="h-4 w-20"/><Skeleton className="h-9 w-full rounded-sm"/></div>
-               <div className="space-y-2"><Skeleton className="h-4 w-20"/><Skeleton className="h-9 w-full rounded-sm"/></div>
+            {/* Resume Profile Details Skeleton */}
+            <div className="space-y-6">
+              <div className="flex items-start justify-between">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-32 rounded-sm" />
+                  <Skeleton className="h-3 w-48 rounded-sm" />
+                </div>
+                <Skeleton className="h-7 w-24 rounded-sm" />
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="space-y-1">
+                    <Skeleton className="h-3 w-16 rounded-sm ml-1" />
+                    <Skeleton className="h-10 w-full rounded-md" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Skeleton className="h-px w-full" />
+
+            {/* Online Profiles Skeleton */}
+            <div className="space-y-6">
+              <div className="flex items-start justify-between">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-32 rounded-sm" />
+                  <Skeleton className="h-3 w-48 rounded-sm" />
+                </div>
+                <Skeleton className="h-7 w-24 rounded-sm" />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {[...Array(3)].map((_, i) => (
+                  <Skeleton key={i} className="h-7 w-28 rounded-full" />
+                ))}
+              </div>
+            </div>
+
+            <Skeleton className="h-px w-full" />
+
+            {/* AI Engine Config Skeleton */}
+            <div className="space-y-6">
+              <div className="flex items-start justify-between">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-36 rounded-sm" />
+                  <Skeleton className="h-3 w-56 rounded-sm" />
+                </div>
+                <Skeleton className="h-7 w-28 rounded-sm" />
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Skeleton className="h-16 w-full rounded-lg" />
+                <Skeleton className="h-16 w-full rounded-lg" />
+              </div>
             </div>
           </div>
           <div className="flex items-center justify-end gap-3 border-t border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
-             <Skeleton className="h-9 w-[100px] sm:w-28 rounded-sm" />
+             <Skeleton className="h-8 w-24 rounded-sm" />
           </div>
         </section>
       </div>
       
-      {/* Profile Defaults Skeleton */}
-      <Skeleton className="h-64 w-full rounded-sm" />
-      
-      {/* Danger Actions Skeleton */}
-      <Skeleton className="h-32 w-full rounded-sm" />
+
     </div>
   );
 }

@@ -1,113 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
+  DialogDescription,
 } from "@repo/ui/components/dialog";
 import { Button } from "@repo/ui/components/button";
-import { Loader2, ArrowRight, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowRight, ArrowLeft, X } from "lucide-react";
 
 import UserDialogS1 from "./user-dialog-s1";
 import UserDialogS2 from "./user-dialog-s2";
-import UserDialogS3 from "./user-dialog-s3";
-
-// ── Zod schema (exported so step files can share the inferred type) ───────
-const profileFormSchema = z.object({
-  fullName: z.string().trim().min(2, "Full name must be at least 2 characters"),
-  email: z.string().trim().min(1, "Email is required").email("Invalid email address"),
-  phone: z
-    .string()
-    .trim()
-    .optional()
-    .or(z.literal(""))
-    .superRefine((val, ctx) => {
-      if (val) {
-        const phoneRegex = /^[0-9+\s\-()]+$/;
-        if (!phoneRegex.test(val)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Only digits, spaces, dashes, parentheses and + allowed",
-          });
-        }
-      }
-    }),
-  location: z.string().trim().optional(),
-  portfolioUrl: z
-    .string()
-    .trim()
-    .optional()
-    .or(z.literal(""))
-    .superRefine((val, ctx) => {
-      if (val) {
-        if (!val.startsWith("https://")) {
-          ctx.addIssue({ code: z.ZodIssueCode.custom, message: "URL must start with https://" });
-          return;
-        }
-        try { new URL(val); } catch {
-          ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid URL format" });
-        }
-      }
-    }),
-  githubUrl: z
-    .string()
-    .trim()
-    .optional()
-    .or(z.literal(""))
-    .superRefine((val, ctx) => {
-      if (val) {
-        if (!val.startsWith("https://")) {
-          ctx.addIssue({ code: z.ZodIssueCode.custom, message: "URL must start with https://" });
-          return;
-        }
-        try { new URL(val); } catch {
-          ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid URL format" });
-        }
-      }
-    }),
-  linkedinUrl: z
-    .string()
-    .trim()
-    .optional()
-    .or(z.literal(""))
-    .superRefine((val, ctx) => {
-      if (val) {
-        if (!val.startsWith("https://")) {
-          ctx.addIssue({ code: z.ZodIssueCode.custom, message: "URL must start with https://" });
-          return;
-        }
-        try { new URL(val); } catch {
-          ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid URL format" });
-        }
-      }
-    }),
-  extraLinks: z
-    .array(
-      z.object({
-        label: z.string().trim().min(1, "Label is required"),
-        url: z
-          .string()
-          .trim()
-          .min(1, "URL is required")
-          .superRefine((val, ctx) => {
-            if (!val.startsWith("https://")) {
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Must start with https://" });
-              return;
-            }
-            try { new URL(val); } catch {
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid URL format" });
-            }
-          }),
-      })
-    )
-    .max(5),
-});
-
-/** Exported so user-dialog-s1.tsx and user-dialog-s2.tsx can share it */
-export type ProfileFormValues = z.infer<typeof profileFormSchema>;
+import UserDialogS3, { UserDialogS3Ref } from "./user-dialog-s3";
+import { profileFormSchema, type ProfileFormValues } from "../../server/user-profile-schema";
 
 // ── Props ─────────────────────────────────────────────────────────────────
 interface UserProfileDialogProps {
@@ -132,6 +40,7 @@ export default function UserProfileDialog({
 }: UserProfileDialogProps) {
   const [step, setStep] = useState(initialStep);
   const [submitting, setSubmitting] = useState(false);
+  const s3Ref = useRef<UserDialogS3Ref>(null);
 
   const {
     register,
@@ -139,6 +48,7 @@ export default function UserProfileDialog({
     handleSubmit,
     trigger,
     reset,
+    getValues,
     formState: { errors },
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -190,9 +100,38 @@ export default function UserProfileDialog({
     }
   }, [open, isAutomaticPrompt]);
 
+  const saveProfileData = async (values: ProfileFormValues) => {
+    const response = await fetch("/api/user-profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        full_name: values.fullName,
+        email: values.email,
+        phone: values.phone || null,
+        location: values.location || null,
+        portfolio_url: values.portfolioUrl || null,
+        github_url: values.githubUrl || null,
+        linkedin_url: values.linkedinUrl || null,
+        extra_links: values.extraLinks,
+      }),
+    });
+    if (!response.ok) throw new Error("Failed to update profile details");
+  };
+
   const handleNext = async () => {
     const isValid = await trigger(["fullName", "email", "phone", "location"]);
-    if (isValid) setStep(2);
+    if (!isValid) return;
+
+    setSubmitting(true);
+    try {
+      await saveProfileData(getValues());
+      setStep(2);
+    } catch (error) {
+      console.error("Profile save error:", error);
+      alert("Error saving profile details. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleBack = () => setStep((s) => s - 1);
@@ -200,21 +139,7 @@ export default function UserProfileDialog({
   const onFormSubmit = async (values: ProfileFormValues) => {
     setSubmitting(true);
     try {
-      const response = await fetch("/api/user-profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          full_name: values.fullName,
-          email: values.email,
-          phone: values.phone || null,
-          location: values.location || null,
-          portfolio_url: values.portfolioUrl || null,
-          github_url: values.githubUrl || null,
-          linkedin_url: values.linkedinUrl || null,
-          extra_links: values.extraLinks,
-        }),
-      });
-      if (!response.ok) throw new Error("Failed to update profile details");
+      await saveProfileData(values);
       setStep(3);
     } catch (error) {
       console.error("Profile save error:", error);
@@ -225,108 +150,167 @@ export default function UserProfileDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={() => {}}>
+    <Dialog
+      open={open}
+      onOpenChange={(val) => {
+        if (!val && isAutomaticPrompt) return;
+        onOpenChange(val);
+      }}
+    >
       <DialogContent
         showCloseButton={false}
-        className="rounded-lg sm:max-w-lg w-full p-0 overflow-hidden border-foreground/5 bg-background/95 backdrop-blur-2xl shadow-2xl transition-all h-[100dvh] sm:h-[600px] flex flex-col justify-between"
-        onPointerDownOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => e.preventDefault()}
+        className="rounded-xl sm:max-w-xl w-full p-0 overflow-hidden border-foreground/5 bg-background/95 backdrop-blur-2xl shadow-2xl h-dvh sm:h-[650px] flex flex-col"
+        onPointerDownOutside={(e) => {
+          if (isAutomaticPrompt) e.preventDefault();
+        }}
+        onEscapeKeyDown={(e) => {
+          if (isAutomaticPrompt) e.preventDefault();
+        }}
       >
-        <div className="flex flex-col flex-1 overflow-y-auto px-6 py-8">
-          {/* Step Progress Indicator */}
-          <div className="flex items-center justify-between mb-8 shrink-0">
-            <div className="flex gap-2">
-              {[1, 2, 3].map((s) => (
-                <span
-                  key={s}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    step === s
-                      ? "w-12 bg-primary shadow-[0_0_8px_rgba(59,130,246,0.5)]"
-                      : step > s
-                      ? "w-12 bg-primary/40"
-                      : "w-8 bg-muted"
-                  }`}
-                />
-              ))}
-            </div>
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest bg-muted/50 px-2 py-0.5 rounded-sm">
-              Step {step} of {TOTAL_STEPS}
-            </span>
-          </div>
+        <DialogTitle className="sr-only">Profile Setup</DialogTitle>
+        <DialogDescription className="sr-only">Complete your profile setup to personalize your experience.</DialogDescription>
 
-          {/* ── Step 1: Personal Info ── */}
+        {/* ── Top bar: progress pills + close ── */}
+        <div className="flex items-center justify-between px-6 py-4 shrink-0 border-b border-border/10">
+          <div className="flex gap-1.5">
+            {[1, 2, 3].map((s) => (
+              <span
+                key={s}
+                className={`h-1.5 rounded-full transition-all duration-300 ${step === s
+                    ? "w-10 bg-primary shadow-[0_0_8px_rgba(99,102,241,0.4)]"
+                    : step > s
+                      ? "w-10 bg-primary/40"
+                      : "w-6 bg-muted"
+                  }`}
+              />
+            ))}
+          </div>
+          {!isAutomaticPrompt && (
+            <button
+              onClick={() => onOpenChange(false)}
+              className="rounded-full p-1.5 text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors"
+              aria-label="Close"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+
+        {/* ── Scrollable step content ── */}
+        <div className="flex flex-col flex-1 overflow-y-auto px-6 py-5 min-h-0">
           {step === 1 && (
             <UserDialogS1 register={register} errors={errors} />
           )}
-
-          {/* ── Step 2: Online Profiles ── */}
           {step === 2 && (
             <UserDialogS2 register={register} errors={errors} control={control} />
           )}
-
-          {/* ── Step 3: AI Setup (self-contained — owns its own footer) ── */}
           {step === 3 && (
             <UserDialogS3
+              ref={s3Ref}
               initialData={initialData?.preferences}
+              onSavingChange={setSubmitting}
               onDone={() => { onSaveSuccess(); onOpenChange(false); }}
               onSkip={() => { onSaveSuccess(); onOpenChange(false); }}
+              onPrevious={() => setStep(2)}
             />
           )}
         </div>
 
-        {/* ── Shared footer for steps 1 & 2 only ── */}
-        {step !== 3 && (
-          <div className="flex items-center justify-between border-t border-border/40 p-4 bg-muted/10 shrink-0">
-            {step === 1 && (
-              <>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => onOpenChange(false)}
-                  className="text-xs text-muted-foreground hover:text-foreground font-semibold"
-                >
-                  Remind me later
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleNext}
-                  className="h-9 text-xs font-semibold px-5 gap-1.5 transition-all duration-300 hover:scale-105"
-                >
-                  Next <ArrowRight className="h-3.5 w-3.5" />
-                </Button>
-              </>
-            )}
-
-            {step === 2 && (
-              <>
+        {/* ── Shared Footer ── */}
+        <div className="flex items-center justify-between border-t border-border/10 px-6 py-4 bg-muted/5 shrink-0">
+          {step === 1 && (
+            <>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => onOpenChange(false)}
+                className="h-9 text-xs text-muted-foreground hover:text-foreground font-semibold px-4"
+              >
+                {isAutomaticPrompt ? "Remind me later" : "Cancel"}
+              </Button>
+              <Button
+                type="button"
+                disabled={submitting}
+                onClick={handleNext}
+                className="h-9 text-xs font-semibold px-5 gap-1.5"
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving...
+                  </>
+                ) : (
+                  <>
+                    Save & Next <ArrowRight className="h-3.5 w-3.5" />
+                  </>
+                )}
+              </Button>
+            </>
+          )}
+          {step === 2 && (
+            <>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleBack}
+                className="h-9 text-xs font-semibold px-4 gap-1.5"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" /> Back
+              </Button>
+              <Button
+                type="button"
+                disabled={submitting}
+                onClick={handleSubmit(onFormSubmit)}
+                className="h-9 text-xs font-semibold px-6 gap-2"
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving...
+                  </>
+                ) : (
+                  <>
+                    Save & Next <ArrowRight className="h-3.5 w-3.5" />
+                  </>
+                )}
+              </Button>
+            </>
+          )}
+          {step === 3 && (
+            <>
+              <div className="flex gap-2">
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={handleBack}
-                  className="h-9 text-xs font-semibold px-4 gap-1.5 border-border/50 bg-card/50"
+                  onClick={() => setStep(2)}
+                  className="h-9 text-xs font-semibold px-4 gap-1.5 border-foreground/5!"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" /> Back
                 </Button>
                 <Button
                   type="button"
-                  disabled={submitting}
-                  onClick={handleSubmit(onFormSubmit)}
-                  className="h-9 text-xs font-semibold px-6 gap-2 transition-all duration-300 hover:scale-105"
+                  variant="ghost"
+                  onClick={() => { onSaveSuccess(); onOpenChange(false); }}
+                  className="h-9 text-xs text-muted-foreground hover:text-foreground font-semibold px-4"
                 >
-                  {submitting ? (
-                    <>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving...
-                    </>
-                  ) : (
-                    <>
-                      Next <ArrowRight className="h-3.5 w-3.5" />
-                    </>
-                  )}
+                  Skip for now
                 </Button>
-              </>
-            )}
-          </div>
-        )}
+              </div>
+              <Button
+                type="button"
+                disabled={submitting}
+                onClick={() => s3Ref.current?.save()}
+                className="h-9 text-xs font-semibold px-6 gap-2"
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving...
+                  </>
+                ) : (
+                  "Save & Finish"
+                )}
+              </Button>
+            </>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

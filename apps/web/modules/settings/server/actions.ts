@@ -81,6 +81,21 @@ export const EditProfileActions = async (name: string) => {
     .where(eq(user.id, session.user.id));
 };
 
+export const DeleteAvatarAction = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  await db
+    .update(user)
+    .set({ image: null })
+    .where(eq(user.id, session.user.id));
+};
+
 export const EditPreferenceAction = async (input: SettingsPreferencesInput) => {
   const session = await auth.api.getSession({
     headers: await headers(),
