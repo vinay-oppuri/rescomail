@@ -1,119 +1,112 @@
+"use client";
+
 import { Button } from "@repo/ui/components/button";
-import { Target, Briefcase, Mail, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { motion } from "motion/react";
 
 import { BentoFeatures } from "../components/bento-features";
 import { HeroScrollDashboard } from "../components/scroll-dashboard";
 import { HomeFaq } from "../components/home-faq";
 import { HomeCta } from "../components/home-cta";
 
-
 const HomeView = () => {
   return (
-    <main className="min-h-screen bg-background selection:bg-primary/20">
-      {/* Split Hero Section */}
-      <section className="relative overflow-visible min-h-screen lg:min-h-[85vh] flex items-center pt-0 lg:pt-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 w-full relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+    <main className="relative min-h-screen overflow-x-hidden w-full bg-background transition-colors duration-300">
 
-            {/* Left Column: Title & Description */}
-            <div className="max-w-2xl min-h-screen lg:min-h-0 flex flex-col justify-center pb-0 lg:py-0">
-              <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl leading-[1.1]">
-                Land Your Dream Job with{" "}
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-500">
-                  Rescomail
-                </span>
-              </h1>
-              <p className="mb-8 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl">
-                The ultimate AI assistant for your career. Discover relevant jobs, optimize your resume for ATS, track your pipeline, and generate personalized cold emails—all in one place.
-              </p>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <Button size="lg" className="w-[75%] sm:w-auto h-10 md:h-12 px-6 text-sm shadow-md shadow-primary/20 transition-all hover:scale-105 " asChild>
-                  <Link href="/signup">
-                    Get Started Free <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-[65%] md:w-auto h-10 md:h-12 px-6 text-sm border-foreground/5!"
-                  asChild
-                >
-                  <Link href="#features">Explore Features</Link>
-                </Button>
-              </div>
+      {/* ── Horizon Gradient Backdrop ── */}
+      <div
+        aria-hidden="true"
+        className="absolute top-0 left-0 right-0 h-screen overflow-hidden pointer-events-none select-none z-0 blur-sm"
+        style={{
+          backgroundImage: `radial-gradient(
+            circle at 50% 100%,
+            var(--radial-center) 0%,
+            var(--radial-stop1) 18%,
+            var(--radial-stop2) 35%,
+            var(--radial-stop3) 25%,
+            var(--radial-stop4) 60%,
+            var(--radial-stop5) 100%
+          )`
 
-              <div className="mt-8 flex items-center gap-3 text-xs text-muted-foreground">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-muted flex items-center justify-center overflow-hidden">
-                      <div className="w-full h-full bg-linear-to-br from-primary/40 to-blue-500/40" />
-                    </div>
-                  ))}
-                </div>
-                <p>Join <span className="font-semibold text-foreground">1,000+</span> professionals landing interviews.</p>
-              </div>
-            </div>
+        }}
+      >
+        {/* Semicircle Overlay */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 bg-background transition-colors duration-300 animate-fade-in z-50 w-[150vh] sm:w-[130vw] aspect-square rounded-[50%] bottom-[-75vh] sm:bottom-[-95vw]"
+        />
+      </div>
 
-            {/* Right Column: Features Explanation / Visuals */}
-            <div className="relative lg:ml-auto w-full max-w-xl pb-12 lg:pb-0">
-              {/* Decorative background blur */}
-              <div className="absolute -inset-0.5 bg-linear-to-br from-primary/30 to-blue-500/30 blur-2xl opacity-50"></div>
+      {/* ── Hero Section ── */}
+      <section className="z-10 relative min-h-screen flex flex-col items-center justify-center mt-24">
+        {/* Center Pill Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-8 inline-flex items-center gap-3 rounded-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium border border-foreground/5 shadow-sm relative z-10"
+        >
+          <span className="flex h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
+          <span className="text-foreground font-semibold">Rescomail v1.0</span>
+          <span className="text-muted-foreground">·</span>
+          <span className="text-muted-foreground">Your AI Job Agent</span>
+        </motion.div>
 
-              <div className="relative flex flex-col gap-4">
-                {/* Feature Card 1 */}
-                <div className="group relative rounded-sm border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-primary/10">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary shadow-inner">
-                      <Target className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground text-base mb-1">Smart ATS Optimization</h3>
-                      <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
-                        Upload your resume and a job description. Our AI instantly analyzes keyword gaps and formatting issues to boost your match score.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+        {/* Main Content */}
+        <div className="mx-auto max-w-4xl px-4 w-full text-center relative z-10 flex flex-col items-center">
 
-                {/* Feature Card 2 */}
-                <div className="group relative rounded-sm border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-500/10 ml-0 sm:ml-8">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-blue-500/10 text-blue-500 shadow-inner">
-                      <Mail className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground text-base mb-1">1-Click Cold Emails</h3>
-                      <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
-                        Stop staring at a blank screen. Generate highly personalized outreach emails tailored perfectly to the hiring manager.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-6 text-4xl sm:text-6xl lg:text-7xl font-medium tracking-tight text-foreground leading-[1.08] max-w-3xl"
+          >
+            An assistant for <br />
+            your <span className="font-serif italic font-light text-blue-500 dark:text-purple-500">dream</span> job
+          </motion.h1>
 
-                {/* Feature Card 3 */}
-                <div className="group relative rounded-sm border border-border/50 bg-background/80 backdrop-blur-xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-purple-500/10">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-purple-500/10 text-purple-500 shadow-inner">
-                      <Briefcase className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground text-base mb-1">Kanban Job Tracker</h3>
-                      <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
-                        Organize your entire pipeline. Move applications from &apos;Saved&apos; to &apos;Offer&apos; and never lose track of a crucial follow-up.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-8 text-sm md:text-base text-muted-foreground leading-relaxed max-w-lg mx-auto"
+          >
+            Rescomail surfaces relevant jobs, perfects your resume, and writes high-converting cold emails so you can land your role.
+          </motion.p>
 
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="relative group z-10"
+          >
+            {/* Glowing background behind button */}
+            <div className="absolute -inset-x-8 -inset-y-4 bg-blue-500/20 blur-2xl rounded-full opacity-60 group-hover:opacity-85 transition-opacity duration-500 pointer-events-none" />
+
+            <Button
+              className="relative h-12 px-8 text-sm font-semibold rounded-full"
+              asChild
+            >
+              <Link href="/signup" className="flex items-center gap-1">
+                Try for free
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </motion.div>
+
         </div>
       </section>
+
+      {/* ── Scroll-Spy Feature Showcase ── */}
       <HeroScrollDashboard />
+
+      {/* ── Bento Features Grid ── */}
       <BentoFeatures />
+
+      {/* ── FAQ ── */}
       <HomeFaq />
+
+      {/* ── Final Call to Action ── */}
       <HomeCta />
 
     </main>

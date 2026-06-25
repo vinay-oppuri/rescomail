@@ -5,8 +5,8 @@ import { ArrowRight, Zap } from "lucide-react";
 export function HomeCta() {
   return (
     <section className="py-8 md:py-8 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="relative overflow-hidden rounded-sm border border-border/50 bg-card shadow-xl">
+      <div className="mx-auto max-w-5xl">
+        <div className="relative overflow-hidden rounded-sm border border-border/50 bg-muted/30 shadow-xl">
           {/* Content */}
           <div className="relative z-10 px-5 py-10 md:px-16 md:py-8 text-center bg-blue-400/20 dark:bg-card/20">
 
@@ -30,7 +30,7 @@ export function HomeCta() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 md:gap-3">
               <Button
                 size="lg"
-                className="w-full sm:w-auto h-9 md:h-12 px-5 md:px-8 text-xs md:text-sm font-semibold shadow-lg shadow-primary/20 hover:scale-105 transition-all"
+                className="w-full sm:w-auto h-9 md:h-12 px-5 md:px-8 text-xs md:text-sm font-semibold rounded-lg"
                 asChild
               >
                 <Link href="/signup">
@@ -40,7 +40,7 @@ export function HomeCta() {
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto h-9 md:h-12 px-5 md:px-8 text-xs md:text-sm font-semibold border-border/50 hover:bg-muted/50 transition-all"
+                className="w-full sm:w-auto h-9 md:h-12 px-5 md:px-8 text-xs md:text-sm font-semibold border-foreground/5! rounded-lg"
                 asChild
               >
                 <Link href="#features">See Features</Link>

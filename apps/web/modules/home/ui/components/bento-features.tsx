@@ -20,7 +20,7 @@ export function BentoFeatures() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
 
           {/* Card 1: ATS — Wide (spans 2 cols on md+) */}
-          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-card md:col-span-2 flex flex-col sm:flex-row transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20">
+          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-muted/30 md:col-span-2 flex flex-col sm:flex-row transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20">
             {/* Text side */}
             <div className="p-5 md:p-8 flex flex-col justify-center sm:min-w-[200px] sm:max-w-[240px] shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-primary/10 text-primary items-center justify-center mb-3 md:mb-5">
@@ -79,7 +79,7 @@ export function BentoFeatures() {
           </div>
 
           {/* Card 2: Cold Emails — Tall (spans 2 rows on md+) */}
-          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-card md:row-span-2 flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:border-blue-500/20">
+          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-muted/30 md:row-span-2 flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:border-blue-500/20">
             <div className="p-5 md:p-8 flex flex-col shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-blue-500/10 text-blue-500 items-center justify-center mb-3 md:mb-5">
                 <Mail className="h-4 w-4 md:h-5 md:w-5" />
@@ -133,7 +133,7 @@ export function BentoFeatures() {
           </div>
 
           {/* Card 3: Kanban Tracker */}
-          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-card flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/5 hover:border-purple-500/20">
+          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-muted/30 flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/5 hover:border-purple-500/20">
             <div className="p-5 md:p-8 flex flex-col shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-purple-500/10 text-purple-500 items-center justify-center mb-3 md:mb-5">
                 <Briefcase className="h-4 w-4 md:h-5 md:w-5" />
@@ -150,18 +150,18 @@ export function BentoFeatures() {
               <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden p-2.5 flex gap-2 group-hover:-translate-y-1 transition-all duration-300">
                 <div className="flex-1 bg-muted/30 rounded-sm p-1.5 flex flex-col gap-1.5">
                   <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Applied</div>
-                  <div className="bg-card border border-border/50 rounded-sm p-1.5 space-y-1">
+                  <div className="bg-muted/30 border border-border/50 rounded-sm p-1.5 space-y-1">
                     <div className="h-1 w-1/2 bg-purple-400/50 rounded-full" />
                     <div className="h-1 w-full bg-muted rounded-full" />
                   </div>
-                  <div className="bg-card border border-border/50 rounded-sm p-1.5 space-y-1">
+                  <div className="bg-muted/30 border border-border/50 rounded-sm p-1.5 space-y-1">
                     <div className="h-1 w-2/3 bg-blue-400/50 rounded-full" />
                     <div className="h-1 w-5/6 bg-muted rounded-full" />
                   </div>
                 </div>
                 <div className="flex-1 bg-muted/30 rounded-sm p-1.5 flex flex-col gap-1.5">
                   <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Interview</div>
-                  <div className="bg-card border border-primary/30 rounded-sm p-1.5 space-y-1 relative overflow-hidden">
+                  <div className="bg-muted/30 border border-primary/30 rounded-sm p-1.5 space-y-1 relative overflow-hidden">
                     <div className="absolute inset-0 bg-primary/5" />
                     <div className="h-1 w-3/4 bg-primary/40 rounded-full" />
                     <div className="h-1 w-full bg-muted rounded-full" />
@@ -172,7 +172,7 @@ export function BentoFeatures() {
           </div>
 
           {/* Card 4: Actionable Feedback */}
-          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-card flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-green-500/5 hover:border-green-500/20">
+          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-muted/30 flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-green-500/5 hover:border-green-500/20">
             <div className="p-5 md:p-8 flex flex-col shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-green-500/10 text-green-500 items-center justify-center mb-3 md:mb-5">
                 <FileText className="h-4 w-4 md:h-5 md:w-5" />
@@ -195,7 +195,7 @@ export function BentoFeatures() {
                   <div className="h-1 w-4/5 bg-muted rounded-full" />
                 </div>
                 {/* AI popover */}
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-card border border-border/80 rounded-sm p-2.5 shadow-xl flex gap-2">
+                <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-muted/30 border border-border/80 rounded-sm p-2.5 shadow-xl flex gap-2">
                   <div className="w-5 h-5 rounded-full bg-green-500/15 text-green-500 flex items-center justify-center shrink-0">
                     <Sparkles className="w-2.5 h-2.5" />
                   </div>

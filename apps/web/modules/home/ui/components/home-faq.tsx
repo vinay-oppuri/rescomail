@@ -22,7 +22,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="rounded-sm border border-border/50 bg-card overflow-hidden transition-all duration-300 hover:border-border">
+    <div className="rounded-sm border border-foreground/5 bg-muted/30 overflow-hidden transition-all duration-300 hover:border-border">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between gap-3 px-4 py-3.5 md:px-6 md:py-5 text-left"
