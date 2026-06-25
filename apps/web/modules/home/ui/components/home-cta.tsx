@@ -1,46 +1,41 @@
 import Link from "next/link";
 import { Button } from "@repo/ui/components/button";
-import { ArrowRight, Zap } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function HomeCta() {
   return (
-    <section className="py-8 md:py-8 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-5xl">
-        <div className="relative overflow-hidden rounded-sm border border-border/50 bg-muted/30 shadow-xl">
+    <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="mx-auto max-w-4xl">
+        <div className="relative overflow-hidden rounded-2xl border border-foreground/5 bg-linear-to-b from-blue-500/10 via-blue-500/5 to-transparent dark:bg-muted/30 dark:bg-none shadow-xl">
+          {/* Subtle ambient light glow */}
+          <div className="absolute -left-20 -top-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+
           {/* Content */}
-          <div className="relative z-10 px-5 py-10 md:px-16 md:py-8 text-center bg-blue-400/20 dark:bg-card/20">
+          <div className="relative z-10 px-6 py-12 md:px-16 md:py-14 text-center backdrop-blur-xs">
 
-            {/* Badge */}
-            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 rounded-full border border-foreground/5 bg-primary/5 text-primary text-[9px] md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6">
-              <Zap className="h-2.5 w-2.5 md:h-3 md:w-3" />
-              Start for free
-            </div>
-
-            <h2 className="text-xl md:text-4xl font-extrabold tracking-tight text-foreground mb-2.5 md:mb-4 max-w-2xl mx-auto leading-tight">
-              Ready to land your{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-500">
-                next role?
-              </span>
+            <h2 className="text-2xl md:text-4xl font-semibold tracking-tight text-foreground mb-4 max-w-2xl mx-auto leading-tight">
+              Ready to land your next role?
             </h2>
 
-            <p className="text-[11px] md:text-sm text-muted-foreground mb-6 md:mb-10 leading-relaxed max-w-lg mx-auto">
+            <p className="text-sm md:text-base text-muted-foreground mb-8 leading-relaxed max-w-lg mx-auto">
               Join professionals who use Rescomail to outsmart the ATS, track applications effortlessly, and write perfect cold emails in seconds.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 md:gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Button
                 size="lg"
-                className="w-full sm:w-auto h-9 md:h-12 px-5 md:px-8 text-xs md:text-sm font-semibold rounded-lg"
+                className="w-full sm:w-auto h-11 px-8 text-sm font-semibold rounded-full bg-blue-600 hover:bg-blue-500! text-white shadow-lg shadow-blue-500/10"
                 asChild
               >
                 <Link href="/signup">
-                  Create Free Account <ArrowRight className="ml-1.5 md:ml-2 h-3.5 w-3.5 md:h-4 md:w-4" />
+                  Create Free Account <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto h-9 md:h-12 px-5 md:px-8 text-xs md:text-sm font-semibold border-foreground/5! rounded-lg"
+                className="w-full sm:w-auto h-11 px-8 text-sm font-semibold border-foreground/5! rounded-full hover:bg-foreground/2"
                 asChild
               >
                 <Link href="#features">See Features</Link>
@@ -48,7 +43,7 @@ export function HomeCta() {
             </div>
 
             {/* Social proof strip */}
-            <p className="mt-5 md:mt-8 text-[9px] md:text-xs text-muted-foreground/70">
+            <p className="mt-8 text-xs text-muted-foreground/60">
               No credit card required &nbsp;·&nbsp; Free plan forever &nbsp;·&nbsp; Cancel anytime
             </p>
 

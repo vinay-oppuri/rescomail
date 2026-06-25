@@ -10,7 +10,6 @@ import {
     getTrackedJobsStats,
     getRecentScans
 } from "../../server/procedures";
-import DashboardClient from "../components/dashboard-client";
 
 const DashboardView = async () => {
     const session = await auth.api.getSession({
@@ -54,7 +53,6 @@ const DashboardView = async () => {
 
             {/* Minimalist Welcome Header */}
             <div className="relative overflow-hidden rounded-sm border border-border/50 bg-card/80 backdrop-blur-xl p-4 md:p-8 shadow-sm">
-                <div className="absolute -inset-0.5 bg-linear-to-br from-primary/10 to-blue-500/10 blur-xl opacity-50 -z-10" />
                 <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
                         <div className="flex items-center gap-2">
@@ -69,7 +67,6 @@ const DashboardView = async () => {
                         </p>
                     </div>
                     <div className="flex flex-col md:flex-row gap-3 shrink-0">
-                        <DashboardClient />
                         <Button asChild size="default" className="h-9 md:h-11 px-3 md:px-5 shadow-lg shadow-primary/20 hover:scale-105 transition-all text-xs md:text-sm font-medium">
                             <Link href="/dashboard/resumes">
                                 <Upload className="mr-2 h-4 w-4" /> Upload Resume
@@ -155,7 +152,7 @@ const DashboardView = async () => {
                                 </span>
                             )}
                             {trackedJobsStats.total > 0 && trackedJobsStats.applied === 0 && trackedJobsStats.interviewing === 0 && trackedJobsStats.offer === 0 && (
-                                <span className="text-muted-foreground font-medium lowercase normal-case tracking-normal text-xs">
+                                <span className="text-muted-foreground font-medium lowercase tracking-normal text-xs">
                                     Pipeline tracked
                                 </span>
                             )}

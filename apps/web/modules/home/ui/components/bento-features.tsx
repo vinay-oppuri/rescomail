@@ -1,4 +1,79 @@
+"use client";
+
+import React, { useState, useRef } from "react";
 import { Zap, Mail, Briefcase, FileText, CheckCircle2, Sparkles, Send } from "lucide-react";
+import { cn } from "@repo/ui/lib/utils";
+
+interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+function BentoCard({ children, className, ...props }: BentoCardProps) {
+  const [transformClass, setTransformClass] = useState("translate-x-0 translate-y-0");
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const w = rect.width;
+    const h = rect.height;
+
+    const distances = {
+      top: y,
+      bottom: h - y,
+      left: x,
+      right: w - x,
+    };
+
+    const closestEdge = Object.keys(distances).reduce((a, b) =>
+      distances[a as keyof typeof distances] < distances[b as keyof typeof distances] ? a : b
+    );
+
+    switch (closestEdge) {
+      case "top":
+        setTransformClass("translate-y-2");
+        break;
+      case "bottom":
+        setTransformClass("-translate-y-2");
+        break;
+      case "left":
+        setTransformClass("translate-x-2");
+        break;
+      case "right":
+        setTransformClass("-translate-x-2");
+        break;
+      default:
+        setTransformClass("translate-x-0 translate-y-0");
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      setTransformClass("translate-x-0 translate-y-0");
+    }, 200);
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setTransformClass("translate-x-0 translate-y-0");
+  };
+
+  return (
+    <div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={cn(
+        "group relative overflow-hidden rounded-2xl border border-foreground/5 transition-transform duration-300 ease-out",
+        transformClass,
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
 
 export function BentoFeatures() {
   return (
@@ -20,13 +95,13 @@ export function BentoFeatures() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
 
           {/* Card 1: ATS — Wide (spans 2 cols on md+) */}
-          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-muted/30 md:col-span-2 flex flex-col sm:flex-row transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20">
+          <BentoCard className="bg-linear-to-b from-violet-500/15 dark:from-violet-500/5 to-violet-500/5 dark:to-violet-500/1 md:col-span-2 flex flex-col sm:flex-row">
             {/* Text side */}
             <div className="p-5 md:p-8 flex flex-col justify-center sm:min-w-[200px] sm:max-w-[240px] shrink-0">
-              <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-primary/10 text-primary items-center justify-center mb-3 md:mb-5">
+              <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-violet-500/10 text-violet-500 items-center justify-center mb-3 md:mb-5">
                 <Zap className="h-4 w-4 md:h-5 md:w-5" />
               </div>
-              <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-foreground">ATS Semantic Matching</h3>
+              <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-violet-500/80">ATS Semantic Matching</h3>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                 Go beyond keywords. Our AI understands context to ensure your resume truly matches job requirements.
               </p>
@@ -38,7 +113,7 @@ export function BentoFeatures() {
 
             {/* Mockup side */}
             <div className="flex-1 p-4 md:p-6 flex items-center justify-center">
-              <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden group-hover:-translate-y-1 transition-all duration-300">
+              <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden">
                 <div className="h-8 border-b border-border/50 flex items-center px-3 gap-1.5 bg-muted/20">
                   <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-destructive/50" />
                   <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-yellow-500/50" />
@@ -76,15 +151,15 @@ export function BentoFeatures() {
                 </div>
               </div>
             </div>
-          </div>
+          </BentoCard>
 
           {/* Card 2: Cold Emails — Tall (spans 2 rows on md+) */}
-          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-muted/30 md:row-span-2 flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:border-blue-500/20">
+          <BentoCard className="bg-linear-to-b from-blue-500/15 dark:from-blue-500/5 via-blue-500/10 dark:via-blue-500/3 to-blue-500/5 dark:to-blue-500/1 md:row-span-2 flex flex-col">
             <div className="p-5 md:p-8 flex flex-col shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-blue-500/10 text-blue-500 items-center justify-center mb-3 md:mb-5">
                 <Mail className="h-4 w-4 md:h-5 md:w-5" />
               </div>
-              <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-foreground">1-Click Cold Emails</h3>
+              <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-blue-500/80">1-Click Cold Emails</h3>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                 Personalized outreach emails that get opened. AI analyzes company context to craft the perfect message.
               </p>
@@ -94,7 +169,7 @@ export function BentoFeatures() {
 
             {/* Email mockup */}
             <div className="flex-1 p-4 md:p-6 flex items-stretch min-h-[200px]">
-              <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden flex flex-col group-hover:-translate-y-1 transition-all duration-300">
+              <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden flex flex-col">
                 <div className="px-3 py-2 border-b border-border/50 flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                     <span className="w-5 shrink-0">To:</span>
@@ -130,15 +205,15 @@ export function BentoFeatures() {
                 </div>
               </div>
             </div>
-          </div>
+          </BentoCard>
 
           {/* Card 3: Kanban Tracker */}
-          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-muted/30 flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/5 hover:border-purple-500/20">
+          <BentoCard className="bg-linear-to-b from-orange-500/15 dark:from-orange-500/5 to-orange-500/5 dark:to-orange-500/1 flex flex-col">
             <div className="p-5 md:p-8 flex flex-col shrink-0">
-              <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-purple-500/10 text-purple-500 items-center justify-center mb-3 md:mb-5">
+              <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-purple-500/10 text-orange-500 items-center justify-center mb-3 md:mb-5">
                 <Briefcase className="h-4 w-4 md:h-5 md:w-5" />
               </div>
-              <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-foreground">Kanban Job Tracker</h3>
+              <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-orange-500/80">Kanban Job Tracker</h3>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                 Organize your pipeline. Never lose track of a follow-up.
               </p>
@@ -147,7 +222,7 @@ export function BentoFeatures() {
             <div className="mx-5 md:mx-8 h-px bg-border/50" />
 
             <div className="flex-1 p-4 md:p-6 flex items-stretch min-h-[140px]">
-              <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden p-2.5 flex gap-2 group-hover:-translate-y-1 transition-all duration-300">
+              <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden p-2.5 flex gap-2">
                 <div className="flex-1 bg-muted/30 rounded-sm p-1.5 flex flex-col gap-1.5">
                   <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Applied</div>
                   <div className="bg-muted/30 border border-border/50 rounded-sm p-1.5 space-y-1">
@@ -161,7 +236,7 @@ export function BentoFeatures() {
                 </div>
                 <div className="flex-1 bg-muted/30 rounded-sm p-1.5 flex flex-col gap-1.5">
                   <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Interview</div>
-                  <div className="bg-muted/30 border border-primary/30 rounded-sm p-1.5 space-y-1 relative overflow-hidden">
+                  <div className="bg-muted/30 border border-border/50 rounded-sm p-1.5 relative overflow-hidden">
                     <div className="absolute inset-0 bg-primary/5" />
                     <div className="h-1 w-3/4 bg-primary/40 rounded-full" />
                     <div className="h-1 w-full bg-muted rounded-full" />
@@ -169,15 +244,15 @@ export function BentoFeatures() {
                 </div>
               </div>
             </div>
-          </div>
+          </BentoCard>
 
           {/* Card 4: Actionable Feedback */}
-          <div className="group relative overflow-hidden rounded-sm border border-border/50 bg-muted/30 flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-green-500/5 hover:border-green-500/20">
+          <BentoCard className="bg-linear-to-b from-green-500/15 dark:from-green-500/5 to-green-500/5 dark:to-green-500/1 flex flex-col">
             <div className="p-5 md:p-8 flex flex-col shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-green-500/10 text-green-500 items-center justify-center mb-3 md:mb-5">
                 <FileText className="h-4 w-4 md:h-5 md:w-5" />
               </div>
-              <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-foreground">Actionable Feedback</h3>
+              <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-green-500/80">Actionable Feedback</h3>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                 Concrete feedback on structure, impact statements, and phrasing.
               </p>
@@ -186,7 +261,7 @@ export function BentoFeatures() {
             <div className="mx-5 md:mx-8 h-px bg-border/50" />
 
             <div className="flex-1 p-4 md:p-6 flex items-stretch min-h-[140px]">
-              <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden p-3 relative group-hover:-translate-y-1 transition-all duration-300">
+              <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden p-3 relative">
                 <div className="flex flex-col gap-1.5 opacity-50">
                   <div className="h-1.5 w-1/3 bg-foreground/20 rounded-full mx-auto mb-1" />
                   <div className="h-1 w-full bg-muted rounded-full" />
@@ -195,7 +270,7 @@ export function BentoFeatures() {
                   <div className="h-1 w-4/5 bg-muted rounded-full" />
                 </div>
                 {/* AI popover */}
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-muted/30 border border-border/80 rounded-sm p-2.5 shadow-xl flex gap-2">
+                <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-muted/30 border border-border/80 backdrop-blur-sm rounded-sm p-2.5 shadow-xl flex gap-2">
                   <div className="w-5 h-5 rounded-full bg-green-500/15 text-green-500 flex items-center justify-center shrink-0">
                     <Sparkles className="w-2.5 h-2.5" />
                   </div>
@@ -208,7 +283,7 @@ export function BentoFeatures() {
                 </div>
               </div>
             </div>
-          </div>
+          </BentoCard>
 
         </div>
       </div>

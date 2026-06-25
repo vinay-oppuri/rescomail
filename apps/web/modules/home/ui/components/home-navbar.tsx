@@ -38,12 +38,7 @@ const HomeNavbar = () => {
     <>
       {/* Desktop & Mobile Floating Header Container */}
       <header className="fixed top-4 sm:top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-        <motion.div
-          animate={{
-            y: isScrolled ? 0 : 4,
-            scale: isScrolled ? 0.95 : 1,
-          }}
-          transition={{ duration: 0.2 }}
+        <div
           className={cn(
             "pointer-events-auto flex items-center justify-between w-full max-w-xl sm:max-w-2xl h-14 px-3 sm:px-4 rounded-full",
             "bg-background/80 backdrop-blur-md border border-foreground/5 shadow-lg transition-all duration-300"
@@ -94,7 +89,7 @@ const HomeNavbar = () => {
               {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </Button>
           </div>
-        </motion.div>
+        </div>
       </header>
 
       {/* Mobile drawer menu */}
@@ -138,7 +133,7 @@ const ThemeToggle = () => {
     <Button
       variant="ghost"
       size="icon"
-      className="rounded-full h-8 w-8 text-foreground hover:bg-black/5 dark:hover:bg-white/5"
+      className="rounded-full h-8 w-8 text-primary/80 hover:bg-black/5 dark:hover:bg-white/5"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >
       <Sun className="h-4 w-4 dark:hidden" />

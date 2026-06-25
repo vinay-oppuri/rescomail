@@ -47,7 +47,7 @@ const DashboardNavbar = () => {
         <div className="flex flex-1 items-center gap-4 md:gap-8">
           <Button
             variant="outline"
-            className="hidden md:flex relative h-8! w-full justify-start rounded-sm bg-muted/60 text-xs text-muted-foreground sm:pr-12 md:max-w-xs shadow-sm border-foreground/5"
+            className="hidden md:flex relative h-8! w-full justify-start rounded-sm bg-muted/60 text-xs text-muted-foreground sm:pr-12 md:max-w-xs shadow-sm border-foreground/5!"
             onClick={() => setOpen(true)}
           >
             <Search className="mr-2 h-4 w-4" />

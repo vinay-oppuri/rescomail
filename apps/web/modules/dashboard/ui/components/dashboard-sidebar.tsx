@@ -91,7 +91,7 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
                     className={cn(
                       "h-10 px-3 py-2 rounded-sm transition-all duration-200",
                       pathname === item.href
-                        ? "bg-primary/10 text-primary font-semibold border-l-2 border-blue-400!"
+                        ? "bg-primary/10 text-primary font-semibold"
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                     onClick={() => {
