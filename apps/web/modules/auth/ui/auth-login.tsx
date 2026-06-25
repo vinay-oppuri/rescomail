@@ -112,9 +112,9 @@ const AuthLogin = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col lg:flex-row">
+    <div className="flex min-h-screen w-full flex-col lg:flex-row bg-background transition-colors duration-300">
       {/* Left Side - Login Form */}
-      <div className="flex w-full items-center justify-center p-6 sm:p-8 lg:w-1/2 lg:p-16">
+      <div className="flex w-full min-h-screen items-center justify-center p-6 sm:p-8 lg:w-1/2 lg:p-16">
         <div className="w-full max-w-sm space-y-6 md:space-y-8">
           <div className="space-y-2">
             <Link href="/" className="group mb-6 md:mb-8 flex items-center gap-2">
@@ -233,41 +233,37 @@ const AuthLogin = () => {
         </div>
       </div>
 
-      <div className="relative hidden w-1/2 overflow-hidden border-l bg-muted/20 lg:flex">
-        <div className="relative z-10 flex w-full flex-col justify-center p-16">
-          <div className="max-w-md space-y-6">
-            <div className="inline-flex items-center gap-2 border bg-background px-4 py-2 text-sm font-medium rounded-full">
-              <CheckCircle2 className="h-4 w-4 text-primary" />
-              Used by 5000+ applicants
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
-              Rescomail helped me double my interview rate in just 2 weeks.
-            </h2>
-            <div className="space-y-4 pt-8">
-              {[
-                "AI-Powered ATS analysis",
-                "Personalized cold emails",
-                "Smart application tracking",
-                "Unlimited resume versions",
-              ].map((text) => (
-                <div key={text} className="flex items-center gap-3">
-                  <div className="h-1.5 w-1.5 bg-primary rounded-full" />
-                  <span className="text-sm md:text-lg text-muted-foreground">{text}</span>
-                </div>
-              ))}
-            </div>
+      <div className="relative hidden w-1/2 overflow-hidden bg-background lg:flex">
+        {/* ── Horizon Gradient Backdrop (mirrored) ── */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 blur-sm"
+          style={{
+            backgroundImage: `radial-gradient(
+              circle at 0% 50%,
+              var(--radial-center) 0%,
+              var(--radial-stop1) 18%,
+              var(--radial-stop2) 35%,
+              var(--radial-stop3) 25%,
+              var(--radial-stop4) 60%,
+              var(--radial-stop5) 100%
+            )`
+          }}
+        >
+          {/* Semicircle Overlay */}
+          <div
+            className="absolute top-1/2 -translate-y-1/2 bg-background transition-colors duration-300 animate-fade-in z-50 w-[150vh] aspect-square rounded-[50%] left-[-75vh]"
+          />
+        </div>
 
-            <div className="mt-12 border-t pt-12">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 bg-primary rounded-sm" />
-                <div>
-                  <p className="font-bold">Alex Chen</p>
-                  <p className="text-sm text-muted-foreground">
-                    Software Engineer @ Google
-                  </p>
-                </div>
-              </div>
-            </div>
+        <div className="relative z-10 flex w-full flex-col justify-center items-start py-16">
+          <div className="max-w-md space-y-3">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+              Your AI-powered job copilot.
+            </h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Scan your resume against job listings, draft custom outreach templates, and manage your application pipeline.
+            </p>
           </div>
         </div>
       </div>

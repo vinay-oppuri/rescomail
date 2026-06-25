@@ -97,17 +97,10 @@ const HomeView = () => {
         </div>
       </section>
 
-      {/* ── Scroll-Spy Feature Showcase ── */}
       <HeroScrollDashboard />
-
-      {/* ── Bento Features Grid ── */}
       <BentoFeatures />
-
-      {/* ── FAQ ── */}
-      <HomeFaq />
-
-      {/* ── Final Call to Action ── */}
       <HomeCta />
+      <HomeFaq />
 
     </main>
   );

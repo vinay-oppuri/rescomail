@@ -1,55 +1,171 @@
+"use client"
+
 import Link from "next/link";
 import { Button } from "@repo/ui/components/button";
 import { ArrowRight } from "lucide-react";
 
 export function HomeCta() {
   return (
-    <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 relative z-10">
-      <div className="mx-auto max-w-4xl">
-        <div className="relative overflow-hidden rounded-2xl border border-foreground/5 bg-linear-to-b from-blue-500/10 via-blue-500/5 to-transparent dark:bg-muted/30 dark:bg-none shadow-xl">
-          {/* Subtle ambient light glow */}
-          <div className="absolute -left-20 -top-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+    <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 border border-foreground/5 dark:border-border/30 rounded-2xl overflow-hidden bg-linear-to-b from-blue-500/10 via-blue-500/5 to-transparent dark:from-blue-500/5 dark:via-blue-500/3 dark:to-blue-500/1 shadow-xl">
 
-          {/* Content */}
-          <div className="relative z-10 px-6 py-12 md:px-16 md:py-14 text-center backdrop-blur-xs">
-
-            <h2 className="text-2xl md:text-4xl font-semibold tracking-tight text-foreground mb-4 max-w-2xl mx-auto leading-tight">
-              Ready to land your next role?
-            </h2>
-
-            <p className="text-sm md:text-base text-muted-foreground mb-8 leading-relaxed max-w-lg mx-auto">
-              Join professionals who use Rescomail to outsmart the ATS, track applications effortlessly, and write perfect cold emails in seconds.
+          {/* Left — copy + actions */}
+          <div className="px-8 py-12 md:px-10 md:py-14 flex flex-col justify-center">
+            <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-primary mb-3">
+              AI job search copilot
             </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto h-11 px-8 text-sm font-semibold rounded-full bg-blue-600 hover:bg-blue-500! text-white shadow-lg shadow-blue-500/10"
-                asChild
-              >
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground leading-snug mb-4">
+              Land your next <span className="font-serif italic font-light text-blue-500 dark:text-purple-400">dream job</span> faster — with AI working alongside you
+            </h2>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-sm">
+              Rescomail scans your resume against the job, tracks every application, and drafts cold emails that actually get replies.
+            </p>
+            <div className="flex flex-col gap-3">
+              <Button size="lg" className="h-11 text-sm font-semibold rounded-full bg-blue-600 hover:bg-blue-500! dark:bg-blue-500/20 dark:hover:bg-blue-500/25! text-white transition-all duration-200" asChild>
                 <Link href="/signup">
-                  Create Free Account <ArrowRight className="ml-2 h-4 w-4" />
+                  Get started free <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto h-11 px-8 text-sm font-semibold border-foreground/5! rounded-full hover:bg-foreground/2"
-                asChild
-              >
-                <Link href="#features">See Features</Link>
+              <Button size="lg" variant="outline" className="h-11 text-sm font-semibold rounded-full border-foreground/5! hover:bg-foreground/2 transition-all duration-200" asChild>
+                <Link href="#features">See how it works</Link>
               </Button>
             </div>
-
-            {/* Social proof strip */}
-            <p className="mt-8 text-xs text-muted-foreground/60">
-              No credit card required &nbsp;·&nbsp; Free plan forever &nbsp;·&nbsp; Cancel anytime
+            <p className="mt-6 text-xs text-muted-foreground/60">
+              No credit card required · Free plan forever
             </p>
-
           </div>
+
+          {/* Right — live product preview */}
+          <div className="hidden md:flex flex-col gap-4 bg-white/10 dark:bg-neutral-950/20 backdrop-blur-xs px-7 py-8 border-l border-foreground/5">
+            <HomeCTAPreview />
+          </div>
+
         </div>
       </div>
     </section>
+  );
+}
+
+
+import { useEffect, useState } from "react";
+
+const SCAN_STEPS = [
+  "Scanning resume…",
+  "Checking keyword density…",
+  "Analysing impact verbs…",
+  "Flagging passive language…",
+  "Scan complete — 3 suggestions",
+];
+
+const APPLICATIONS = [
+  { company: "Stripe", role: "Design Lead", status: "Interview", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
+  { company: "Linear", role: "Product Designer", status: "Applied", color: "bg-muted text-muted-foreground" },
+  { company: "Vercel", role: "Senior Designer", status: "Offer", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
+];
+
+export function HomeCTAPreview() {
+  const [scanStep, setScanStep] = useState(0);
+  const [kwWidth, setKwWidth] = useState(0);
+  const [ilWidth, setIlWidth] = useState(0);
+  const [atsScore, setAtsScore] = useState<string | null>(null);
+  const [dotColor, setDotColor] = useState("bg-blue-500");
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setKwWidth(82), 600);
+    const t2 = setTimeout(() => setIlWidth(54), 900);
+    const t3 = setTimeout(() => setAtsScore("87 / 100"), 1200);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setScanStep((prev) => {
+        const next = (prev + 1) % SCAN_STEPS.length;
+        if (next === SCAN_STEPS.length - 1) {
+          setDotColor("bg-emerald-500");
+          setTimeout(() => { setDotColor("bg-blue-500"); setScanStep(0); }, 3000);
+        }
+        return next;
+      });
+    }, 1600);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <>
+      {/* Resume scan card */}
+      <div className="px-2">
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-mono">
+          Resume scan
+        </p>
+        <div className="border border-foreground/5 bg-background/50 backdrop-blur-xs rounded-xl overflow-hidden text-sm shadow-xs">
+          <div className="flex items-center gap-2.5 px-4 py-3 border-b border-foreground/5">
+            <div className="w-7 h-7 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 flex items-center justify-center text-[10px] font-medium shrink-0">
+              AK
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-foreground leading-none mb-0.5">Arjun K. — Product Designer</p>
+              <p className="text-[11px] text-muted-foreground">Applying to Stripe · Design Lead</p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-foreground/5">
+            <span className="text-[11px] text-muted-foreground">ATS match score</span>
+            <span className="text-[12px] font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
+              {atsScore ?? "—"}
+            </span>
+          </div>
+
+          {[
+            { label: "Keywords matched", width: kwWidth, color: "bg-emerald-500" },
+            { label: "Impact language", width: ilWidth, color: "bg-amber-400" },
+          ].map(({ label, width, color }) => (
+            <div key={label} className="px-4 py-2.5 border-b border-foreground/5">
+              <div className="flex justify-between mb-1.5">
+                <span className="text-[11px] text-muted-foreground">{label}</span>
+                <span className="text-[11px] text-muted-foreground tabular-nums">{width}%</span>
+              </div>
+              <div className="h-1 bg-muted rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-1500 ease-out ${color}`}
+                  style={{ width: `${width}%` }}
+                />
+              </div>
+            </div>
+          ))}
+
+          <div className="flex items-center gap-2 px-4 py-2.5">
+            <span className={`w-1.5 h-1.5 rounded-full shrink-0 transition-colors duration-300 ${dotColor}`} />
+            <span className="text-[11px] text-muted-foreground transition-all duration-300">
+              {SCAN_STEPS[scanStep]}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Application tracker */}
+      <div className="px-2">
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-mono">
+          Application tracker
+        </p>
+        <div className="border border-foreground/5 bg-background/50 backdrop-blur-xs rounded-xl overflow-hidden shadow-xs">
+          <div className="px-4 py-2.5 border-b border-foreground/5">
+            <p className="text-xs font-semibold text-foreground">Active applications</p>
+          </div>
+          {APPLICATIONS.map(({ company, role, status, color }) => (
+            <div key={company} className="flex items-center justify-between px-4 py-2.5 border-b border-foreground/5 last:border-0">
+              <div>
+                <p className="text-xs font-semibold text-foreground leading-none mb-0.5">{company}</p>
+                <p className="text-[11px] text-muted-foreground">{role}</p>
+              </div>
+              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${color}`}>
+                {status}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }

@@ -115,9 +115,9 @@ const AuthSignup = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col lg:flex-row">
+    <div className="flex min-h-screen w-full flex-col lg:flex-row bg-background transition-colors duration-300">
       {/* Left Side - Signup Form */}
-      <div className="flex w-full items-center justify-center p-6 sm:p-8 lg:w-1/2 lg:p-16">
+      <div className="flex w-full min-h-screen items-center justify-center p-6 sm:p-8 lg:w-1/2 lg:p-16">
         <div className="w-full max-w-sm space-y-6 md:space-y-8">
           <div className="space-y-2">
             <Link href="/" className="group mb-6 md:mb-8 flex items-center gap-2">
@@ -268,42 +268,37 @@ const AuthSignup = () => {
         </div>
       </div>
 
-      <div className="relative hidden w-1/2 overflow-hidden border-l bg-muted/20 lg:flex">
-        <div className="relative z-10 flex w-full flex-col justify-center p-16">
-          <div className="max-w-md space-y-6">
-            <div className="inline-flex items-center gap-2 border bg-background px-4 py-2 text-sm font-medium rounded-full">
-              <CheckCircle2 className="h-4 w-4 text-primary" />
-              Trusted by developers worldwide
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
-              The best investment I made for my career this year.
+      <div className="relative hidden w-1/2 overflow-hidden bg-background lg:flex">
+        {/* ── Horizon Gradient Backdrop (mirrored) ── */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 blur-sm"
+          style={{
+            backgroundImage: `radial-gradient(
+              circle at 0% 50%,
+              var(--radial-center) 0%,
+              var(--radial-stop1) 18%,
+              var(--radial-stop2) 35%,
+              var(--radial-stop3) 25%,
+              var(--radial-stop4) 60%,
+              var(--radial-stop5) 100%
+            )`
+          }}
+        >
+          {/* Semicircle Overlay */}
+          <div
+            className="absolute top-1/2 -translate-y-1/2 bg-background transition-colors duration-300 animate-fade-in z-50 w-[150vh] aspect-square rounded-[50%] left-[-75vh]"
+          />
+        </div>
+
+        <div className="relative z-10 flex w-full flex-col justify-center items-start py-16">
+          <div className="max-w-md space-y-3">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+              Accelerate your job search.
             </h2>
-            <div className="space-y-6 pt-8">
-              {[
-                {
-                  title: "ATS Optimized",
-                  desc: "Pass through filters effortlessly",
-                },
-                {
-                  title: "AI Generation",
-                  desc: "Personalized content that sticks",
-                },
-                {
-                  title: "Time Saver",
-                  desc: "Apply to 10x more roles daily",
-                },
-              ].map((item) => (
-                <div key={item.title} className="flex gap-4 [&_div]:rounded-full">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center border border-primary">
-                    <div className="h-2 w-2 bg-primary" />
-                  </div>
-                  <div>
-                    <p className="font-bold">{item.title}</p>
-                    <p className="text-muted-foreground">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Optimize your resume for ATS, generate personalized outreach emails, and track your applications in one simple place.
+            </p>
           </div>
         </div>
       </div>

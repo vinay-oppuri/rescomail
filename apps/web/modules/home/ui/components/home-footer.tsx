@@ -6,7 +6,7 @@ const HomeFooter = () => {
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6 lg:px-8 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-xs">
           <div className="flex items-center gap-2 mb-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-lg shadow-lg">
+            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary text-primary-foreground font-bold text-lg shadow-lg">
               R
             </div>
             <div>
