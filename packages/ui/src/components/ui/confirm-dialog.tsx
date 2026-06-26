@@ -3,14 +3,12 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "./button";
+import { ResponsiveDialog } from "./responsive-dialog";
 import {
-  Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "./dialog";
 
 interface ConfirmDialogProps {
@@ -54,14 +52,20 @@ export function ConfirmDialog({
   };
 
   return (
-    <Dialog
+    <ResponsiveDialog
       open={open}
       onOpenChange={(next) => {
         if (!isPending) setOpen(next);
       }}
+      title={title}
+      description={description}
+      trigger={trigger}
+      hideHeader
+      showCloseButton={!isPending}
+      className="rounded-sm"
+      bodyClassName="grid gap-4"
+      drawerBodyClassName="p-4"
     >
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent showCloseButton={!isPending}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
@@ -100,7 +104,6 @@ export function ConfirmDialog({
             )}
           </Button>
         </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    </ResponsiveDialog>
   );
 }

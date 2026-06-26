@@ -3,8 +3,6 @@
 import React, { useState } from "react";
 import {
   Button,
-  Dialog,
-  DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -18,6 +16,7 @@ import {
   SelectValue,
   Textarea,
 } from "@repo/ui";
+import { ResponsiveDialog } from "@repo/ui/components/responsive-dialog";
 import { Loader2, Trash2 } from "lucide-react";
 import {
   createApplicationAction,
@@ -121,8 +120,16 @@ export const ApplicationDialog = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md max-w-lg overflow-y-auto max-h-[90vh] p-6 text-sm">
+    <ResponsiveDialog
+      open={isOpen}
+      onOpenChange={(open) => !open && onClose()}
+      title={application ? "Edit Application" : "Track New Role"}
+      description={application ? "Update details or status of your job application." : "Track a new job opportunity in your dashboard."}
+      hideHeader
+      className="sm:max-w-md max-w-lg overflow-y-auto max-h-[90vh] p-6 text-sm"
+      bodyClassName="grid gap-4"
+      drawerBodyClassName="p-6"
+    >
         <DialogHeader className="mb-4">
           <DialogTitle className="text-lg font-bold">
             {application ? "Edit Application" : "Track New Role"}
@@ -270,7 +277,6 @@ export const ApplicationDialog = ({
             </div>
           </DialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+    </ResponsiveDialog>
   );
 };

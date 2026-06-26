@@ -3,12 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@repo/ui/components/dialog";
+import { ResponsiveDialog } from "@repo/ui/components/responsive-dialog";
 import { Button } from "@repo/ui/components/button";
 import { Loader2, ArrowRight, ArrowLeft, X } from "lucide-react";
 
@@ -150,26 +145,21 @@ export default function UserProfileDialog({
   };
 
   return (
-    <Dialog
+    <ResponsiveDialog
       open={open}
       onOpenChange={(val) => {
         if (!val && isAutomaticPrompt) return;
         onOpenChange(val);
       }}
+      title="Profile Setup"
+      description="Complete your profile setup to personalize your experience."
+      hideHeader
+      showCloseButton={false}
+      className="rounded-sm sm:max-w-xl w-full p-0 overflow-hidden border-foreground/5 bg-background/95 backdrop-blur-2xl shadow-2xl h-145 sm:h-165 flex flex-col"
+      drawerContentClassName="h-dvh max-h-none! rounded-none"
+      bodyClassName="flex min-h-0 flex-1 flex-col"
+      drawerBodyClassName="max-h-none!"
     >
-      <DialogContent
-        showCloseButton={false}
-        className="rounded-sm sm:max-w-xl w-full p-0 overflow-hidden border-foreground/5 bg-background/95 backdrop-blur-2xl shadow-2xl h-145 sm:h-165 flex flex-col"
-        onPointerDownOutside={(e) => {
-          if (isAutomaticPrompt) e.preventDefault();
-        }}
-        onEscapeKeyDown={(e) => {
-          if (isAutomaticPrompt) e.preventDefault();
-        }}
-      >
-        <DialogTitle className="sr-only">Profile Setup</DialogTitle>
-        <DialogDescription className="sr-only">Complete your profile setup to personalize your experience.</DialogDescription>
-
         {/* ── Top bar: progress pills + close ── */}
         <div className="flex items-center justify-between px-6 py-4 shrink-0 border-b border-border/10">
           <div className="flex gap-1.5">
@@ -197,7 +187,7 @@ export default function UserProfileDialog({
         </div>
 
         {/* ── Scrollable step content ── */}
-        <div className="flex flex-col flex-1 overflow-y-auto px-3 md:px-6 py-3 md:py-5 min-h-0">
+        <div className="flex flex-col flex-1 overflow-y-auto px-6 py-5 min-h-0">
           {step === 1 && (
             <UserDialogS1 register={register} errors={errors} />
           )}
@@ -311,7 +301,6 @@ export default function UserProfileDialog({
             </>
           )}
         </div>
-      </DialogContent>
-    </Dialog>
+    </ResponsiveDialog>
   );
 }

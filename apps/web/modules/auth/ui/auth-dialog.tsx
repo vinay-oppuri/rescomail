@@ -1,11 +1,13 @@
 import { LogIn } from "lucide-react";
 import { Button } from "@repo/ui/components/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@repo/ui";
+import { DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@repo/ui";
+import { ResponsiveDialog } from "@repo/ui/components/responsive-dialog";
 import { SiGoogle } from "react-icons/si";
 import { SiGithub } from "react-icons/si";
 import Link from "next/link";
 import { signIn, useSession } from "@repo/auth/client";
 import { cn } from "@repo/ui/lib/utils";
+import { useState } from "react";
 
 interface AuthProps {
     className?: string
@@ -15,6 +17,7 @@ const AuthDialog = ({
     className
 }: AuthProps) => {
     const { data: session } = useSession();
+    const [open, setOpen] = useState(false);
 
     const onGoogle = async () => {
         await signIn.social({
@@ -35,14 +38,21 @@ const AuthDialog = ({
     }
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
+        <ResponsiveDialog
+            open={open}
+            onOpenChange={setOpen}
+            title="Welcome back"
+            description="Sign in to your Rescomail account to access your AI copilot and track your applications."
+            hideHeader
+            className="rounded-sm sm:max-w-100 p-0 overflow-hidden bg-background/95 backdrop-blur-2xl shadow-2xl"
+            drawerBodyClassName="p-0"
+            trigger={
                 <Button className={cn("-mr-1 font-semibold gap-2 px-4 h-8 bg-foreground! text-background! transition-all duration-300 ease-out hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5", className)}>
                     <LogIn className="h-4 w-4" />
                     <span>Login</span>
                 </Button>
-            </DialogTrigger>
-            <DialogContent className="rounded-sm sm:max-w-100 p-0 overflow-hidden bg-background/95 backdrop-blur-2xl shadow-2xl">
+            }
+        >
                 <div className="p-8">
                     <DialogHeader className="mb-8">
                         <DialogTitle className="text-2xl font-extrabold tracking-tight">
@@ -92,8 +102,7 @@ const AuthDialog = ({
                         </DialogFooter>
                     </div>
                 </div>
-            </DialogContent>
-        </Dialog>
+        </ResponsiveDialog>
     )
 }
 

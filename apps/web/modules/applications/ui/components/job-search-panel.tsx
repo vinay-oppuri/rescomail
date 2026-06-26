@@ -6,14 +6,13 @@ import {
   Input,
   Card,
   Badge,
-  Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   Skeleton,
 } from "@repo/ui";
+import { ResponsiveDialog } from "@repo/ui/components/responsive-dialog";
 import { Search, MapPin, Briefcase, ExternalLink, Plus, Check, Loader2 } from "lucide-react";
 import { searchJobsAction, createApplicationAction } from "../../server/actions";
 
@@ -69,8 +68,17 @@ const JobDetailsDialog = ({ isOpen, onClose, job, isTracked, onTrack }: JobDetai
   if (!job) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-5xl max-w-none w-[90vw] h-[85vh] max-h-[85vh] overflow-hidden flex flex-col p-6 text-sm">
+    <ResponsiveDialog
+      open={isOpen}
+      onOpenChange={(open) => !open && onClose()}
+      title={job.title}
+      description={`${job.company}${job.location ? ` · ${job.location}` : ""}`}
+      hideHeader
+      className="sm:max-w-5xl max-w-none w-[90vw] h-[85vh] max-h-[85vh] overflow-hidden flex flex-col p-6 text-sm"
+      bodyClassName="flex min-h-0 flex-1 flex-col"
+      drawerContentClassName="max-h-none! h-[85vh]"
+      drawerBodyClassName="max-h-none! p-6"
+    >
         <DialogHeader className="mb-4 border-b border-border/50 pb-4">
           <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <DialogTitle className="text-base font-bold text-foreground">
@@ -140,8 +148,7 @@ const JobDetailsDialog = ({ isOpen, onClose, job, isTracked, onTrack }: JobDetai
             </Button>
           </div>
         </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    </ResponsiveDialog>
   );
 };
 

@@ -100,14 +100,14 @@ const HomeNavbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-21 left-4 right-4 z-40 p-4 rounded-3xl bg-background/80 backdrop-blur-2xl border border-black/8 dark:border-white/10 shadow-2xl flex flex-col gap-4 sm:hidden"
+            className="fixed top-21 left-4 right-4 z-40 p-4 rounded-2xl bg-background/80 backdrop-blur-md border border-foreground/5 shadow-2xl flex flex-col gap-4 sm:hidden"
           >
             <ul className="flex flex-col gap-2">
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.path}
-                    className="block px-4 py-3 rounded-2xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    className="block px-4 py-3 rounded-2xl text-sm font-medium text-muted-foreground"
                     onClick={() => setMobileOpen(false)}
                   >
                     {link.name}
@@ -116,7 +116,7 @@ const HomeNavbar = () => {
               ))}
             </ul>
             <div className="w-full flex flex-col">
-              <AuthDialog className="w-full rounded-2xl h-11 text-sm font-medium justify-center" />
+              <AuthDialog className="w-full rounded-lg h-10 text-sm font-medium justify-center" />
             </div>
           </motion.div>
         )}

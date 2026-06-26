@@ -6,10 +6,10 @@ import Link from "next/link";
 import { motion } from "motion/react";
 
 import { BentoFeatures } from "../components/bento-features";
-import { HeroScrollDashboard } from "../components/scroll-dashboard";
 import { HomeFaq } from "../components/home-faq";
 import { HomeCta } from "../components/home-cta";
 import CharAnimation from "@repo/ui/components/char-animation";
+import { HeroDashboard } from "../components/hero-dashboard";
 
 const HomeView = () => {
   return (
@@ -50,7 +50,7 @@ const HomeView = () => {
           <span className="flex h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
           <span className="text-foreground font-semibold">Rescomail v1.0</span>
           <span className="hidden md:block text-muted-foreground">·</span>
-          <span className="hidden md:block text-muted-foreground">Your AI Job Agent</span>
+          <span className="hidden md:block text-muted-foreground">Your AI Enhancer</span>
         </motion.div>
 
         {/* Main Content */}
@@ -98,7 +98,7 @@ const HomeView = () => {
         </div>
       </section>
 
-      <HeroScrollDashboard />
+      <HeroDashboard />
       <BentoFeatures />
       <HomeCta />
       <HomeFaq />
