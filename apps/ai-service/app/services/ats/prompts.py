@@ -1,3 +1,5 @@
+from app.schemas.resume import StructuredResume
+
 GEMINI_ATS_SCHEMA = {
     "type": "OBJECT",
     "properties": {
@@ -72,10 +74,10 @@ GEMINI_ATS_SCHEMA = {
             "items": {
                 "type": "OBJECT",
                 "properties": {
-                    "target": {"type": "STRING", "description": "The section or aspect of the resume to replace (e.g., 'Summary', 'Project Details', 'Work Experience bullet point')"},
-                    "reason": {"type": "STRING", "description": "Why this replacement is suggested and how it enhances the ATS score"},
-                    "before": {"type": "STRING", "description": "The exact original text from the candidate's resume that should be replaced"},
-                    "after": {"type": "STRING", "description": "The complete, optimized new text to insert instead"},
+                    "target": {"type": "STRING", "description": "The category of the rewrite. Must be one of: 'Summary', 'Work Experience', or 'Projects'"},
+                    "reason": {"type": "STRING", "description": "Why this specific bullet point replacement is suggested and how it enhances the ATS score"},
+                    "before": {"type": "STRING", "description": "The exact original bullet point or sentence from the candidate's resume that should be replaced. Must match the original text verbatim."},
+                    "after": {"type": "STRING", "description": "The complete, optimized new bullet point or sentence to insert instead, incorporating missing keywords and action verbs. Must be a single bullet point/sentence, not a merged paragraph."},
                 },
                 "required": ["target", "reason", "before", "after"],
             },
@@ -203,10 +205,19 @@ def build_ats_prompt(
     job_description: str,
     company_name: str,
     target_keywords: list[str],
+    structured_resume: StructuredResume | None = None,
 ) -> str:
-    return f"""## Candidate Resume:
-{resume_text[:12000]}
+    structured_text = ""
+    if structured_resume:
+        import json
+        try:
+            structured_text = f"\n## Structured Candidate Resume JSON:\n{json.dumps(structured_resume.model_dump(), indent=2)}\n"
+        except Exception:
+            pass
 
+    return f"""## Candidate Resume Text:
+{resume_text[:12000]}
+{structured_text}
 ## Target Job Description:
 {job_description[:12000]}
 
@@ -233,7 +244,18 @@ Analyze how well this resume matches the job description.
 
 6. **Suggestions**: 2-5 actionable items with priority levels.
 
-7. **Rewrite Suggestions**: Provide 2-5 specific text replacements where a weak line, summary, or project description in the resume can be replaced by a stronger, more ATS-friendly line. For each item, you MUST include the target section, the reason for the change, the exact 'before' text from the resume, and the optimized 'after' text.
+7. **Rewrite Suggestions**: You MUST analyze the candidate's resume pointwise: check the professional summary, each individual bullet point under every work experience entry, and each individual bullet point under every project entry.
+   - For each individual sentence or bullet point that needs improvement (e.g. lacks metrics, lacks action verbs, or misses relevant keywords), generate a separate pointwise rewrite suggestion in the `rewriteSuggestions` list.
+   - If a bullet point or sentence is already strong and needs no improvement, do NOT suggest a rewrite for it (skip it).
+   - Do NOT merge multiple bullet points or sentences together into a single rewrite suggestion. Each suggestion MUST correspond to exactly one original bullet point or sentence.
+   - You should generate suggestions for all projects and all experience entries that contain weak bullet points.
+   - CRITICAL: Do NOT restrict yourself to exactly 3 suggestions. You MUST review and generate suggestions for EVERY single bullet point or sentence in the resume that can be optimized. Strive to generate between 5 to 12 detailed, pointwise suggestions if the resume is not fully optimized.
+   - For each suggestion, you MUST include:
+     - `target`: The section/category, must be exactly 'Summary', 'Work Experience', or 'Projects'.
+     - `reason`: A brief explanation of how this specific change boosts ATS compatibility (e.g. "Injects missing keyword 'Express' and quantifies impact").
+     - `before`: The exact original bullet point or sentence from the candidate's resume, copied verbatim.
+     - `after`: An optimized, impact-driven single bullet point or sentence that integrates missing keywords or action verbs.
+
 8. **Summary**: A 2-3 sentence professional evaluation summarizing the overall fit of the candidate's profile for the target job description (e.g. highlighting key strengths and major gaps). Do NOT output raw contact details, emails, names, or phone headers here.
 
 IMPORTANT: The company name "{company_name}" must NOT be treated as a keyword match.

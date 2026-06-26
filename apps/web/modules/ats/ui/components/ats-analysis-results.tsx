@@ -1,4 +1,5 @@
 import { useAtsStore } from "../../store/ats-store";
+
 import AtsKeywordPanel from "./results/ats-keyword-panel";
 import AtsRewritePlan from "./results/ats-rewrite-plan";
 import AtsScoreOverview from "./results/ats-score-overview";
@@ -15,12 +16,11 @@ const AtsAnalysisResults = () => {
       {/* 1. Score percentages and summary overview */}
       <AtsScoreOverview analysis={analysis} />
 
-      {/* 2. Missing keywords section */}
+      {/* 2. Missing keywords section (Moved to top of details for prominent display) */}
       <div className="border-t">
         <AtsKeywordPanel
-          title="Keyword improvements (Missing keywords)"
+          title="Missing Keywords (Highly critical for ATS parsing)"
           keywords={analysis.missingKeywords}
-          muted
         />
       </div>
 

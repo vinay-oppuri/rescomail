@@ -22,6 +22,7 @@ def analyze_resume_fit(
         job_description=request.jobDescription,
         company_name=request.companyName or "",
         target_keywords=request.targetKeywords or [],
+        structured_resume=structured_resume,
     )
 
     result = None

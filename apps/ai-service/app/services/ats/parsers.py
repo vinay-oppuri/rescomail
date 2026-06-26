@@ -46,7 +46,7 @@ def _build_response(result: dict, request: AtsAnalyzeRequest) -> AtsAnalysisResp
         strengths=result.get("strengths", ["Begin ATS comparison with this baseline."]),
         risks=result.get("risks", []),
         suggestions=[_parse_suggestion(s) for s in result.get("suggestions", [])[:7]],
-        rewriteSuggestions=[_parse_rewrite(r) for r in result.get("rewriteSuggestions", [])[:4]],
+        rewriteSuggestions=[_parse_rewrite(r) for r in result.get("rewriteSuggestions", [])[:15]],
         intelligence=AtsIntelligence(
             semanticMatch=AtsSemanticMatch(
                 resumeToJob=_clamp(sm.get("resumeToJob", 50)),
