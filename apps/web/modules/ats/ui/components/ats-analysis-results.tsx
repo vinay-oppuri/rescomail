@@ -12,12 +12,12 @@ const AtsAnalysisResults = () => {
   }
 
   return (
-    <div className="flex flex-col bg-background border rounded-sm overflow-hidden">
+    <div className="flex flex-col bg-background rounded-b-sm overflow-hidden border border-foreground/5">
       {/* 1. Score percentages and summary overview */}
       <AtsScoreOverview analysis={analysis} />
 
       {/* 2. Missing keywords section (Moved to top of details for prominent display) */}
-      <div className="border-t">
+      <div>
         <AtsKeywordPanel
           title="Missing Keywords (Highly critical for ATS parsing)"
           keywords={analysis.missingKeywords}

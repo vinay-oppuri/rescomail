@@ -46,13 +46,6 @@ const AtsAnalysisView = ({ analyses, resumes, initialResumeId }: AtsAnalysisView
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">
       <div className="flex flex-col gap-4 border-b border-border/50 pb-6 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
         <div className="max-w-3xl space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline" className="gap-1">
-              <BrainCircuit className="h-3 w-3" />
-              LLM + Semantic Match
-            </Badge>
-            <Badge variant="outline">{parsedResumes} parsed resumes</Badge>
-          </div>
           <h1 className="text-xl font-bold tracking-tight md:text-2xl">
             Resume intelligence
           </h1>
@@ -116,29 +109,23 @@ const AtsAnalysisView = ({ analyses, resumes, initialResumeId }: AtsAnalysisView
         {showForm ? (
           <AtsAnalysisForm />
         ) : (
-          <section className="min-h-175 overflow-hidden border bg-card rounded-sm">
-            <div className="flex items-center justify-between gap-3 border-b px-5 py-3">
+          <section className="min-h-175 overflow-hidden rounded-sm">
+            <div className="bg-card flex items-center justify-between gap-3 border border-foreground/5 px-5 py-3">
               <div>
                 <h2 className="text-sm font-semibold">Match report</h2>
-                <p className="text-xs text-muted-foreground">
+                <p className="hidden md:block text-xs text-muted-foreground">
                   Evidence, model confidence, and rewrite priorities
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                {analysis ? (
-                  <Badge variant="outline">
-                    {analysis.overallScore}/100
-                  </Badge>
-                ) : null}
-
                 {/* Plus button to hide report and go back to form */}
                 <Button
                   type="button"
-                  size="icon"
                   onClick={() => setShowForm(true)}
                   title="New Analysis"
                 >
                   <Plus className="h-4 w-4" />
+                  New Analysis
                 </Button>
 
                 {analysis?.analysisId && (

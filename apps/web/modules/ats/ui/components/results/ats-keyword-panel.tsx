@@ -21,7 +21,7 @@ const AtsKeywordPanel = ({
       )}>
         <AlertCircle className="h-4 w-4" />
       </div>
-      <h3 className="text-sm font-semibold tracking-tight text-foreground">{title}</h3>
+      <h3 className="text-xs md:text-sm font-semibold tracking-tight text-foreground truncate">{title}</h3>
     </div>
     <div className="flex flex-wrap gap-2">
       {keywords.length === 0 ? (
@@ -32,7 +32,7 @@ const AtsKeywordPanel = ({
             key={keyword}
             variant="outline"
             className={cn(
-              "px-2.5 py-0.5 text-xs font-medium rounded-sm border shadow-xs transition-all hover:scale-105",
+              "px-2.5 py-0.5 text-xs font-medium rounded-none border shadow-xs transition-all hover:scale-105",
               muted
                 ? "text-muted-foreground border-muted-foreground/15 bg-muted/20"
                 : "text-rose-600 dark:text-rose-400 border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10"

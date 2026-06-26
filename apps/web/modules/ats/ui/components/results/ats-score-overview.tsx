@@ -21,14 +21,10 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
       : "from-rose-400 to-red-500";
 
   return (
-    <div className="relative grid gap-4 border-b p-4 md:grid-cols-[180px_1fr] overflow-hidden bg-linear-to-br from-background to-muted/30">
-      
-      {/* Decorative Background Glow */}
-      <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 bg-primary/5 blur-3xl" />
-
+    <div className="relative grid gap-4 border-b border-foreground/5 p-4 md:grid-cols-[180px_1fr] overflow-hidden bg-card/30">
       {/* Score Ring */}
-      <div className="relative flex aspect-square w-full max-w-[160px] flex-col items-center justify-center self-center border bg-card/50 p-4 shadow-sm backdrop-blur-xl transition-all duration-500 hover:shadow-md hover:border-primary/20 rounded-sm">
-        <div className="relative flex h-24 w-24 items-center justify-center">
+      <div className="relative flex flex-row md:flex-col items-center justify-start md:justify-center self-center gap-4 md:gap-3 w-full md:w-auto">
+        <div className="relative flex h-16 md:h-24 w-16 md:w-24 shrink-0 items-center justify-center">
           <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
             <circle
               className="stroke-muted/30"
@@ -53,36 +49,32 @@ const AtsScoreOverview = ({ analysis }: AtsScoreOverviewProps) => {
           </svg>
           <div className="absolute flex flex-col items-center justify-center">
             <span className={cn(
-              "text-3xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-linear-to-br",
+              "text-xl md:text-3xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-linear-to-br",
               gradientClass
             )}>
               {score}
             </span>
           </div>
         </div>
-        <div className="mt-4 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          <Sparkles className="h-3.5 w-3.5" />
-          Match Score
-        </div>
-      </div>
 
-      <div className="z-10 flex min-w-0 flex-col justify-center gap-5">
         <div className="flex items-start justify-between">
           <Badge
             variant="outline"
-            className={cn("h-7 px-3 text-xs shadow-sm transition-all hover:scale-105", verdictTone[analysis.verdict])}
+            className={cn("h-7 px-3 text-xs rounded-none", verdictTone[analysis.verdict])}
           >
             {verdictLabel[analysis.verdict]}
           </Badge>
         </div>
-        
-        <p className="text-sm font-medium leading-relaxed text-foreground/90">
+      </div>
+
+      <div className="z-10 flex min-w-0 flex-col justify-center gap-5">    
+        <p className="text-xs md:text-sm font-medium leading-relaxed text-foreground/90">
           {analysis.summary}
         </p>
 
-        <div className="grid gap-3 sm:grid-cols-2 mt-2">
+        <div className="grid gap-3 grid-cols-2 md:grid-cols-3 mt-2">
           {Object.entries(analysis.categoryScores).map(([key, catScore]) => (
-            <div key={key} className="group relative overflow-hidden border bg-card/50 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-muted/30 hover:shadow-sm rounded-sm">
+            <div key={key} className="group relative overflow-hidden border border-foreground/5 bg-card/50 p-4 rounded-sm hover:bg-card/70">
               <div className="flex items-center justify-between text-xs font-semibold">
                 <span className="text-foreground/80 group-hover:text-foreground transition-colors">
                   {categoryLabels[key as keyof AtsAnalysisResponse["categoryScores"]]}

@@ -119,10 +119,10 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
 
       <SidebarFooter className="p-4 gap-4">
         <div>{creditsSlot}</div>
-        <div className="rounded-sm border border-border/50 bg-muted/30 p-2 shadow-sm transition-colors hover:bg-muted/50">
+        <div className="rounded-xl border border-border/50 bg-muted/30 p-2 shadow-sm transition-colors hover:bg-muted/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-background/40 shadow-sm border border-border/50">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-background/40 shadow-sm border border-border/50">
                 <Settings className="h-4 w-4 text-foreground" />
               </div>
               <div className="flex flex-col">

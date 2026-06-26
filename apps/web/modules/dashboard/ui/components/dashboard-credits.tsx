@@ -42,7 +42,7 @@ const DashboardCredits = async ({ userId }: Props) => {
     : Math.min(coldEmailUsed, emailLimit);
 
   return (
-    <div className="relative mb-4 overflow-hidden rounded-sm border border-primary/10 bg-primary/5 p-4">
+    <div className="relative overflow-hidden rounded-xl border border-foreground/5 bg-primary/5 p-4">
       <div className="absolute top-0 right-0 p-2 opacity-5">
         <Sparkles className="h-10 w-10 text-primary" />
       </div>
