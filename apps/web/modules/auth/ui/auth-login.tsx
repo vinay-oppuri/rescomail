@@ -34,6 +34,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 
 const AuthLogin = () => {
   const [authError, setAuthError] = useState<string | null>(null);
+  const [authSuccess, setAuthSuccess] = useState(false);
   const [socialLoading, setSocialLoading] = useState(false);
 
   const router = useRouter();
@@ -60,10 +61,11 @@ const AuthLogin = () => {
     },
   });
 
-  const isPending = form.formState.isSubmitting || socialLoading;
+  const isPending = form.formState.isSubmitting || socialLoading || authSuccess;
 
   const onSubmit = async (values: LoginFormValues) => {
     setAuthError(null);
+    setAuthSuccess(false);
 
     try {
       const response = await signIn.email({
@@ -81,6 +83,8 @@ const AuthLogin = () => {
       }
 
       form.reset();
+      setAuthSuccess(true);
+      await new Promise((resolve) => setTimeout(resolve, 700));
       router.push("/dashboard");
       router.refresh();
     } catch (error) {
@@ -114,7 +118,7 @@ const AuthLogin = () => {
   return (
     <div className="flex min-h-screen w-full flex-col lg:flex-row bg-background transition-colors duration-300">
       {/* Left Side - Login Form */}
-      <div className="flex w-full min-h-screen items-center justify-center p-6 sm:p-8 lg:w-1/2 lg:p-16">
+      <div className="flex w-full items-center justify-center p-6 sm:p-8 lg:w-1/2 lg:p-16">
         <div className="w-full max-w-sm space-y-6 md:space-y-8">
           <div className="space-y-2">
             <Link href="/" className="group mb-6 md:mb-8 flex items-center gap-2">
@@ -185,12 +189,20 @@ const AuthLogin = () => {
               />
               <Button
                 type="submit"
-                className="h-10 w-full text-sm md:text-base"
+                className={
+                  authSuccess
+                    ? "h-10 w-full bg-emerald-500 text-sm text-white hover:bg-emerald-500 md:text-base"
+                    : "h-10 w-full text-sm md:text-base"
+                }
                 size="lg"
                 disabled={isPending}
               >
-                {form.formState.isSubmitting ? "Signing in" : "Sign In"}
-                <ArrowRight className="ml-2 h-4 w-4" />
+                {authSuccess ? "Login successful" : form.formState.isSubmitting ? "Signing in" : "Sign In"}
+                {authSuccess ? (
+                  <CheckCircle2 className="ml-2 h-4 w-4" />
+                ) : (
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                )}
               </Button>
             </form>
           </Form>

@@ -42,6 +42,7 @@ const ResumeActionsRow = ({
           variant="outline"
           size="sm"
           asChild
+          className="border-foreground/5!"
         >
           <a href={`/dashboard/ats?resumeId=${resumeId}`}>
             <Sparkles className="h-3.5 w-3.5" />
@@ -53,6 +54,7 @@ const ResumeActionsRow = ({
           variant="outline"
           size="sm"
           disabled
+          className="border-foreground/5!"
         >
           <Sparkles className="h-3.5 w-3.5" />
           Analyse

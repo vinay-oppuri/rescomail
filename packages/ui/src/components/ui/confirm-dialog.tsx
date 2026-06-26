@@ -79,6 +79,7 @@ export function ConfirmDialog({
             size="sm"
             onClick={() => setOpen(false)}
             disabled={isPending}
+            className="border-foreground/5!"
           >
             {cancelText}
           </Button>
@@ -87,6 +88,7 @@ export function ConfirmDialog({
             size="sm"
             onClick={handleConfirm}
             disabled={isPending}
+            className="border-foreground/5!"
           >
             {isPending ? (
               <>

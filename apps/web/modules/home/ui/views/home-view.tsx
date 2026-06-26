@@ -9,6 +9,7 @@ import { BentoFeatures } from "../components/bento-features";
 import { HeroScrollDashboard } from "../components/scroll-dashboard";
 import { HomeFaq } from "../components/home-faq";
 import { HomeCta } from "../components/home-cta";
+import CharAnimation from "@repo/ui/components/char-animation";
 
 const HomeView = () => {
   return (
@@ -48,8 +49,8 @@ const HomeView = () => {
         >
           <span className="flex h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
           <span className="text-foreground font-semibold">Rescomail v1.0</span>
-          <span className="text-muted-foreground">·</span>
-          <span className="text-muted-foreground">Your AI Job Agent</span>
+          <span className="hidden md:block text-muted-foreground">·</span>
+          <span className="hidden md:block text-muted-foreground">Your AI Job Agent</span>
         </motion.div>
 
         {/* Main Content */}
@@ -59,10 +60,10 @@ const HomeView = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-6 text-4xl sm:text-6xl lg:text-7xl font-medium tracking-tight text-foreground leading-[1.08] max-w-3xl"
+            className="mb-6 text-4xl sm:text-6xl font-medium tracking-tight text-foreground leading-[1.08] max-w-3xl"
           >
             An assistant for <br />
-            your <span className="font-serif italic font-light text-blue-500 dark:text-purple-500">dream</span> job
+            your <CharAnimation text="dream" className="text-4xl md:text-6xl text-blue-500! dark:text-purple-500!" /> job
           </motion.h1>
 
           <motion.p
@@ -84,7 +85,7 @@ const HomeView = () => {
             <div className="absolute -inset-x-8 -inset-y-4 bg-blue-500/20 blur-2xl rounded-full opacity-60 group-hover:opacity-85 transition-opacity duration-500 pointer-events-none" />
 
             <Button
-              className="relative h-12 px-8 text-sm font-semibold rounded-full"
+              className="relative h-9 md:h-11 px-6 md:px-8 text-xs md:text-sm font-semibold rounded-full"
               asChild
             >
               <Link href="/signup" className="flex items-center gap-1">

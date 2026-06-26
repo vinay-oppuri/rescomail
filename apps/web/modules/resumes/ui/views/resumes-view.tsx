@@ -71,7 +71,7 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">
-      <div className="flex flex-col gap-4 border-b border-border/50 pb-6 lg:flex-row lg:items-end lg:justify-between">
+      <div className="flex flex-col gap-4 pb-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2 max-w-3xl">
           <h1 className="text-xl font-bold tracking-tight md:text-2xl">AI Resumes</h1>
           <p className="text-xs leading-6 text-muted-foreground">
@@ -84,11 +84,11 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
       <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
         <ResumeUploadPanel />
 
-        <div className="min-h-80 border bg-muted/10 rounded-sm overflow-hidden">
-          <div className="bg-foreground text-background border-b px-4 py-3 flex items-center justify-between">
+        <div className="min-h-80 border bg-muted/10 rounded-sm overflow-hidden border-foreground/5">
+          <div className="bg-foreground text-background px-4 py-3 flex items-center justify-between border border-foreground">
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              <span className="text-sm font-semibold">Resume library</span>
+              <span className="text-xs md:text-sm font-semibold">Resume library</span>
             </div>
             {resumes.length > 0 && (
               <span className="text-xs">
@@ -141,7 +141,7 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" asChild>
+                    <Button variant="outline" size="sm" asChild className="border-foreground/5!">
                       <a href={`/api/resumes/${resume.id}/file`} target="_blank" rel="noreferrer">
                         Open PDF
                       </a>

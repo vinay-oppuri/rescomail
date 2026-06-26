@@ -32,7 +32,7 @@ function FaqItem({ q, a, index, isLast }: { q: string; a: string; index: number;
         aria-controls={panelId}
         className="w-full flex items-center justify-between gap-4 p-2 md:p-4 text-left select-none group/faq-btn transition-colors duration-200"
       >
-        <span className="text-xs md:text-sm font-semibold text-foreground group-hover/faq-btn:text-blue-500 transition-colors duration-200">
+        <span className="text-xs md:text-sm text-foreground group-hover/faq-btn:text-blue-500 transition-colors duration-200">
           {q}
         </span>
         <div className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-full bg-foreground/3 group-hover/faq-btn:bg-foreground/8 transition-colors duration-200 shrink-0">
@@ -65,7 +65,7 @@ export function HomeFaq() {
     <section id="faq" className="py-16 md:py-28 relative z-10">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-6 md:mb-12">
+        <div className="text-center mb-12">
           <p className="text-xs font-bold uppercase tracking-widest text-primary mb-1.5 md:mb-3">FAQ</p>
           <h2 className="text-lg md:text-3xl font-extrabold tracking-tight text-foreground mb-2 md:mb-4">
             Frequently Asked Questions

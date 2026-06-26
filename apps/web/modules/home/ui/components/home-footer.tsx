@@ -6,21 +6,21 @@ const HomeFooter = () => {
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6 lg:px-8 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-xs">
           <div className="flex items-center gap-2 mb-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary text-primary-foreground font-bold text-lg shadow-lg">
+            <div className="flex h-6 w-6 items-center justify-center rounded-sm bg-primary text-primary-foreground font-bold text-sm md:text-lg shadow-lg">
               R
             </div>
             <div>
-              <h3 className="font-bold text-lg tracking-tight">Rescomail</h3>
+              <h3 className="font-bold text-sm md:text-lg tracking-tight">Rescomail</h3>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
+          <p className="text-[10px] md:text-xs text-muted-foreground leading-relaxed">
             The AI copilot designed to help you organize your job search, optimize your resume, and land more interviews.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-12 lg:gap-20">
+        <div className="flex flex-wrap gap-10 lg:gap-20">
           <div>
-            <h4 className="font-semibold text-sm mb-4">Product</h4>
+            <h4 className="font-semibold text-xs md:text-sm mb-4">Product</h4>
             <div className="flex flex-col gap-3 text-xs text-muted-foreground">
               <Link href="/#features" className="hover:text-primary transition-colors">Features</Link>
               <Link href="/#pricing" className="hover:text-primary transition-colors">Pricing</Link>
@@ -28,7 +28,7 @@ const HomeFooter = () => {
             </div>
           </div>
           <div>
-            <h4 className="font-semibold text-sm mb-4">Legal</h4>
+            <h4 className="font-semibold text-xs md:text-sm mb-4">Legal</h4>
             <div className="flex flex-col gap-3 text-xs text-muted-foreground">
               <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>

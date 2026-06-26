@@ -11,27 +11,27 @@ export function HomeCta() {
         <div className="grid grid-cols-1 md:grid-cols-2 border border-foreground/5 dark:border-border/30 rounded-2xl overflow-hidden bg-linear-to-b from-blue-500/10 via-blue-500/5 to-transparent dark:from-blue-500/5 dark:via-blue-500/3 dark:to-blue-500/1 shadow-xl">
 
           {/* Left — copy + actions */}
-          <div className="px-8 py-12 md:px-10 md:py-14 flex flex-col justify-center">
+          <div className="px-6 py-10 md:px-10 md:py-14 flex flex-col justify-center">
             <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-primary mb-3">
               AI job search copilot
             </p>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground leading-snug mb-4">
-              Land your next <span className="font-serif italic font-light text-blue-500 dark:text-purple-400">dream job</span> faster — with AI working alongside you
+            <h2 className="text-xl md:text-3xl font-bold tracking-tight text-foreground leading-snug mb-4">
+              Land your next <span className="font-bold text-blue-500 dark:text-purple-400">dream job</span> faster — with AI working alongside you
             </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-sm">
+            <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-8 max-w-sm">
               Rescomail scans your resume against the job, tracks every application, and drafts cold emails that actually get replies.
             </p>
             <div className="flex flex-col gap-3">
-              <Button size="lg" className="h-11 text-sm font-semibold rounded-full bg-blue-600 hover:bg-blue-500! dark:bg-blue-500/20 dark:hover:bg-blue-500/25! text-white transition-all duration-200" asChild>
+              <Button size="lg" className="h-9 md:h-11 text-xs md:text-sm font-semibold rounded-full bg-blue-600 hover:bg-blue-500! dark:bg-blue-500/20 dark:hover:bg-blue-500/25! text-white transition-all duration-200" asChild>
                 <Link href="/signup">
                   Get started free <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-11 text-sm font-semibold rounded-full border-foreground/5! hover:bg-foreground/2 transition-all duration-200" asChild>
+              <Button size="lg" variant="outline" className="h-9 md:h-11 text-xs md:text-sm font-semibold rounded-full border-foreground/5! hover:bg-foreground/2 transition-all duration-200" asChild>
                 <Link href="#features">See how it works</Link>
               </Button>
             </div>
-            <p className="mt-6 text-xs text-muted-foreground/60">
+            <p className="mt-6 text-[9px] md:text-xs text-muted-foreground/60">
               No credit card required · Free plan forever
             </p>
           </div>

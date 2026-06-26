@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, JetBrains_Mono } from "next/font/google";
+import { Source_Serif_4, Geist, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@repo/ui/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -15,6 +15,12 @@ const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
+
+const serif = Source_Serif_4({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  weight: "variable"
+})
 
 const siteUrl = (
   process.env.NEXT_PUBLIC_APP_URL || "https://rescomail.vinayweb.in"
@@ -156,6 +162,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "h-full antialiased",
+        serif.variable,
         geistSans.variable,
         jetbrainsMono.variable,
       )}

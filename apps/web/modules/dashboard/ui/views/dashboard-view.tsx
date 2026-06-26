@@ -245,38 +245,6 @@ const DashboardView = async () => {
                         </div>
                     )}
                 </div>
-
-                {/* Sidebar Tips & Recommendations (Span 2 Columns) */}
-                <div className="md:col-span-2 space-y-5">
-                    <div>
-                        <h2 className="text-lg font-bold tracking-tight text-foreground">AI Insights</h2>
-                        <p className="text-sm text-muted-foreground mt-0.5">Pro tips to beat ATS algorithms</p>
-                    </div>
-
-                    <div className="space-y-4">
-                        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 shadow-md hover:shadow-lg transition-shadow">
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-2">
-                                    <BarChart2 className="h-4 w-4" /> Core Tip #1: Match Rate
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="text-sm text-muted-foreground leading-relaxed">
-                                Aim for a Match Score of <strong className="text-foreground">75% or higher</strong> before applying. This typically covers 90% of the recruiter&apos;s baseline keyword queries.
-                            </CardContent>
-                        </Card>
-
-                        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 shadow-md hover:shadow-lg transition-shadow">
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-xs font-bold uppercase tracking-widest text-blue-500 flex items-center gap-2">
-                                    <Sparkles className="h-4 w-4" /> Core Tip #2: Action Verbs
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="text-sm text-muted-foreground leading-relaxed">
-                                Avoid passive language. Use high-impact verbs like <em className="text-foreground font-semibold not-italic">&quot;Engineered&quot;</em>, <em className="text-foreground font-semibold not-italic">&quot;Streamlined&quot;</em>, and <em className="text-foreground font-semibold not-italic">&quot;Spearheaded&quot;</em> aligned with key job requirements.
-                            </CardContent>
-                        </Card>
-                    </div>
-                </div>
             </div>
         </div>
     );

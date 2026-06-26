@@ -34,6 +34,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 
 const AuthSignup = () => {
   const [authError, setAuthError] = useState<string | null>(null);
+  const [authSuccess, setAuthSuccess] = useState(false);
   const [socialLoading, setSocialLoading] = useState(false);
 
   const router = useRouter();
@@ -62,10 +63,11 @@ const AuthSignup = () => {
     },
   });
 
-  const isPending = form.formState.isSubmitting || socialLoading;
+  const isPending = form.formState.isSubmitting || socialLoading || authSuccess;
 
   const onSubmit = async (values: SignupFormValues) => {
     setAuthError(null);
+    setAuthSuccess(false);
 
     try {
       const response = await signUp.email({
@@ -84,6 +86,8 @@ const AuthSignup = () => {
       }
 
       form.reset();
+      setAuthSuccess(true);
+      await new Promise((resolve) => setTimeout(resolve, 700));
       router.push("/dashboard");
       router.refresh();
     } catch (error) {
@@ -117,7 +121,7 @@ const AuthSignup = () => {
   return (
     <div className="flex min-h-screen w-full flex-col lg:flex-row bg-background transition-colors duration-300">
       {/* Left Side - Signup Form */}
-      <div className="flex w-full min-h-screen items-center justify-center p-6 sm:p-8 lg:w-1/2 lg:p-16">
+      <div className="flex w-full items-center justify-center p-6 sm:p-8 lg:w-1/2 lg:p-16">
         <div className="w-full max-w-sm space-y-6 md:space-y-8">
           <div className="space-y-2">
             <Link href="/" className="group mb-6 md:mb-8 flex items-center gap-2">
@@ -220,12 +224,20 @@ const AuthSignup = () => {
               />
               <Button
                 type="submit"
-                className="h-10 w-full text-sm md:text-base"
+                className={
+                  authSuccess
+                    ? "h-10 w-full bg-emerald-500 text-sm text-white hover:bg-emerald-500 md:text-base"
+                    : "h-10 w-full text-sm md:text-base"
+                }
                 size="lg"
                 disabled={isPending}
               >
-                {form.formState.isSubmitting ? "Creating account" : "Sign Up"}
-                <ArrowRight className="ml-2 h-4 w-4" />
+                {authSuccess ? "Sign up successful" : form.formState.isSubmitting ? "Creating account" : "Sign Up"}
+                {authSuccess ? (
+                  <CheckCircle2 className="ml-2 h-4 w-4" />
+                ) : (
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                )}
               </Button>
             </form>
           </Form>
