@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { EditProfileActions } from "../../server/actions";
 import { Button } from "@repo/ui/components/button";
 import { Separator } from "@repo/ui/components/separator";
-import { FileText, Check, Loader2 } from "lucide-react";
+import { FileText } from "lucide-react";
 import UserProfileDialog from "@/modules/dashboard/ui/components/user-profile-dialog";
 import { AccountProfileBasic } from "./account-profile-basic";
 import { ResumeProfileSection } from "./resume-profile-section";
@@ -42,28 +41,12 @@ export function AccountDetails({
   primaryProvider,
 }: AccountDetailsProps) {
   const router = useRouter();
-  const [name, setName] = useState(user.name || "");
-  const [isSavingProfile, setIsSavingProfile] = useState(false);
-  const [profileSaved, setProfileSaved] = useState(false);
   const [resumeDialogOpen, setResumeDialogOpen] = useState(false);
   const [dialogStep, setDialogStep] = useState(1);
 
   const openDialogAtStep = (stepNumber: number) => {
     setDialogStep(stepNumber);
     setResumeDialogOpen(true);
-  };
-
-  const handleSaveProfile = async () => {
-    setIsSavingProfile(true);
-    try {
-      await EditProfileActions(name);
-      setProfileSaved(true);
-      setTimeout(() => setProfileSaved(false), 2500);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsSavingProfile(false);
-    }
   };
 
   return (
@@ -81,7 +64,7 @@ export function AccountDetails({
           size="sm"
           variant="outline"
           onClick={() => openDialogAtStep(1)}
-          className="h-8 text-xs gap-1.5 border-foreground/5! bg-background! shrink-0"
+          className="h-8 text-xs gap-1.5 border-foreground/5! bg-muted/60! shrink-0"
         >
           <FileText className="h-3.5 w-3.5" />
           Edit Resume Profile
@@ -89,7 +72,7 @@ export function AccountDetails({
       </div>
 
       <div className="flex flex-col gap-6 p-3 sm:p-6">
-        <AccountProfileBasic user={user} name={name} setName={setName} />
+        <AccountProfileBasic user={user} />
 
         <Separator className="bg-foreground/5" />
 
@@ -99,22 +82,6 @@ export function AccountDetails({
           groqApiKey={groqApiKey}
           openDialogAtStep={openDialogAtStep}
         />
-      </div>
-
-      <div className="flex items-center justify-end gap-3 border-t border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
-        <Button
-          size="sm"
-          className="h-9"
-          onClick={handleSaveProfile}
-          disabled={isSavingProfile || name === user.name}
-        >
-          {isSavingProfile ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : profileSaved ? (
-            <Check className="mr-2 h-4 w-4 text-green-400" />
-          ) : null}
-          {profileSaved ? "Saved!" : "Save Profile"}
-        </Button>
       </div>
 
       <UserProfileDialog

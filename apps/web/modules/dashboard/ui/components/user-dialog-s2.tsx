@@ -69,7 +69,7 @@ export default function UserDialogS2({ register, errors, control }: Step2Props) 
       </div>
 
       {/* Social Links */}
-      <div className="flex flex-col gap-3.5">
+      <div className="flex flex-col gap-4">
         <UrlField
           id="portfolioUrl"
           label="Portfolio / Website"
@@ -80,7 +80,7 @@ export default function UserDialogS2({ register, errors, control }: Step2Props) 
           <Input
             id="portfolioUrl"
             placeholder="https://johndoe.dev"
-            className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+            className="h-9 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs md:text-sm"
             {...register("portfolioUrl")}
           />
         </UrlField>
@@ -95,7 +95,7 @@ export default function UserDialogS2({ register, errors, control }: Step2Props) 
           <Input
             id="githubUrl"
             placeholder="https://github.com/johndoe"
-            className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+            className="h-9 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs md:text-sm"
             {...register("githubUrl")}
           />
         </UrlField>
@@ -110,7 +110,7 @@ export default function UserDialogS2({ register, errors, control }: Step2Props) 
           <Input
             id="linkedinUrl"
             placeholder="https://linkedin.com/in/johndoe"
-            className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+            className="h-9 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs md:text-sm"
             {...register("linkedinUrl")}
           />
         </UrlField>
@@ -118,12 +118,12 @@ export default function UserDialogS2({ register, errors, control }: Step2Props) 
         {/* Extra Links */}
         <div className="pt-2 border-t border-border/30 space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-medium text-foreground/60">Other links (up to 5)</span>
+            <span className="text-[10px] md:text-xs font-medium text-foreground/60">Other links (up to 5)</span>
             {fields.length < 5 && (
               <button
                 type="button"
                 onClick={() => append({ label: "", url: "" })}
-                className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1 py-1 px-2 rounded-md hover:bg-primary/5"
+                className="text-[10px] md:text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1 py-1 px-2 rounded-sm hover:bg-primary/5"
               >
                 <Plus className="h-3 w-3" /> Add link
               </button>

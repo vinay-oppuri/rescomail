@@ -6,7 +6,6 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { randomUUID } from "crypto";
 import {
-  profileNameSchema,
   settingsPreferencesSchema,
   type SettingsPreferencesInput,
 } from "@repo/validations";
@@ -58,27 +57,6 @@ const validateGroqApiKey = async (apiKey: string) => {
   } finally {
     clearTimeout(timeout);
   }
-};
-
-export const EditProfileActions = async (name: string) => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
-
-  const parsedName = profileNameSchema.safeParse(name);
-
-  if (!parsedName.success) {
-    throw new Error("Enter a valid profile name.");
-  }
-
-  await db
-    .update(user)
-    .set({ name: parsedName.data })
-    .where(eq(user.id, session.user.id));
 };
 
 export const DeleteAvatarAction = async () => {

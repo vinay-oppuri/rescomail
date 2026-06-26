@@ -67,12 +67,12 @@ const DashboardView = async () => {
                         </p>
                     </div>
                     <div className="flex flex-col md:flex-row gap-3 shrink-0">
-                        <Button asChild size="default" className="h-9 md:h-11 px-3 md:px-5 shadow-lg shadow-primary/20 hover:scale-105 transition-all text-xs md:text-sm font-medium">
+                        <Button asChild size="default" className="h-9 md:h-11 px-3 md:px-5 hover:bg-foreground! hover:-translate-y-0.5 text-xs md:text-sm font-medium">
                             <Link href="/dashboard/resumes">
                                 <Upload className="mr-2 h-4 w-4" /> Upload Resume
                             </Link>
                         </Button>
-                        <Button asChild size="default" variant="outline" className="h-9 md:h-11 px-3 md:px-5 border-border/50 hover:bg-muted transition-all text-xs md:text-sm font-medium bg-card/50 backdrop-blur-sm">
+                        <Button asChild size="default" variant="outline" className="h-9 md:h-11 px-3 md:px-5 border-foreground/5! hover:bg-background! hover:-translate-y-0.5 text-xs md:text-sm font-medium bg-card/50 backdrop-blur-sm">
                             <Link href="/dashboard/ats">
                                 <Sparkles className="mr-2 h-4 w-4 text-primary" /> Run ATS Scan
                             </Link>

@@ -159,7 +159,7 @@ export default function UserProfileDialog({
     >
       <DialogContent
         showCloseButton={false}
-        className="rounded-xl sm:max-w-xl w-full p-0 overflow-hidden border-foreground/5 bg-background/95 backdrop-blur-2xl shadow-2xl h-dvh sm:h-[650px] flex flex-col"
+        className="rounded-sm sm:max-w-xl w-full p-0 overflow-hidden border-foreground/5 bg-background/95 backdrop-blur-2xl shadow-2xl h-145 sm:h-165 flex flex-col"
         onPointerDownOutside={(e) => {
           if (isAutomaticPrompt) e.preventDefault();
         }}
@@ -197,7 +197,7 @@ export default function UserProfileDialog({
         </div>
 
         {/* ── Scrollable step content ── */}
-        <div className="flex flex-col flex-1 overflow-y-auto px-6 py-5 min-h-0">
+        <div className="flex flex-col flex-1 overflow-y-auto px-3 md:px-6 py-3 md:py-5 min-h-0">
           {step === 1 && (
             <UserDialogS1 register={register} errors={errors} />
           )}
@@ -217,14 +217,14 @@ export default function UserProfileDialog({
         </div>
 
         {/* ── Shared Footer ── */}
-        <div className="flex items-center justify-between border-t border-border/10 px-6 py-4 bg-muted/5 shrink-0">
+        <div className="flex items-center justify-between border-t border-border/10 px-3 md:px-6 py-4 bg-muted/5 shrink-0">
           {step === 1 && (
             <>
               <Button
                 type="button"
                 variant="ghost"
                 onClick={() => onOpenChange(false)}
-                className="h-9 text-xs text-muted-foreground hover:text-foreground font-semibold px-4"
+                className="h-7 md:h-9 text-xs text-muted-foreground hover:text-foreground font-semibold px-4"
               >
                 {isAutomaticPrompt ? "Remind me later" : "Cancel"}
               </Button>
@@ -232,7 +232,7 @@ export default function UserProfileDialog({
                 type="button"
                 disabled={submitting}
                 onClick={handleNext}
-                className="h-9 text-xs font-semibold px-5 gap-1.5"
+                className="h-7 md:h-9 text-xs font-semibold px-4 md:px-6 gap-1.5"
               >
                 {submitting ? (
                   <>
@@ -252,7 +252,7 @@ export default function UserProfileDialog({
                 type="button"
                 variant="ghost"
                 onClick={handleBack}
-                className="h-9 text-xs font-semibold px-4 gap-1.5"
+                className="h-7! md:h-9! text-xs font-semibold px-4 gap-1.5"
               >
                 <ArrowLeft className="h-3.5 w-3.5" /> Back
               </Button>
@@ -260,7 +260,7 @@ export default function UserProfileDialog({
                 type="button"
                 disabled={submitting}
                 onClick={handleSubmit(onFormSubmit)}
-                className="h-9 text-xs font-semibold px-6 gap-2"
+                className="h-7 md:h-9 text-xs font-semibold px-4 md:px-6 gap-2"
               >
                 {submitting ? (
                   <>
@@ -281,7 +281,7 @@ export default function UserProfileDialog({
                   type="button"
                   variant="outline"
                   onClick={() => setStep(2)}
-                  className="h-9 text-xs font-semibold px-4 gap-1.5 border-foreground/5!"
+                  className="h-7 md:h-9 text-xs font-semibold px-4 gap-1.5 border-foreground/5!"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" /> Back
                 </Button>
@@ -289,16 +289,16 @@ export default function UserProfileDialog({
                   type="button"
                   variant="ghost"
                   onClick={() => { onSaveSuccess(); onOpenChange(false); }}
-                  className="h-9 text-xs text-muted-foreground hover:text-foreground font-semibold px-4"
+                  className="h-7 md:h-9 text-xs text-muted-foreground hover:text-foreground font-semibold px-4"
                 >
-                  Skip for now
+                  Skip <span className="hidden md:block">for now</span>
                 </Button>
               </div>
               <Button
                 type="button"
                 disabled={submitting}
                 onClick={() => s3Ref.current?.save()}
-                className="h-9 text-xs font-semibold px-6 gap-2"
+                className="h-7 md:h-9 text-xs font-semibold px-4 md:px-6 gap-2"
               >
                 {submitting ? (
                   <>

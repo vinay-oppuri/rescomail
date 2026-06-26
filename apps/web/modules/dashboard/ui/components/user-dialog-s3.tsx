@@ -12,6 +12,7 @@ import {
   X,
   ShieldCheck,
   ArrowLeft,
+  Check,
 } from "lucide-react";
 import { EditPreferenceAction } from "@/modules/settings/server/actions";
 
@@ -166,9 +167,6 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
 
       {/* Key Input */}
       <div className="grid gap-1.5">
-        <Label htmlFor="s3ApiKeyInput" className="text-xs font-medium text-foreground/70 flex items-center gap-1.5">
-          <Key className="h-3.5 w-3.5 text-muted-foreground" /> API Key
-        </Label>
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Input
@@ -178,7 +176,7 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
               value={apiKeyInput}
               onChange={(e) => handleKeyChange(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAddKey(); } }}
-              className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm pr-28"
+              className="h-9 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs pr-28"
             />
             {detectedProvider && (
               <span
@@ -196,36 +194,31 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
             type="button"
             disabled={!apiKeyInput.trim() || !detectedProvider}
             onClick={handleAddKey}
-            className="h-10 px-4 text-xs font-semibold shrink-0 transition-all duration-200 hover:scale-105"
+            className="h-9 px-4 text-xs font-semibold shrink-0 transition-all duration-200 hover:scale-105"
           >
             Add
           </Button>
         </div>
         {addKeyError && <span className="text-[11px] text-destructive">{addKeyError}</span>}
-        <p className="text-[11px] text-muted-foreground leading-relaxed">
-          Gemini keys start with{" "}
-          <code className="bg-muted px-1 rounded text-[10px]">AIza</code>. Groq keys start with{" "}
-          <code className="bg-muted px-1 rounded text-[10px]">gsk_</code>.
-        </p>
       </div>
 
       {/* Active Keys */}
       {hasAnyKey && (
         <div className="grid gap-1.5">
-          <Label className="text-xs font-medium text-foreground/70 flex items-center gap-1.5">
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" /> Active Keys
+          <Label className="text-xs font-medium text-foreground flex items-center gap-1.5">
+            Active Keys
           </Label>
           <div className="flex flex-col gap-2">
             {activeGeminiKey && (
-              <div className="flex items-center gap-2.5 px-3 py-2.5 border border-blue-500/20 bg-blue-500/5 rounded-lg">
+              <div className="flex items-center gap-3 px-2 md:px-4 py-1 md:py-2 border border-blue-500/10 bg-blue-500/5 rounded-sm">
                 <Brain className="h-4 w-4 text-blue-400 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="text-xs font-semibold text-blue-400">Google Gemini</p>
                     {stagedKeys.gemini ? (
-                      <span className="text-[9px] bg-blue-500/10 text-blue-500 px-1.5 py-0.5 rounded-full border border-blue-500/20 uppercase font-bold tracking-wide">New</span>
+                      <span className="text-[9px] bg-blue-500/10 text-blue-500 px-1.5 py-0.5 rounded-none border border-blue-500/10 uppercase font-bold tracking-wide">New</span>
                     ) : (
-                      <span className="text-[9px] bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded-full border border-emerald-500/20 uppercase font-bold tracking-wide">Saved</span>
+                      <span className="text-[9px] bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded-none border border-emerald-500/10 uppercase font-bold tracking-wide">Saved</span>
                     )}
                   </div>
                   <p className="text-[10px] text-muted-foreground font-mono truncate">
@@ -235,7 +228,7 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
                 <button
                   type="button"
                   onClick={() => handleRemoveKey("gemini")}
-                  className="shrink-0 text-muted-foreground hover:text-destructive transition-colors p-1 rounded-md hover:bg-destructive/10"
+                  className="shrink-0 text-muted-foreground hover:text-destructive transition-colors p-1 rounded-sm hover:bg-destructive/10"
                   aria-label="Remove Gemini key"
                 >
                   <X className="h-3.5 w-3.5" />
@@ -243,15 +236,15 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
               </div>
             )}
             {activeGroqKey && (
-              <div className="flex items-center gap-2.5 px-3 py-2.5 border border-orange-500/20 bg-orange-500/5 rounded-lg">
+              <div className="flex items-center gap-3 px-2 md:px-4 py-1 md:py-2 border border-orange-500/10 bg-orange-500/3 rounded-sm">
                 <Zap className="h-4 w-4 text-orange-400 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="text-xs font-semibold text-orange-400">Groq (Llama)</p>
                     {stagedKeys.groq ? (
-                      <span className="text-[9px] bg-orange-500/10 text-orange-500 px-1.5 py-0.5 rounded-full border border-orange-500/20 uppercase font-bold tracking-wide">New</span>
+                      <span className="text-[9px] bg-orange-500/10 text-orange-500 px-1.5 py-0.5 rounded-none border border-orange-500/10 uppercase font-bold tracking-wide">New</span>
                     ) : (
-                      <span className="text-[9px] bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded-full border border-emerald-500/20 uppercase font-bold tracking-wide">Saved</span>
+                      <span className="text-[9px] bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded-none border border-emerald-500/10 uppercase font-bold tracking-wide">Saved</span>
                     )}
                   </div>
                   <p className="text-[10px] text-muted-foreground font-mono truncate">
@@ -274,26 +267,26 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
 
       {/* Primary Provider */}
       <div className="grid gap-1.5">
-        <Label className="text-xs font-medium text-foreground/70">Primary AI Model</Label>
+        <Label className="text-xs font-medium text-foreground">Primary AI Model</Label>
         <div className="grid grid-cols-2 gap-2.5">
           {/* Gemini card */}
           <button
             type="button"
             disabled={!activeGeminiKey}
             onClick={() => setPrimaryProvider("gemini")}
-            className={`relative flex flex-col items-start gap-2 p-3 rounded-lg border text-left transition-all duration-200 ${!activeGeminiKey
+            className={`relative flex flex-col items-start gap-2 p-3 rounded-sm border text-left transition-all duration-200 ${!activeGeminiKey
                 ? "opacity-40 cursor-not-allowed border-border/30 bg-muted/5"
                 : primaryProvider === "gemini"
-                  ? "border-emerald-500/50 bg-emerald-500/8 shadow-sm shadow-emerald-500/10"
+                  ? "border-emerald-500/20 bg-emerald-500/5 shadow-sm shadow-emerald-500/10"
                   : "border-border/40 bg-muted/10 hover:border-border/60 hover:bg-muted/20"
               }`}
           >
             {primaryProvider === "gemini" && activeGeminiKey && (
               <span className="absolute top-2.5 right-2.5 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-white shadow-sm">
-                <CheckCircle2 className="h-2.5 w-2.5" />
+                <Check className="h-2.5 w-2.5" />
               </span>
             )}
-            <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${primaryProvider === "gemini" && activeGeminiKey ? "bg-blue-500/15 text-blue-400" : "bg-muted text-muted-foreground"
+            <div className={`flex h-8 w-8 items-center justify-center rounded-sm ${primaryProvider === "gemini" && activeGeminiKey ? "bg-blue-500/15 text-blue-400" : "bg-muted text-muted-foreground"
               }`}>
               <Brain className="h-4 w-4" />
             </div>
@@ -308,19 +301,19 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
             type="button"
             disabled={!activeGroqKey}
             onClick={() => setPrimaryProvider("groq")}
-            className={`relative flex flex-col items-start gap-2 p-3 rounded-lg border text-left transition-all duration-200 ${!activeGroqKey
+            className={`relative flex flex-col items-start gap-2 p-3 rounded-sm border text-left transition-all duration-200 ${!activeGroqKey
                 ? "opacity-40 cursor-not-allowed border-border/30 bg-muted/5"
                 : primaryProvider === "groq"
-                  ? "border-emerald-500/50 bg-emerald-500/8 shadow-sm shadow-emerald-500/10"
+                  ? "border-emerald-500/52 bg-emerald-500/5 shadow-sm shadow-emerald-500/10"
                   : "border-border/40 bg-muted/10 hover:border-border/60 hover:bg-muted/20"
               }`}
           >
             {primaryProvider === "groq" && activeGroqKey && (
               <span className="absolute top-2.5 right-2.5 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-white shadow-sm">
-                <CheckCircle2 className="h-2.5 w-2.5" />
+                <Check className="h-2.5 w-2.5" />
               </span>
             )}
-            <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${primaryProvider === "groq" && activeGroqKey ? "bg-orange-500/15 text-orange-400" : "bg-muted text-muted-foreground"
+            <div className={`flex h-8 w-8 items-center justify-center rounded-sm ${primaryProvider === "groq" && activeGroqKey ? "bg-orange-500/15 text-orange-400" : "bg-muted text-muted-foreground"
               }`}>
               <Zap className="h-4 w-4" />
             </div>
@@ -340,12 +333,12 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
       {saveError && <span className="text-[11px] text-destructive">{saveError}</span>}
 
       {/* API key links */}
-      <div className="flex gap-4 text-[11px] text-muted-foreground pt-3 border-t border-border/20 mt-4">
-        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline underline-offset-4 transition-colors">
-          → Get Gemini key
+      <div className="flex gap-8 text-[11px] text-muted-foreground pt-3 border-t border-border/20 mt-4">
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-blue-400 underline underline-offset-4 transition-colors">
+          Get Gemini key
         </a>
-        <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer" className="text-orange-400 hover:underline underline-offset-4 transition-colors">
-          → Get Groq key
+        <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer" className="text-orange-400 underline underline-offset-4 transition-colors">
+          Get Groq key
         </a>
       </div>
     </div>

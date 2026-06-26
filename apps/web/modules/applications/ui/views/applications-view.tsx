@@ -57,12 +57,6 @@ export default function ApplicationsView({
       {/* Standard Header */}
       <div className="flex flex-col gap-4 border-b border-border/50 pb-6 md:flex-row md:items-end md:justify-between md:gap-12">
         <div className="max-w-3xl space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline" className="gap-1">
-              <Briefcase className="h-3 w-3" />
-              <span>{applications.length} roles tracked</span>
-            </Badge>
-          </div>
           <h1 className="text-xl font-bold tracking-tight md:text-2xl">
             Job Applications
           </h1>

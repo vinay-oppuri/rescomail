@@ -1,5 +1,6 @@
 import { Button } from "@repo/ui/components/button";
 import { Separator } from "@repo/ui/components/separator";
+import { cn } from "@repo/ui/lib/utils";
 import { User, Mail, Phone, MapPin, Globe, Github, Linkedin, Link2, Brain, Zap, Pencil } from "lucide-react";
 
 interface ResumeProfileSectionProps {
@@ -46,33 +47,33 @@ export function ResumeProfileSection({ profile, geminiApiKey, groqApiKey, openDi
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1">
               <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider pl-1">Full Name</span>
-              <div className="flex items-center gap-2.5 text-sm text-foreground bg-muted/20 border border-foreground/5 px-3 py-2 rounded-md transition-colors hover:bg-muted/30">
+              <div className="flex items-center gap-2.5 text-sm text-foreground bg-muted/20 border border-foreground/5 px-3 py-2 rounded-sm transition-colors hover:bg-muted/30">
                 <User className="h-4 w-4 text-primary/70 shrink-0" />
-                <span className="truncate font-medium">{profile.fullName || "—"}</span>
+                <span className="text-xs md:text-sm truncate font-medium">{profile.fullName || "—"}</span>
               </div>
             </div>
 
             <div className="space-y-1">
               <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider pl-1">Email Address</span>
-              <div className="flex items-center gap-2.5 text-sm text-foreground bg-muted/20 border border-foreground/5 px-3 py-2 rounded-md transition-colors hover:bg-muted/30">
+              <div className="flex items-center gap-2.5 text-sm text-foreground bg-muted/20 border border-foreground/5 px-3 py-2 rounded-sm transition-colors hover:bg-muted/30">
                 <Mail className="h-4 w-4 text-primary/70 shrink-0" />
-                <span className="truncate font-medium">{profile.email || "—"}</span>
+                <span className="text-xs md:text-sm truncate font-medium">{profile.email || "—"}</span>
               </div>
             </div>
 
             <div className="space-y-1">
               <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider pl-1">Phone Number</span>
-              <div className="flex items-center gap-2.5 text-sm text-foreground bg-muted/20 border border-foreground/5 px-3 py-2 rounded-md transition-colors hover:bg-muted/30">
+              <div className="flex items-center gap-2.5 text-sm text-foreground bg-muted/20 border border-foreground/5 px-3 py-2 rounded-sm transition-colors hover:bg-muted/30">
                 <Phone className="h-4 w-4 text-primary/70 shrink-0" />
-                <span className="truncate font-medium">{profile.phone || "—"}</span>
+                <span className="text-xs md:text-sm truncate font-medium">{profile.phone || "—"}</span>
               </div>
             </div>
 
             <div className="space-y-1">
               <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider pl-1">Location</span>
-              <div className="flex items-center gap-2.5 text-sm text-foreground bg-muted/20 border border-foreground/5 px-3 py-2 rounded-md transition-colors hover:bg-muted/30">
+              <div className="flex items-center gap-2.5 text-sm text-foreground bg-muted/20 border border-foreground/5 px-3 py-2 rounded-sm transition-colors hover:bg-muted/30">
                 <MapPin className="h-4 w-4 text-primary/70 shrink-0" />
-                <span className="truncate font-medium">{profile.location || "—"}</span>
+                <span className="text-xs md:text-sm truncate font-medium">{profile.location || "—"}</span>
               </div>
             </div>
           </div>
@@ -89,20 +90,20 @@ export function ResumeProfileSection({ profile, geminiApiKey, groqApiKey, openDi
                 variant="ghost"
                 size="sm"
                 onClick={() => openDialogAtStep(2)}
-                className="h-7 text-xs font-medium gap-1.5 px-2"
+                className="h-7 text-xs font-medium gap-1.5 px-2 shadow-sm"
               >
-                <Pencil className="h-3 w-3" />
+                <Pencil className="h-3 w-3 text-muted-foreground" />
                 Edit Links
               </Button>
             </div>
-            
+
             <div className="flex flex-wrap gap-2 mt-2">
               {profile.portfolioUrl && (
                 <a
                   href={profile.portfolioUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-primary bg-muted/40 hover:bg-muted/60 px-3 py-1.5 rounded-md border border-foreground/5 transition-all font-medium shadow-sm hover:shadow"
+                  className="inline-flex items-center gap-1.5 text-xs text-primary bg-muted/40 hover:bg-muted/60 px-3 py-1.5 rounded-sm border border-foreground/5 transition-all font-medium shadow-sm hover:shadow"
                 >
                   <Globe className="h-3.5 w-3.5" />
                   Portfolio
@@ -113,7 +114,7 @@ export function ResumeProfileSection({ profile, geminiApiKey, groqApiKey, openDi
                   href={profile.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-foreground bg-green-500/20 hover:bg-green-500/30 px-3 py-1.5 rounded-md border border-green-500/5 transition-all font-medium shadow-sm hover:shadow"
+                  className="inline-flex items-center gap-1.5 text-xs text-foreground bg-green-500/20 hover:bg-green-500/30 px-3 py-1.5 rounded-sm border border-green-500/5 transition-all font-medium shadow-sm hover:shadow"
                 >
                   <Github className="h-3.5 w-3.5" />
                   GitHub
@@ -124,7 +125,7 @@ export function ResumeProfileSection({ profile, geminiApiKey, groqApiKey, openDi
                   href={profile.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/15 px-3 py-1.5 rounded-md border border-blue-500/20 transition-all font-medium shadow-sm hover:shadow"
+                  className="inline-flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/15 px-3 py-1.5 rounded-sm border border-blue-500/20 transition-all font-medium shadow-sm hover:shadow"
                 >
                   <Linkedin className="h-3.5 w-3.5" />
                   LinkedIn
@@ -136,7 +137,7 @@ export function ResumeProfileSection({ profile, geminiApiKey, groqApiKey, openDi
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground bg-muted/30 hover:bg-muted/50 px-3 py-1.5 rounded-md border border-foreground/5 transition-all font-medium shadow-sm hover:shadow"
+                  className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground bg-muted/30 hover:bg-muted/50 px-3 py-1.5 rounded-sm border border-foreground/5 transition-all font-medium shadow-sm hover:shadow"
                 >
                   <Link2 className="h-3.5 w-3.5" />
                   {link.label}
@@ -160,50 +161,54 @@ export function ResumeProfileSection({ profile, geminiApiKey, groqApiKey, openDi
                 variant="ghost"
                 size="sm"
                 onClick={() => openDialogAtStep(3)}
-                className="h-7 text-xs font-medium gap-1.5 px-2"
+                className="h-7 text-xs font-medium gap-1.5 px-2 shadow-sm"
               >
-                <Pencil className="h-3 w-3" />
+                <Pencil className="h-3 w-3 text-muted-foreground" />
                 Edit API Keys
               </Button>
             </div>
-            
+
             <div className="grid gap-3 sm:grid-cols-2 mt-2">
-              <div className="flex items-center justify-between px-3.5 py-3 bg-muted/10 border border-foreground/5 rounded-md hover:bg-muted/20 transition-colors">
+              <div className="flex items-center justify-between px-2 py-2 md:px-4 bg-muted/10 border border-foreground/5 rounded-sm hover:bg-muted/20 transition-colors">
                 <div className="flex items-center gap-3">
-                  <div className="p-1.5 bg-blue-500/10 rounded-md">
+                  <div className="p-1.5 bg-blue-500/10 rounded-sm">
                     <Brain className="h-4 w-4 text-blue-500 shrink-0" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium">Google Gemini</span>
-                    <span className="text-[10px] text-muted-foreground">
-                      {geminiApiKey ? "API Key Configured" : "Not configured"}
-                    </span>
+                    <span className="text-xs md:text-sm font-medium">Google Gemini</span>
                   </div>
                 </div>
-                {geminiApiKey && (
-                  <span className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20 font-semibold tracking-wide uppercase">
-                    Active
-                  </span>
-                )}
+                <span
+                  className={cn(
+                    "text-[9px] px-2 py-0.5 rounded-none border font-semibold tracking-wide uppercase",
+                    geminiApiKey
+                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                      : "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+                  )}
+                >
+                  {geminiApiKey ? "Active Key" : "No Key"}
+                </span>
               </div>
 
-              <div className="flex items-center justify-between px-3.5 py-3 bg-muted/10 border border-foreground/5 rounded-md hover:bg-muted/20 transition-colors">
+              <div className="flex items-center justify-between px-2 py-2 md:px-4 bg-muted/10 border border-foreground/5 rounded-sm hover:bg-muted/20 transition-colors">
                 <div className="flex items-center gap-3">
-                  <div className="p-1.5 bg-orange-500/10 rounded-md">
+                  <div className="p-1.5 bg-orange-500/10 rounded-sm">
                     <Zap className="h-4 w-4 text-orange-500 shrink-0" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium">Groq (Llama)</span>
-                    <span className="text-[10px] text-muted-foreground">
-                      {groqApiKey ? "API Key Configured" : "Not configured"}
-                    </span>
+                    <span className="text-xs md:text-sm font-medium">Groq (Llama)</span>
                   </div>
                 </div>
-                {groqApiKey && (
-                  <span className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20 font-semibold tracking-wide uppercase">
-                    Active
-                  </span>
-                )}
+                <span
+                  className={cn(
+                    "text-[9px] px-2 py-0.5 rounded-none border font-semibold tracking-wide uppercase",
+                    groqApiKey
+                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                      : "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+                  )}
+                >
+                  {groqApiKey ? "Active Key" : "No Key"}
+                </span>
               </div>
             </div>
           </div>

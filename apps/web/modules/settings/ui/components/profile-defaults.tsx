@@ -248,8 +248,7 @@ export function ProfileDefaults() {
 
       <div className="flex items-center justify-end gap-3 border-t border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
         <Button
-          size="sm"
-          className="h-9"
+          className="h-8 md:h-9"
           onClick={handleSavePrefs}
           disabled={isSavingPrefs}
         >

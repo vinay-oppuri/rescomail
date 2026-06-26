@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-export const profileNameSchema = z.string().trim().min(1).max(120);
-
 const preferredLocationSchema = z
   .object({
     city: z.string().trim().max(120).optional(),

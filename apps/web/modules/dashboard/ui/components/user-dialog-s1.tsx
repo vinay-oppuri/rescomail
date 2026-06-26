@@ -60,7 +60,7 @@ export default function UserDialogS1({ register, errors }: Step1Props) {
             <Input
               id="fullName"
               placeholder="John Doe"
-              className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+              className="h-9 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs md:text-sm"
               {...register("fullName")}
             />
           </FieldGroup>
@@ -72,7 +72,7 @@ export default function UserDialogS1({ register, errors }: Step1Props) {
               id="email"
               type="email"
               placeholder="john@example.com"
-              className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+              className="h-9 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs md:text-sm"
               {...register("email")}
             />
           </FieldGroup>
@@ -82,7 +82,7 @@ export default function UserDialogS1({ register, errors }: Step1Props) {
           <Input
             id="phone"
             placeholder="+1 (555) 000-0000"
-            className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+            className="h-9 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs md:text-sm"
             {...register("phone")}
           />
         </FieldGroup>
@@ -91,7 +91,7 @@ export default function UserDialogS1({ register, errors }: Step1Props) {
           <Input
             id="location"
             placeholder="San Francisco, CA"
-            className="h-10 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+            className="h-9 border-border/60 bg-muted/20 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs md:text-sm"
             {...register("location")}
           />
         </FieldGroup>

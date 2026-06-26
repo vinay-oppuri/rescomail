@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import { useUploadThing } from "@/lib/uploadthing";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
 import { Badge } from "@repo/ui/components/badge";
-import { Input } from "@repo/ui/components/input";
 import { ConfirmDialog } from "@repo/ui/components/confirm-dialog";
-import { Camera, Mail, Shield, Calendar, Pencil, Check, X, Loader2, Trash2 } from "lucide-react";
+import { Camera, Mail, Shield, Calendar, Loader2, Trash2 } from "lucide-react";
 import { DeleteAvatarAction } from "../../server/actions";
 
 interface AccountProfileBasicProps {
@@ -18,13 +17,9 @@ interface AccountProfileBasicProps {
     createdAt: Date;
     emailVerified: boolean;
   };
-  name: string;
-  setName: (name: string) => void;
 }
 
-export function AccountProfileBasic({ user, name, setName }: AccountProfileBasicProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [tempName, setTempName] = useState(name);
+export function AccountProfileBasic({ user }: AccountProfileBasicProps) {
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -60,16 +55,6 @@ export function AccountProfileBasic({ user, name, setName }: AccountProfileBasic
     month: "long",
     year: "numeric",
   });
-
-  const handleSave = () => {
-    setName(tempName);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setTempName(name);
-    setIsEditing(false);
-  };
 
   return (
     <div className="flex items-center gap-5">
@@ -122,47 +107,9 @@ export function AccountProfileBasic({ user, name, setName }: AccountProfileBasic
       </div>
 
       <div className="space-y-1.5 min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          {isEditing ? (
-            <div className="flex items-center gap-1.5">
-              <Input
-                value={tempName}
-                onChange={(e) => setTempName(e.target.value)}
-                className="h-7 text-sm py-1 px-2 w-48 bg-muted/20 border-foreground/10"
-                autoFocus
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSave();
-                  else if (e.key === "Escape") handleCancel();
-                }}
-              />
-              <button
-                onClick={handleSave}
-                className="text-green-500 hover:bg-green-500/10 p-1.5 rounded-sm transition-colors"
-              >
-                <Check className="h-3.5 w-3.5" />
-              </button>
-              <button
-                onClick={handleCancel}
-                className="text-muted-foreground hover:bg-muted p-1.5 rounded-sm transition-colors"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 group">
-              <p className="text-sm font-semibold truncate">
-                {name || "Unknown User"}
-              </p>
-              <button
-                onClick={() => setIsEditing(true)}
-                className="text-muted-foreground hover:text-foreground transition-opacity p-1"
-                title="Edit name"
-              >
-                <Pencil className="h-3 w-3" />
-              </button>
-            </div>
-          )}
-        </div>
+        <p className="text-sm font-semibold truncate">
+          {user.name || "Unknown User"}
+        </p>
         
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Mail className="h-3.5 w-3.5 shrink-0" />
