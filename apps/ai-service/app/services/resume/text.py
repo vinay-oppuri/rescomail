@@ -15,6 +15,9 @@ def structured_resume_to_text(resume: StructuredResume) -> str:
     ]
     parts.append(" ".join(item for item in contact_items if item))
 
+    if resume.summary:
+        parts.append(f"Summary: {resume.summary}")
+
     if resume.skills:
         parts.append("Skills: " + ", ".join(resume.skills))
 
@@ -22,6 +25,7 @@ def structured_resume_to_text(resume: StructuredResume) -> str:
         parts.append("Experience:")
 
         for experience in resume.experience:
+            desc_str = " ".join(experience.description)
             parts.append(
                 " ".join(
                     item
@@ -29,7 +33,7 @@ def structured_resume_to_text(resume: StructuredResume) -> str:
                         experience.role,
                         experience.company,
                         experience.duration,
-                        experience.description,
+                        desc_str,
                     ]
                     if item
                 )
@@ -39,9 +43,17 @@ def structured_resume_to_text(resume: StructuredResume) -> str:
         parts.append("Projects:")
 
         for project in resume.projects:
-            project_text = f"{project.title}: {project.description}"
+            desc_str = " ".join(project.description)
+            project_text = f"{project.title}: {desc_str}"
             if project.technologies:
                 project_text += f" (Technologies: {', '.join(project.technologies)})"
+            links = []
+            if project.githubUrl:
+                links.append(f"GitHub: {project.githubUrl}")
+            if project.liveUrl:
+                links.append(f"Live: {project.liveUrl}")
+            if links:
+                project_text += f" ({', '.join(links)})"
             parts.append(project_text)
 
     if resume.education:

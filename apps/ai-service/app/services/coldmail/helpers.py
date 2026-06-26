@@ -66,12 +66,13 @@ def experience_highlight(
     """Return a one-sentence summary of the candidate's top experience."""
     if structured_resume and structured_resume.experience:
         experience = structured_resume.experience[0]
+        desc_str = " ".join(experience.description) if isinstance(experience.description, list) else experience.description
         details = " ".join(
             item.strip()
             for item in [
                 experience.role,
                 f"at {experience.company}" if experience.company else "",
-                experience.description,
+                desc_str,
             ]
             if item and item.strip()
         )

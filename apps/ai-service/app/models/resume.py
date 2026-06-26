@@ -13,6 +13,7 @@ GEMINI_STRUCTURED_RESUME_SCHEMA = {
             },
             "required": ["name", "email", "phone"],
         },
+        "summary": {"type": "STRING"},
         "skills": {
             "type": "ARRAY",
             "items": {"type": "STRING"},
@@ -25,7 +26,10 @@ GEMINI_STRUCTURED_RESUME_SCHEMA = {
                     "role": {"type": "STRING"},
                     "company": {"type": "STRING"},
                     "duration": {"type": "STRING"},
-                    "description": {"type": "STRING"},
+                    "description": {
+                        "type": "ARRAY",
+                        "items": {"type": "STRING"},
+                    },
                 },
                 "required": ["role", "company", "duration", "description"],
             },
@@ -48,11 +52,16 @@ GEMINI_STRUCTURED_RESUME_SCHEMA = {
                 "type": "OBJECT",
                 "properties": {
                     "title": {"type": "STRING"},
-                    "description": {"type": "STRING"},
+                    "description": {
+                        "type": "ARRAY",
+                        "items": {"type": "STRING"},
+                    },
                     "technologies": {
                         "type": "ARRAY",
                         "items": {"type": "STRING"},
                     },
+                    "githubUrl": {"type": "STRING"},
+                    "liveUrl": {"type": "STRING"},
                 },
                 "required": ["title", "description", "technologies"],
             },

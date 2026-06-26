@@ -21,7 +21,7 @@ class Experience(BaseModel):
     role: str
     company: str
     duration: str
-    description: str
+    description: list[str]
 
 
 class Education(BaseModel):
@@ -32,12 +32,15 @@ class Education(BaseModel):
 
 class Project(BaseModel):
     title: str
-    description: str
+    description: list[str]
     technologies: list[str]
+    githubUrl: str | None = None
+    liveUrl: str | None = None
 
 
 class StructuredResume(BaseModel):
     personalInfo: PersonalInfo
+    summary: str | None = None
     skills: list[str]
     experience: list[Experience]
     education: list[Education]

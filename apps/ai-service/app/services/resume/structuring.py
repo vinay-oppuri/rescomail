@@ -23,6 +23,7 @@ def _fallback_resume(preprocessed: dict) -> dict:
             "githubUrl": None,
             "linkedinUrl": None,
         },
+        "summary": None,
         "skills": [],
         "experience": [],
         "education": [],

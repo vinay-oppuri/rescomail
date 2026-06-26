@@ -96,12 +96,88 @@ def extract_text_from_url(file_url: str) -> str:
 
 
 def _sync_extract(temp_path: str) -> str:
-    """Extract text from a local PDF file path using PyMuPDF."""
-    text = ""
+    """Extract text from a local PDF file path using PyMuPDF, embedding links in-place."""
+    pages_text = []
     with fitz.open(temp_path) as doc:
         for page in doc:
-            text += page.get_text() + "\n"
-    return text.strip()
+            links = page.get_links()
+            # Filter external URI links
+            uri_links = [l for l in links if l.get("kind") == fitz.LINK_URI and "uri" in l]
+
+            # Use get_text("dict", sort=True) to get layout blocks sorted logically
+            page_dict = page.get_text("dict", sort=True)
+
+            page_lines = []
+            for block in page_dict.get("blocks", []):
+                # Only process text blocks (type 0)
+                if block.get("type") != 0:
+                    continue
+
+                for line in block.get("lines", []):
+                    line_parts = []
+                    current_uri = None
+                    current_text = []
+
+                    for span in line.get("spans", []):
+                        span_text = span.get("text", "")
+                        if not span_text:
+                            continue
+
+                        # Find if span intersects with any link
+                        span_rect = fitz.Rect(span["bbox"])
+                        span_uri = None
+                        for link in uri_links:
+                            link_rect = fitz.Rect(link["from"])
+                            # Check if the intersection is non-empty
+                            if not (link_rect & span_rect).is_empty:
+                                span_uri = link["uri"]
+                                break
+
+                        if span_uri == current_uri:
+                            current_text.append(span_text)
+                        else:
+                            # Commit previous span group
+                            if current_text:
+                                merged_text = "".join(current_text)
+                                if current_uri:
+                                    left_strip = len(merged_text) - len(merged_text.lstrip())
+                                    right_strip = len(merged_text) - len(merged_text.rstrip())
+                                    stripped = merged_text.strip()
+                                    if stripped:
+                                        link_str = f"[{stripped}]({current_uri})"
+                                        line_parts.append(merged_text[:left_strip] + link_str + merged_text[len(merged_text)-right_strip:])
+                                    else:
+                                        line_parts.append(merged_text)
+                                else:
+                                    line_parts.append(merged_text)
+                            current_uri = span_uri
+                            current_text = [span_text]
+
+                    # Commit last span group
+                    if current_text:
+                        merged_text = "".join(current_text)
+                        if current_uri:
+                            left_strip = len(merged_text) - len(merged_text.lstrip())
+                            right_strip = len(merged_text) - len(merged_text.rstrip())
+                            stripped = merged_text.strip()
+                            if stripped:
+                                link_str = f"[{stripped}]({current_uri})"
+                                line_parts.append(merged_text[:left_strip] + link_str + merged_text[len(merged_text)-right_strip:])
+                            else:
+                                line_parts.append(merged_text)
+                        else:
+                            line_parts.append(merged_text)
+
+                    line_str = "".join(line_parts)
+                    if line_str.strip():
+                        page_lines.append(line_str)
+
+                # Add a blank line between blocks to preserve layout paragraphs
+                page_lines.append("")
+
+            pages_text.append("\n".join(page_lines).strip())
+
+    return "\n\n".join(p for p in pages_text if p).strip()
 
 
 # ---------------------------------------------------------------------------
