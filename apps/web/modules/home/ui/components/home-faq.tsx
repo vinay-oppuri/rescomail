@@ -15,6 +15,14 @@ const FAQS = [
     a: "Absolutely. Once your resume is parsed, you can input a target job or company URL. Our AI fetches the company context and drafts a personalized email referencing your exact relevant experience.",
   },
   {
+    q: "How does the AI optimize my resume for a specific job?",
+    a: "When you paste a target job description, our AI compares it against your resume to identify critical skills, missing keywords, and experience gaps. It then provides tailormade, actionable suggestions and bullet-point rewrites that align with the role while maintaining your authentic work history.",
+  },
+  {
+    q: "Can I track and organize my job applications?",
+    a: "Yes. Rescomail includes a built-in application tracker where you can organize your jobs by status (Applied, Interviewing, Offered, etc.), link them to specific optimized resumes, and keep notes on all your follow-ups in one place.",
+  },
+  {
     q: "Is my data secure and private?",
     a: "Yes. Resumes are stored securely and parsed data is private to your account. We don't train public models on your personal data.",
   },

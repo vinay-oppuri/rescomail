@@ -29,7 +29,7 @@ export function HeroDashboard() {
         </div>
 
         <div className="flex justify-center">
-          <Iphone size="md" className="shadow-md">
+          <Iphone size="md">
             <div className="h-full w-full bg-muted/30 px-4 pb-4 pt-12 font-sans text-foreground">
               <div className="border-b border-foreground/5 pb-2">
                 <p className="text-[10px] text-muted-foreground">Resume analysis</p>

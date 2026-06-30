@@ -88,9 +88,9 @@ const HomeView = () => {
               className="relative h-9 md:h-11 px-6 md:px-8 text-xs md:text-sm font-semibold rounded-full"
               asChild
             >
-              <Link href="/signup" className="flex items-center gap-1">
+              <Link href="/signup" className="h-9.5! md:h-11! relative pl-11 md:pl-14!">
                 Try for free
-                <ArrowRight className="h-4 w-4" />
+                <div className="absolute left-0.5 md:left-1 p-2 md:p-2.5 bg-background text-foreground rounded-full border border-foreground/5"><ArrowRight className="h-4 w-4" /></div>
               </Link>
             </Button>
           </motion.div>

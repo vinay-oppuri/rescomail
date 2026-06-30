@@ -115,7 +115,7 @@ const Iphone = React.forwardRef<HTMLDivElement, IphoneProps>(({
         ref={ref}
         role="img"
         aria-label="iPhone device frame"
-        className={cn(iphoneVariants({ size, color }), className)}
+        className={cn(iphoneVariants({ size, color }), outerRadius[s], className)}
         {...props}
       >
         {/* Bezel */}

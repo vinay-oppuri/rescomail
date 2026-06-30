@@ -52,7 +52,8 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  /* --background: oklch(1 0 0); */
+  --background: oklch(0.985 0.002 250);
   --foreground: oklch(0.141 0.005 285.823);
   --radial-center: #000000;
   --radial-stop1: #ffffff;
