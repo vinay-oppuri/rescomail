@@ -1,10 +1,11 @@
 "use server";
 
 import { auth } from "@repo/auth";
-import { db, user, userPreferences, session as sessionTable, account as accountTable } from "@repo/db";
+import { db, user, userPreferences, session as sessionTable, account as accountTable, resumes } from "@repo/db";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { randomUUID } from "crypto";
+import { UTApi } from "uploadthing/server";
 import {
   settingsPreferencesSchema,
   type SettingsPreferencesInput,
@@ -148,13 +149,30 @@ export const EditPreferenceAction = async (input: SettingsPreferencesInput) => {
   return { success: true };
 };
 
-export const DelectAccountAction = async () => {
+export const DeleteAccountAction = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   if (!session) {
     throw new Error("Unauthorized");
+  }
+
+  // 1. Query all resumes.fileKey for the user
+  const userResumes = await db
+    .select({ fileKey: resumes.fileKey })
+    .from(resumes)
+    .where(eq(resumes.userId, session.user.id));
+
+  // 2. Delete files from UploadThing storage
+  if (userResumes.length > 0) {
+    try {
+      const utapi = new UTApi();
+      await utapi.deleteFiles(userResumes.map((r) => r.fileKey));
+    } catch {
+      // log but don't block account deletion
+      console.warn("Failed to delete user files from storage during account deletion");
+    }
   }
 
   // Delete related auth records first to prevent foreign key constraint violations

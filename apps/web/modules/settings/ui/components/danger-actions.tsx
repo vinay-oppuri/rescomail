@@ -2,13 +2,13 @@
 
 import { Button } from "@repo/ui/components/button";
 import { ConfirmDialog } from "@repo/ui";
-import { DelectAccountAction } from "../../server/actions";
+import { DeleteAccountAction } from "../../server/actions";
 import { useRouter } from "next/navigation";
 
 export function DangerActions() {
   const router = useRouter();
   const handleDeleteAccount = async () => {
-    await DelectAccountAction();
+    await DeleteAccountAction();
     router.push("/");
   };
   return (

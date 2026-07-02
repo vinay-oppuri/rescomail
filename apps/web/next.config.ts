@@ -4,6 +4,12 @@ const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value: [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",   // tighten to nonce later
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https://utfs.io https://ufs.sh",
+      "connect-src 'self' https://uploadthing.com https://api.uploadthing.com",
+      "font-src 'self'",
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",

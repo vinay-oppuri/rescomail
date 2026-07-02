@@ -1,6 +1,6 @@
 import { logger, schedules } from "@trigger.dev/sdk/v3";
-import { db, userPreferences, jobNotifications } from "@repo/db";
-import { eq } from "drizzle-orm";
+import { db, userPreferences, jobNotifications, resumes } from "@repo/db";
+import { eq, desc } from "drizzle-orm";
 import { serverEnv } from "@repo/env/server";
 
 export const jobDigestSchedule = schedules.task({
@@ -42,6 +42,16 @@ export const jobDigestSchedule = schedules.task({
 
           logger.log(`Fetching job matches for user ${pref.userId}: "${formattedRole}" in "${location}"`);
 
+          // Retrieve the user's latest parsed resume
+          const userResume = await db
+            .select({ parsedText: resumes.parsedText })
+            .from(resumes)
+            .where(eq(resumes.userId, pref.userId))
+            .orderBy(desc(resumes.createdAt))
+            .limit(1);
+
+          const resumeText = userResume[0]?.parsedText || "";
+
           let realJobs: any[] = [];
           try {
             const aiResponse = await fetch(`${serverEnv.AI_SERVICE_URL}/jobs/search?query=${encodeURIComponent(formattedRole)}&location=${encodeURIComponent(location)}&max_results=5`, {
@@ -55,17 +65,52 @@ export const jobDigestSchedule = schedules.task({
             if (aiResponse.ok) {
               const data = await aiResponse.json();
               if (data.results && data.results.length > 0) {
-                realJobs = data.results.map((r: any, idx: number) => ({
-                  id: `real_job_${r.id || idx}_${pref.userId}`,
-                  userId: pref.userId,
-                  title: r.title ? (r.title.length > 40 ? r.title.substring(0, 40) + "..." : r.title) : "Job Opening",
-                  company: r.company || "Unknown",
-                  location: r.location || location,
-                  matchScore: Math.floor(Math.random() * 15) + 80,
-                  timeAgo: r.posted_at || "Recent",
-                  url: r.apply_link || null,
-                  isRead: false
-                }));
+                let scoredResults = data.results;
+                if (resumeText) {
+                  try {
+                    const relevanceResponse = await fetch(`${serverEnv.AI_SERVICE_URL}/jobs/relevance`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        ...(serverEnv.AI_SERVICE_API_KEY ? { Authorization: `Bearer ${serverEnv.AI_SERVICE_API_KEY}` } : {})
+                      },
+                      body: JSON.stringify({
+                        jobs: data.results,
+                        resume_text: resumeText
+                      })
+                    });
+
+                    if (relevanceResponse.ok) {
+                      const relevanceData = await relevanceResponse.json();
+                      if (relevanceData.results) {
+                        scoredResults = relevanceData.results;
+                      }
+                    } else {
+                      logger.error(`AI Service /jobs/relevance returned status: ${relevanceResponse.status} for user ${pref.userId}`);
+                    }
+                  } catch (e) {
+                    logger.error(`Failed to calculate relevance for user ${pref.userId}`, { error: e });
+                  }
+                }
+
+                realJobs = scoredResults.map((r: any, idx: number) => {
+                  const relevanceScore = r.relevance_score !== undefined ? r.relevance_score : null;
+                  const matchScore = relevanceScore !== null
+                    ? Math.round(((relevanceScore + 1.0) / 2.0) * 100)
+                    : 80;
+
+                  return {
+                    id: `real_job_${r.id || idx}_${pref.userId}`,
+                    userId: pref.userId,
+                    title: r.title ? (r.title.length > 40 ? r.title.substring(0, 40) + "..." : r.title) : "Job Opening",
+                    company: r.company || "Unknown",
+                    location: r.location || location,
+                    matchScore,
+                    timeAgo: r.posted_at || "Recent",
+                    url: r.apply_link || null,
+                    isRead: false
+                  };
+                });
               }
             } else {
               logger.error(`AI Service /jobs/search returned status: ${aiResponse.status} for user ${pref.userId}`);
@@ -92,7 +137,7 @@ export const jobDigestSchedule = schedules.task({
             role: pref.targetRoles?.[0] || "Software Engineer",
             location: pref.preferredLocations?.[0]?.country || "Remote",
             experience_level: pref.targetSeniority || "mid",
-            resume_text: "", 
+            resume_text: resumeText, 
           };
 
           const response = await fetch(`${serverEnv.AI_SERVICE_URL}/jobs/digest`, {

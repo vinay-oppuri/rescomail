@@ -37,8 +37,42 @@ class JobDigestRequest(BaseModel):
     resume_text: str
 
 
+class JobRelevanceRequest(BaseModel):
+    jobs: list[dict]
+    resume_text: str
+
+
 class JobUnsubscribeRequest(BaseModel):
     user_id: str
+
+
+@router.post("/relevance")
+async def calculate_relevance(
+    request: JobRelevanceRequest,
+    _auth: None = Depends(require_service_auth),
+):
+    """Compute cosine similarity relevance scores for a list of jobs against a resume."""
+    logger.info("Computing relevance score for %d jobs", len(request.jobs))
+    try:
+        from app.services.jobs.relevance import filter_by_relevance
+        import asyncio
+
+        loop = asyncio.get_event_loop()
+        scored_jobs = await loop.run_in_executor(
+            None,
+            filter_by_relevance,
+            request.jobs,
+            request.resume_text,
+            len(request.jobs),
+            -1.0,  # Do not filter out low scores; return all scored jobs
+        )
+        return {"results": scored_jobs}
+    except Exception as exc:
+        logger.exception("Failed to calculate job relevance")
+        raise HTTPException(
+            status_code=500,
+            detail="Job relevance calculation failed. Please retry.",
+        ) from exc
 
 
 @router.post("/subscribe")
