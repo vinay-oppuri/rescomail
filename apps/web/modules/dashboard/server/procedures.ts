@@ -53,7 +53,7 @@ export const getTrackedJobsStats = async (userId: string) => {
   };
 
   result.forEach((row) => {
-    const c = parseInt(row.count as any, 10);
+    const c = Number(row.count);
     stats.total += c;
     if (row.stage === 'saved') stats.saved += c;
     if (row.stage === 'applied') stats.applied += c;

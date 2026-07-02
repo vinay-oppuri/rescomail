@@ -4,6 +4,7 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from app.api.dependencies import require_service_auth
+from app.core.executor import thread_executor
 from app.core.rate_limit import limiter
 from app.pipelines.ats_analysis import analyze_ats
 from app.schemas.ats import AtsAnalysisResponse, AtsAnalyzeRequest
@@ -21,9 +22,9 @@ async def analyze_ats_route(
 ):
     logger.info("Running ATS analysis for resume %s", body.resumeId or "inline")
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     try:
-        return await loop.run_in_executor(None, analyze_ats, body)
+        return await loop.run_in_executor(thread_executor, analyze_ats, body)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
     except Exception as error:

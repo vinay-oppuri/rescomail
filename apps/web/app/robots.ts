@@ -1,9 +1,8 @@
 import type { MetadataRoute } from "next";
+import { clientEnv } from "@repo/env/client";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = (
-    process.env.NEXT_PUBLIC_APP_URL || "https://rescomail.vinayweb.in"
-  ).replace(/\/$/, "");
+  const baseUrl = clientEnv.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
 
   return {
     rules: {

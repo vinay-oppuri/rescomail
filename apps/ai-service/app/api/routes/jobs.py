@@ -8,11 +8,13 @@ Endpoints:
 """
 
 import logging
+import asyncio
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, EmailStr
 
 from app.api.dependencies import require_service_auth
+from app.core.executor import thread_executor
 
 logger = logging.getLogger("rescomail.ai-service.jobs")
 router = APIRouter(prefix="/jobs", tags=["jobs"])
@@ -55,11 +57,9 @@ async def calculate_relevance(
     logger.info("Computing relevance score for %d jobs", len(request.jobs))
     try:
         from app.services.jobs.relevance import filter_by_relevance
-        import asyncio
-
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         scored_jobs = await loop.run_in_executor(
-            None,
+            thread_executor,
             filter_by_relevance,
             request.jobs,
             request.resume_text,
@@ -90,10 +90,9 @@ async def subscribe_to_jobs(
     # For now, enqueue an immediate digest task.
     try:
         from app.pipelines.job_search import run_job_search_pipeline
-        import asyncio
 
-        loop = asyncio.get_event_loop()
-        result = await loop.run_in_executor(None, run_job_search_pipeline, request.model_dump())
+        loop = asyncio.get_running_loop()
+        result = await loop.run_in_executor(thread_executor, run_job_search_pipeline, request.model_dump())
         return {"subscribed": True, "result": result, "message": "First digest delivered."}
     except Exception as exc:
         logger.exception("Failed to run job digest for user %s", request.user_id)
@@ -112,10 +111,9 @@ async def trigger_digest(
     logger.info("On-demand digest requested for user %s", request.user_id)
     try:
         from app.pipelines.job_search import run_job_search_pipeline
-        import asyncio
 
-        loop = asyncio.get_event_loop()
-        result = await loop.run_in_executor(None, run_job_search_pipeline, request.model_dump())
+        loop = asyncio.get_running_loop()
+        result = await loop.run_in_executor(thread_executor, run_job_search_pipeline, request.model_dump())
         return {"result": result, "message": "Digest task completed."}
     except Exception as exc:
         logger.exception("Failed to run on-demand digest for user %s", request.user_id)

@@ -11,10 +11,14 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml .
+RUN pip install --no-cache-dir .
+
+RUN adduser --system --no-create-home --group appuser \
+    && chown -R appuser:appuser /app
 
 COPY app ./app
+USER appuser
 
 EXPOSE 8000
 

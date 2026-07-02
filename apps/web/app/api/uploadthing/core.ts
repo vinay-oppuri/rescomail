@@ -11,6 +11,7 @@ import { parseResumeTask } from "@/trigger/parse-resume";
 
 import { db, user } from "@repo/db";
 import { eq } from "drizzle-orm";
+import { logRouteError } from "@/lib/server/api-errors";
 
 const f = createUploadthing();
 
@@ -30,13 +31,18 @@ export const ourFileRouter = {
       return { userId: session.user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      const fileUrl = file.ufsUrl || file.url;
-      await db
-        .update(user)
-        .set({ image: fileUrl })
-        .where(eq(user.id, metadata.userId));
-      
-      return { uploadedBy: metadata.userId, fileUrl };
+      try {
+        const fileUrl = file.ufsUrl || file.url;
+        await db
+          .update(user)
+          .set({ image: fileUrl })
+          .where(eq(user.id, metadata.userId));
+        
+        return { uploadedBy: metadata.userId, fileUrl };
+      } catch (error) {
+        logRouteError("Avatar upload completion failed", error);
+        throw error;
+      }
     }),
 
   resumeUploader: f(
@@ -111,7 +117,7 @@ export const ourFileRouter = {
           parsingTriggered: true,
         };
       } catch (error) {
-        console.error("Resume upload completion failed:", error);
+        logRouteError("Resume upload completion failed", error);
         throw error;
       }
     }),

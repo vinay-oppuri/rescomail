@@ -11,22 +11,18 @@ import asyncio
 import logging
 import os
 import tempfile
-from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
 import fitz
 import requests
 
 from app.core.config import settings
+from app.core.executor import thread_executor
 
 logger = logging.getLogger("rescomail.ai-service.document-extraction")
 
 DEFAULT_MAX_DOWNLOAD_BYTES = 10 * 1024 * 1024
 REQUEST_TIMEOUT = (5, 30)
-
-# Dedicated executor for CPU-bound / blocking PyMuPDF calls.
-# Max 4 workers — tune based on expected concurrency and server CPU count.
-_executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="pdf-extract")
 
 
 # ---------------------------------------------------------------------------
@@ -36,8 +32,8 @@ _executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="pdf-extract")
 
 async def extract_text_from_url_async(file_url: str) -> str:
     """Download and extract text from a PDF URL without blocking the event loop."""
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(_executor, extract_text_from_url, file_url)
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(thread_executor, extract_text_from_url, file_url)
 
 
 # ---------------------------------------------------------------------------

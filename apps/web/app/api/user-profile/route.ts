@@ -3,6 +3,28 @@ import { auth } from "@repo/auth";
 import { db, userProfile, userPreferences } from "@repo/db";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import { z } from "zod";
+import { logRouteError } from "@/lib/server/api-errors";
+
+const userProfileUpdateSchema = z.object({
+  full_name: z.string().trim().max(120).optional(),
+  email: z.string().email().optional(),
+  phone: z.string().max(30).optional(),
+  location: z.string().max(120).optional(),
+  portfolio_url: z.string().url().optional().or(z.literal("")),
+  github_url: z.string().url().optional().or(z.literal("")),
+  linkedin_url: z.string().url().optional().or(z.literal("")),
+  extra_links: z
+    .array(
+      z.object({
+        label: z.string().trim().min(1),
+        url: z.string().url(),
+      })
+    )
+    .max(5)
+    .optional(),
+  last_prompted_at: z.string().datetime().nullable().optional(),
+});
 
 export async function GET(req: NextRequest) {
   const session = await auth.api.getSession({
@@ -78,7 +100,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("GET user-profile error:", error);
+    logRouteError("GET user-profile error", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Internal Server Error" },
       { status: 500 },
@@ -99,19 +121,37 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
+    const parsed = userProfileUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+    }
+    const validatedBody = parsed.data;
 
     // Map body keys from snake_case to camelCase
-    const dataToSave: any = {};
-    if (body.full_name !== undefined) dataToSave.fullName = body.full_name;
-    if (body.email !== undefined) dataToSave.email = body.email;
-    if (body.phone !== undefined) dataToSave.phone = body.phone;
-    if (body.location !== undefined) dataToSave.location = body.location;
-    if (body.portfolio_url !== undefined) dataToSave.portfolioUrl = body.portfolio_url;
-    if (body.github_url !== undefined) dataToSave.githubUrl = body.github_url;
-    if (body.linkedin_url !== undefined) dataToSave.linkedinUrl = body.linkedin_url;
-    if (body.extra_links !== undefined) dataToSave.extraLinks = body.extra_links;
-    if (body.last_prompted_at !== undefined) {
-      dataToSave.lastPromptedAt = body.last_prompted_at ? new Date(body.last_prompted_at) : null;
+    const dataToSave: Partial<{
+      fullName: string;
+      email: string;
+      phone: string;
+      location: string;
+      portfolioUrl: string;
+      githubUrl: string;
+      linkedinUrl: string;
+      extraLinks: { label: string; url: string; }[];
+      isComplete: boolean;
+      lastPromptedAt: Date | null;
+      updatedAt: Date;
+    }> = {};
+
+    if (validatedBody.full_name !== undefined) dataToSave.fullName = validatedBody.full_name;
+    if (validatedBody.email !== undefined) dataToSave.email = validatedBody.email;
+    if (validatedBody.phone !== undefined) dataToSave.phone = validatedBody.phone;
+    if (validatedBody.location !== undefined) dataToSave.location = validatedBody.location;
+    if (validatedBody.portfolio_url !== undefined) dataToSave.portfolioUrl = validatedBody.portfolio_url;
+    if (validatedBody.github_url !== undefined) dataToSave.githubUrl = validatedBody.github_url;
+    if (validatedBody.linkedin_url !== undefined) dataToSave.linkedinUrl = validatedBody.linkedin_url;
+    if (validatedBody.extra_links !== undefined) dataToSave.extraLinks = validatedBody.extra_links;
+    if (validatedBody.last_prompted_at !== undefined) {
+      dataToSave.lastPromptedAt = validatedBody.last_prompted_at ? new Date(validatedBody.last_prompted_at) : null;
     }
 
     const existingProfile = await db.query.userProfile.findFirst({
@@ -119,7 +159,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Helper function to check completeness: non-null and non-empty
-    const checkField = (val: any) => val !== undefined && val !== null && String(val).trim() !== "";
+    const checkField = (val: unknown) => val !== undefined && val !== null && String(val).trim() !== "";
 
     const mergedProfile = {
       fullName: dataToSave.fullName !== undefined ? dataToSave.fullName : existingProfile?.fullName,
@@ -182,7 +222,7 @@ export async function POST(req: NextRequest) {
       updated_at: updatedProfile.updatedAt,
     });
   } catch (error) {
-    console.error("POST user-profile error:", error);
+    logRouteError("POST user-profile error", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Internal Server Error" },
       { status: 500 },

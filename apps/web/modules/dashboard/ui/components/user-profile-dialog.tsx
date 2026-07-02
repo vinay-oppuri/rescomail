@@ -11,12 +11,20 @@ import UserDialogS1 from "./user-dialog-s1";
 import UserDialogS2 from "./user-dialog-s2";
 import UserDialogS3, { UserDialogS3Ref } from "./user-dialog-s3";
 import { profileFormSchema, type ProfileFormValues } from "../../server/user-profile-schema";
+import type { UserProfile } from "@repo/db";
 
 // ── Props ─────────────────────────────────────────────────────────────────
 interface UserProfileDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialData?: any;
+  initialData?: (Partial<UserProfile> & {
+    full_name?: string;
+    portfolio_url?: string;
+    github_url?: string;
+    linkedin_url?: string;
+    extra_links?: { label: string; url: string }[];
+    preferences?: any;
+  }) | null;
   onSaveSuccess: () => void;
   isAutomaticPrompt?: boolean;
   initialStep?: number;

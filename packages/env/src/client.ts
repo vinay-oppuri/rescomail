@@ -8,10 +8,12 @@ const urlWithDefault = (fallback: string) =>
 
 const clientEnvSchema = z.object({
   NEXT_PUBLIC_BETTER_AUTH_URL: urlWithDefault("http://localhost:3000"),
+  NEXT_PUBLIC_APP_URL: urlWithDefault("http://localhost:3000"),
 });
 
 export const clientEnv = clientEnvSchema.parse({
   NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
+  NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
 });
 
 export type ClientEnv = z.infer<typeof clientEnvSchema>;

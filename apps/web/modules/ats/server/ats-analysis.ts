@@ -5,6 +5,7 @@ import { AtsAnalysisError } from "./ats-errors";
 import { checkUsageLimit } from "@/modules/dashboard/server/usage-limits";
 import { atsAnalysisTask } from "@/trigger/ats-analysis";
 import type { AtsAnalyzeInput } from "@repo/validations";
+import { logRouteError } from "@/lib/server/api-errors";
 
 export const runAtsAnalysisForUser = async (
   input: AtsAnalyzeInput & { userId: string },
@@ -31,12 +32,12 @@ export const runAtsAnalysisForUser = async (
       .insert(atsAnalyses)
       .values({
         userId: input.userId,
-        organizationId: resume.organizationId,
+        organizationId: resume.organizationId || null,
         resumeId: resume.id,
-        jobTitle: input.jobTitle,
-        companyName: input.companyName,
-        jobDescription: input.jobDescription,
-        targetKeywords: input.targetKeywords,
+        jobTitle: input.jobTitle || "Custom Job Description",
+        companyName: input.companyName || "Unknown Company",
+        jobDescription: input.jobDescription || "",
+        targetKeywords: input.targetKeywords || [],
         status: "processing",
       })
       .returning({ id: atsAnalyses.id });
@@ -68,7 +69,7 @@ export const runAtsAnalysisForUser = async (
       throw error;
     }
 
-    console.error("Failed to queue ATS analysis", error);
+    logRouteError("Failed to queue ATS analysis", error);
     const message = "Unable to start ATS analysis right now.";
 
     if (savedAnalysisId) {

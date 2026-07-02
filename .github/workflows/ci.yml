@@ -35,7 +35,6 @@ jobs:
       BETTER_AUTH_URL: http://localhost:3000
       NEXT_PUBLIC_BETTER_AUTH_URL: http://localhost:3000
       BETTER_AUTH_SECRET: ci-secret-that-is-long-enough-for-better-auth
-      RESUME_PARSER_API_KEY: ci-parser-token-that-is-long-enough
       AI_SERVICE_URL: http://localhost:8000
       DATA_ENCRYPTION_KEY: e4a7b9c2d5f8103649a2b7c5d8e1f0a3
       AI_SERVICE_API_KEY: 8mwOV1PmLGSsMhSsCFlXmMKNYOYovKbF
@@ -66,6 +65,6 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: apps/ai-service/requirements.txt
-      - run: pip install -r requirements.txt
+          cache-dependency-path: apps/ai-service/pyproject.toml
+      - run: pip install -e ".[dev]"
       - run: python -m compileall app

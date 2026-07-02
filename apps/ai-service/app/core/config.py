@@ -4,10 +4,16 @@ Replaces raw os.environ calls throughout the codebase.
 Fails fast at startup if any required variable is missing.
 """
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
     # --- LLM + Embeddings (same API key) ---
     gemini_api_key: str
     gemini_model: str = "gemini-3.5-flash"
@@ -32,11 +38,6 @@ class Settings(BaseSettings):
     adzuna_api_key: str = ""
     resend_api_key: str = ""
     tavily_api_key: str = ""
-
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        extra = "ignore"  # ignore unknown env vars — don't break on unrelated vars
 
 
 settings = Settings()

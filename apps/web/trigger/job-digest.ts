@@ -3,6 +3,18 @@ import { db, userPreferences, jobNotifications, resumes } from "@repo/db";
 import { eq, desc } from "drizzle-orm";
 import { serverEnv } from "@repo/env/server";
 
+interface JobResult {
+  id: string;
+  title?: string | null;
+  company?: string | null;
+  location?: string | null;
+  description?: string | null;
+  apply_link?: string | null;
+  posted_at?: string | null;
+  source?: string | null;
+  relevance_score?: number | null;
+}
+
 export const jobDigestSchedule = schedules.task({
   id: "job-digest-daily",
   cron: {
@@ -52,7 +64,7 @@ export const jobDigestSchedule = schedules.task({
 
           const resumeText = userResume[0]?.parsedText || "";
 
-          let realJobs: any[] = [];
+          let realJobs: (typeof jobNotifications.$inferInsert)[] = [];
           try {
             const aiResponse = await fetch(`${serverEnv.AI_SERVICE_URL}/jobs/search?query=${encodeURIComponent(formattedRole)}&location=${encodeURIComponent(location)}&max_results=5`, {
               method: "GET",
@@ -93,8 +105,8 @@ export const jobDigestSchedule = schedules.task({
                   }
                 }
 
-                realJobs = scoredResults.map((r: any, idx: number) => {
-                  const relevanceScore = r.relevance_score !== undefined ? r.relevance_score : null;
+                realJobs = scoredResults.map((r: JobResult, idx: number) => {
+                  const relevanceScore = r.relevance_score !== undefined && r.relevance_score !== null ? r.relevance_score : null;
                   const matchScore = relevanceScore !== null
                     ? Math.round(((relevanceScore + 1.0) / 2.0) * 100)
                     : 80;
