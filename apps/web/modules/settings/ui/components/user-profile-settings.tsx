@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
-import { Check, Loader2, User, Mail, Phone, MapPin, Globe, Github, Linkedin } from "lucide-react";
+import { Loader2, User, Mail, Phone, MapPin, Globe, Github, Linkedin } from "lucide-react";
 
 interface UserProfileSettingsProps {
   profile?: {

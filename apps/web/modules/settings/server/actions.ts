@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@repo/auth";
-import { db, user, userPreferences, session as sessionTable, account as accountTable, resumes } from "@repo/db";
+import { db, user, userPreferences, session as sessionTable, account as accountTable, resumes, usageEvents } from "@repo/db";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { randomUUID } from "crypto";
@@ -101,13 +101,13 @@ export const EditPreferenceAction = async (input: SettingsPreferencesInput) => {
       geminiApiKey === undefined
         ? undefined
         : geminiApiKey
-          ? encryptSecret(geminiApiKey)
+          ? encryptSecret(geminiApiKey, session.user.id, "gemini")
           : null,
     groqApiKey:
       groqApiKey === undefined
         ? undefined
         : groqApiKey
-          ? encryptSecret(groqApiKey)
+          ? encryptSecret(groqApiKey, session.user.id, "groq")
           : null,
   };
 
@@ -169,9 +169,9 @@ export const DeleteAccountAction = async () => {
     try {
       const utapi = new UTApi();
       await utapi.deleteFiles(userResumes.map((r) => r.fileKey));
-    } catch {
-      // log but don't block account deletion
-      console.warn("Failed to delete user files from storage during account deletion");
+    } catch (error) {
+      console.error("Failed to delete user files during account deletion", error);
+      throw new Error("Unable to delete stored resume files. Please retry.");
     }
   }
 
@@ -179,6 +179,7 @@ export const DeleteAccountAction = async () => {
   // since `session` and `account` don't have onDelete: "cascade" configured.
   await db.delete(sessionTable).where(eq(sessionTable.userId, session.user.id));
   await db.delete(accountTable).where(eq(accountTable.userId, session.user.id));
+  await db.delete(usageEvents).where(eq(usageEvents.userId, session.user.id));
 
   // Drizzle cascades should handle deleting userPreferences, resumes, etc., since they have cascade constraints
   await db.delete(user).where(eq(user.id, session.user.id));

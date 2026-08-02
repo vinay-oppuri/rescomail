@@ -12,7 +12,6 @@ import {
   Globe,
   Github,
   Linkedin,
-  Link2,
   Plus,
   Trash2,
 } from "lucide-react";
@@ -27,14 +26,12 @@ interface Step2Props {
 function UrlField({
   id,
   label,
-  placeholder,
   icon: Icon,
   error,
   children,
 }: {
   id: string;
   label: string;
-  placeholder: string;
   icon: React.ElementType;
   error?: string;
   children: React.ReactNode;
@@ -73,7 +70,6 @@ export default function UserDialogS2({ register, errors, control }: Step2Props) 
         <UrlField
           id="portfolioUrl"
           label="Portfolio / Website"
-          placeholder="https://johndoe.dev"
           icon={Globe}
           error={errors.portfolioUrl?.message}
         >
@@ -88,7 +84,6 @@ export default function UserDialogS2({ register, errors, control }: Step2Props) 
         <UrlField
           id="githubUrl"
           label="GitHub"
-          placeholder="https://github.com/johndoe"
           icon={Github}
           error={errors.githubUrl?.message}
         >
@@ -103,7 +98,6 @@ export default function UserDialogS2({ register, errors, control }: Step2Props) 
         <UrlField
           id="linkedinUrl"
           label="LinkedIn"
-          placeholder="https://linkedin.com/in/johndoe"
           icon={Linkedin}
           error={errors.linkedinUrl?.message}
         >

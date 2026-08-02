@@ -13,17 +13,17 @@ export function HomeCta() {
           {/* Left — copy + actions */}
           <div className="px-6 py-10 md:px-10 md:py-14 flex flex-col justify-center">
             <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-primary mb-3">
-              AI job search copilot
+              AI resume and outreach workspace
             </p>
             <h2 className="text-xl md:text-3xl font-bold tracking-tight text-foreground leading-snug mb-4">
               Land your next <span className="font-bold text-blue-500 dark:text-purple-400">dream job</span> faster — with AI working alongside you
             </h2>
             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-8 max-w-sm">
-              Rescomail scans your resume against the job, tracks every application, and drafts cold emails that actually get replies.
+              Rescomail compares your resume with a role description and drafts personalized cold emails.
             </p>
             <div className="flex flex-col gap-3">
               <Button size="lg" className="h-9 md:h-11 text-xs md:text-sm font-semibold rounded-full bg-blue-600 hover:bg-blue-500! dark:bg-blue-500/20 dark:hover:bg-blue-500/25! text-white transition-all duration-200" asChild>
-                <Link href="/signup">
+                <Link href="/login">
                   Get started free <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -56,12 +56,6 @@ const SCAN_STEPS = [
   "Analysing impact verbs…",
   "Flagging passive language…",
   "Scan complete — 3 suggestions",
-];
-
-const APPLICATIONS = [
-  { company: "Stripe", role: "Design Lead", status: "Interview", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
-  { company: "Linear", role: "Product Designer", status: "Applied", color: "bg-muted text-muted-foreground" },
-  { company: "Vercel", role: "Senior Designer", status: "Offer", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
 ];
 
 export function HomeCTAPreview() {
@@ -144,26 +138,16 @@ export function HomeCTAPreview() {
         </div>
       </div>
 
-      {/* Application tracker */}
+      {/* Outreach preview */}
       <div className="px-2">
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-mono">
-          Application tracker
+          Cold email draft
         </p>
-        <div className="border border-foreground/5 bg-background/50 backdrop-blur-xs rounded-xl overflow-hidden shadow-xs">
-          <div className="px-4 py-2.5 border-b border-foreground/5">
-            <p className="text-xs font-semibold text-foreground">Active applications</p>
-          </div>
-          {APPLICATIONS.map(({ company, role, status, color }) => (
-            <div key={company} className="flex items-center justify-between px-4 py-2.5 border-b border-foreground/5 last:border-0">
-              <div>
-                <p className="text-xs font-semibold text-foreground leading-none mb-0.5">{company}</p>
-                <p className="text-[11px] text-muted-foreground">{role}</p>
-              </div>
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${color}`}>
-                {status}
-              </span>
-            </div>
-          ))}
+        <div className="border border-foreground/5 bg-background/50 backdrop-blur-xs rounded-xl overflow-hidden p-4 shadow-xs">
+          <p className="text-xs font-semibold text-foreground">Subject: Product design collaboration</p>
+          <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
+            A concise, personalized draft grounded in your resume and the company context you provide.
+          </p>
         </div>
       </div>
     </>

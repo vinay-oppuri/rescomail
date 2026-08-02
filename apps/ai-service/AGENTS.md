@@ -6,19 +6,18 @@ This is a stateless, lightweight FastAPI server running on Python 3.12. It does 
 
 ### Key Components:
 - **FastAPI Routing (`app/api/routes/`):**
-  - `/health`: Health status endpoint.
+  - `/health/live` and `/health/ready`: Liveness and readiness endpoints.
   - `/parse`: PDF resume parsing. Wraps synchronous fitz extraction inside a named `thread_executor`.
   - `/ats/analyze`: Computes ATS compatibility score and skill gaps.
   - `/coldmail/generate`: Generates customized recruiter cold outreach emails.
-  - `/jobs/`: Endpoints for job search, email subscription, cosine similarity relevance checking (`POST /jobs/relevance`), and manual digest triggering.
 - **LLM Integrations (`app/llm/`):**
   - Integrates with the Gemini Developer API.
   - Uses `gemini-3.5-flash` by default.
   - Degrades gracefully with tenant retry to `gemini-1.5-flash` if rate limited or overloaded.
 - **Embeddings Layer (`app/embeddings/`):**
-  - Uses Gemini API (`text-embedding-004`) to batch-embed query and document texts for job relevance cosine similarity.
+  - Uses the Gemini API to support semantic resume analysis.
 - **Shared Bounded Thread Pool Executor (`app/core/executor.py`):**
-  - Configures a thread pool with `max_workers=10` and `thread_name_prefix="ai-service-exec"` to execute blocking operations (Gemini API, PyMuPDF parsing, and JSearch/Adzuna search queries) off the main event loop thread.
+  - Configures a bounded thread pool to execute blocking LLM requests and PyMuPDF parsing off the main event loop thread.
 
 ---
 

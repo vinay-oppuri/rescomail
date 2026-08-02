@@ -8,6 +8,7 @@ from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from app.core.config import settings
 
 
 def get_rate_limit_key(request: Request) -> str:
@@ -16,7 +17,10 @@ def get_rate_limit_key(request: Request) -> str:
     )
 
 
-limiter = Limiter(key_func=get_rate_limit_key, default_limits=["60/minute"])
+limiter = Limiter(
+    key_func=get_rate_limit_key,
+    default_limits=[f"{settings.rate_limit_per_minute}/minute"],
+)
 
 
 async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:

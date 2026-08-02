@@ -57,6 +57,20 @@
       "when": 1782117804084,
       "tag": "0007_burly_jasper_sitwell",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1785518050058,
+      "tag": "0008_product-hardening",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1785522443030,
+      "tag": "0009_repair-user-preference-providers",
+      "breakpoints": true
     }
   ]
 }

@@ -3,7 +3,7 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
-import { User, Mail, Phone, MapPin, Sparkles } from "lucide-react";
+import { User, Mail, Phone, MapPin } from "lucide-react";
 import type { ProfileFormValues } from "../../server/user-profile-schema";
 
 interface Step1Props {

@@ -66,6 +66,10 @@ def extract_text_from_url(file_url: str) -> str:
             if response.status_code != 200:
                 raise RuntimeError(f"Failed to fetch PDF: {response.status_code}")
 
+            content_type = response.headers.get("content-type", "").split(";", 1)[0].lower()
+            if content_type not in {"application/pdf", "application/octet-stream"}:
+                raise ValueError("Resume file must be a PDF.")
+
             content_length = response.headers.get("content-length")
 
             if content_length and int(content_length) > max_download_bytes:
@@ -83,6 +87,8 @@ def extract_text_from_url(file_url: str) -> str:
                             "Resume PDF is larger than the allowed limit."
                         )
 
+                    if downloaded == len(chunk) and not chunk.startswith(b"%PDF-"):
+                        raise ValueError("Resume file does not contain a valid PDF header.")
                     temp_file.write(chunk)
 
         return _sync_extract(temp_path)
@@ -95,6 +101,10 @@ def _sync_extract(temp_path: str) -> str:
     """Extract text from a local PDF file path using PyMuPDF, embedding links in-place."""
     pages_text = []
     with fitz.open(temp_path) as doc:
+        if doc.needs_pass:
+            raise ValueError("Encrypted PDF files are not supported.")
+        if doc.page_count > settings.resume_max_pages:
+            raise ValueError("Resume PDF has too many pages.")
         for page in doc:
             links = page.get_links()
             # Filter external URI links
@@ -204,8 +214,8 @@ def _max_download_bytes() -> int:
 def _validate_file_url(file_url: str) -> None:
     parsed = urlparse(file_url)
 
-    if parsed.scheme not in {"http", "https"}:
-        raise ValueError("Resume file URL must use http or https.")
+    if parsed.scheme != "https":
+        raise ValueError("Resume file URL must use https.")
 
     allowed_hosts = _allowed_hosts()
 

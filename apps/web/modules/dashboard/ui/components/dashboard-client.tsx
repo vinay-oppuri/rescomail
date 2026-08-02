@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "motion/react";
 import UserProfileDialog from "./user-profile-dialog";
 
 export default function DashboardClient() {
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<Record<string, unknown> | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isAutomatic, setIsAutomatic] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Briefcase,
   FileText,
   LayoutDashboard,
   Mail,
@@ -33,7 +32,6 @@ const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "AI Resumes", href: "/dashboard/resumes", icon: FileText },
   { name: "ATS Analysis", href: "/dashboard/ats", icon: Target },
-  { name: "Job Tracker", href: "/dashboard/applications", icon: Briefcase },
   { name: "Cold Emails", href: "/dashboard/emails", icon: Mail },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
@@ -70,9 +68,9 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
               if (isMobile) setOpenMobile(false);
             }}
           >
-            <Link href="/dashboard/applications?new=true">
+            <Link href="/dashboard/resumes">
               <Plus className="h-4 w-4" />
-              <span className="text-xs font-semibold">New Application</span>
+              <span className="text-xs font-semibold">Upload Resume</span>
             </Link>
           </Button>
         </div>

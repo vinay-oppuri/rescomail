@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Badge } from "@repo/ui/components/badge";
 import {
-  BrainCircuit,
   Plus,
   Trash2,
 } from "lucide-react";
@@ -39,8 +37,6 @@ const AtsAnalysisView = ({ analyses, resumes, initialResumeId }: AtsAnalysisView
   useEffect(() => {
     initStore(analyses, resumes, initialResumeId);
   }, [analyses, resumes, initialResumeId, initStore]);
-
-  const parsedResumes = resumes.filter((r) => r.status === "parsed").length;
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">

@@ -1,5 +1,5 @@
 import type { AtsAnalysisResponse } from "@repo/validations";
-import { AlertCircle, CheckCircle2, Sparkles } from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 
 interface AtsRewritePlanProps {
   rewrites: AtsAnalysisResponse["rewriteSuggestions"];

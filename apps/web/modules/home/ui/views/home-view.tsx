@@ -47,7 +47,7 @@ const HomeView = () => {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mb-8 inline-flex items-center gap-3 rounded-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium border border-foreground/5 shadow-sm relative z-10"
         >
-          <span className="flex h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
+          <span className="flex h-1.5 w-1.5 rounded-full bg-custom animate-pulse" />
           <span className="text-foreground font-semibold">Rescomail v1.0</span>
           <span className="hidden md:block text-muted-foreground">·</span>
           <span className="hidden md:block text-muted-foreground">Your AI Enhancer</span>
@@ -88,9 +88,9 @@ const HomeView = () => {
               className="relative h-9 md:h-11 px-6 md:px-8 text-xs md:text-sm font-semibold rounded-full"
               asChild
             >
-              <Link href="/signup" className="h-9.5! md:h-11! relative pl-11 md:pl-14!">
+              <Link href="/login" className="h-9.5! md:h-11! relative pl-11 md:pl-14!">
                 Try for free
-                <div className="absolute left-0.5 md:left-1 p-2 md:p-2.5 bg-background text-foreground rounded-full border border-foreground/5"><ArrowRight className="h-4 w-4" /></div>
+                <div className="absolute left-0.5 md:left-1 p-2 md:p-2.5 bg-background text-foreground rounded-full border border-black!"><ArrowRight className="h-4 w-4" /></div>
               </Link>
             </Button>
           </motion.div>

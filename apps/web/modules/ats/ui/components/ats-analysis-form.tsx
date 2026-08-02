@@ -1,7 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { AlertTriangle, ArrowRight, Building2, FileText, Loader2, Sparkles, Zap } from "lucide-react";
+import { AlertTriangle, ArrowRight, Building2, FileText, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@repo/ui/components/button";
 import { Badge } from "@repo/ui/components/badge";
 

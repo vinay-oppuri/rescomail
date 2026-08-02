@@ -10,7 +10,6 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { user } from "./auth";
-import { organizations } from "./organizations";
 import { resumes } from "./resumes";
 
 export const coldEmails = pgTable(
@@ -20,9 +19,6 @@ export const coldEmails = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    organizationId: uuid("organization_id").references(() => organizations.id, {
-      onDelete: "set null",
-    }),
     resumeId: uuid("resume_id")
       .notNull()
       .references(() => resumes.id, { onDelete: "cascade" }),
@@ -55,10 +51,6 @@ export const coldEmails = pgTable(
     ),
     resumeCreatedAtIdx: index("cold_emails_resume_created_at_idx").on(
       table.resumeId,
-      table.createdAt,
-    ),
-    organizationCreatedAtIdx: index("cold_emails_org_created_at_idx").on(
-      table.organizationId,
       table.createdAt,
     ),
     qualityScoreIdx: index("cold_emails_quality_score_idx").on(

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Zap, Mail, Briefcase, FileText, CheckCircle2, Sparkles, Send } from "lucide-react";
+import { Zap, Mail, ShieldCheck, FileText, CheckCircle2, Sparkles, Send } from "lucide-react";
 import { cn } from "@repo/ui/lib/utils";
 
 interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -207,15 +207,15 @@ export function BentoFeatures() {
             </div>
           </BentoCard>
 
-          {/* Card 3: Kanban Tracker */}
+          {/* Card 3: Privacy controls */}
           <BentoCard className="bg-linear-to-b from-orange-500/15 dark:from-orange-500/5 to-orange-500/5 dark:to-orange-500/1 flex flex-col">
             <div className="p-5 md:p-8 flex flex-col shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-purple-500/10 text-orange-500 items-center justify-center mb-3 md:mb-5">
-                <Briefcase className="h-4 w-4 md:h-5 md:w-5" />
+                <ShieldCheck className="h-4 w-4 md:h-5 md:w-5" />
               </div>
-              <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-orange-500/80">Kanban Job Tracker</h3>
+              <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-orange-500/80">Private by Design</h3>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                Organize your pipeline. Never lose track of a follow-up.
+                Your workspace is private to your account, with encrypted personal API keys.
               </p>
             </div>
 
@@ -224,7 +224,7 @@ export function BentoFeatures() {
             <div className="flex-1 p-4 md:p-6 flex items-stretch min-h-[140px]">
               <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden p-2.5 flex gap-2">
                 <div className="flex-1 bg-muted/30 rounded-sm p-1.5 flex flex-col gap-1.5">
-                  <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Applied</div>
+                  <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Your data</div>
                   <div className="bg-muted/30 border border-border/50 rounded-sm p-1.5 space-y-1">
                     <div className="h-1 w-1/2 bg-purple-400/50 rounded-full" />
                     <div className="h-1 w-full bg-muted rounded-full" />
@@ -235,7 +235,7 @@ export function BentoFeatures() {
                   </div>
                 </div>
                 <div className="flex-1 bg-muted/30 rounded-sm p-1.5 flex flex-col gap-1.5">
-                  <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Interview</div>
+                  <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Encrypted</div>
                   <div className="bg-muted/30 border border-border/50 rounded-sm p-1.5 relative overflow-hidden">
                     <div className="absolute inset-0 bg-primary/5" />
                     <div className="h-1 w-3/4 bg-primary/40 rounded-full" />

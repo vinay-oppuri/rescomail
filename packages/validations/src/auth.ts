@@ -1,35 +1,13 @@
 import { z } from "zod";
 
-export const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address."),
-  password: z.string().min(8, "Password must be at least 8 characters."),
+export const emailOtpRequestSchema = z.object({
+  email: z.string().trim().email("Please enter a valid email address."),
 });
 
-export type LoginInput = z.infer<typeof loginSchema>;
-
-export const signupSchema = z.object({
-  firstName: z.string().trim().min(1, "First name is required"),
-  lastName: z.string().trim().min(1, "Last name is required"),
-  email: z.string().trim().email("Enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+export const emailOtpVerifySchema = z.object({
+  email: z.string().trim().email(),
+  otp: z.string().regex(/^\d{6}$/, "Enter the six-digit code."),
 });
 
-export type SignupInput = z.infer<typeof signupSchema>;
-
-export const forgotPasswordSchema = z.object({
-  email: z.string().trim().email("Enter a valid email address"),
-});
-
-export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
-
-export const resetPasswordSchema = z
-  .object({
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string().min(1, "Confirm your new password"),
-  })
-  .refine((values) => values.password === values.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type EmailOtpRequestInput = z.infer<typeof emailOtpRequestSchema>;
+export type EmailOtpVerifyInput = z.infer<typeof emailOtpVerifySchema>;

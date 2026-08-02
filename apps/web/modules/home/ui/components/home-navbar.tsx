@@ -1,13 +1,13 @@
 "use client";
 
 import { Button } from "@repo/ui/components/button";
-import { Menu, Moon, Sun, X, Target } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@repo/ui/lib/utils";
 import { useTheme } from "next-themes";
 import { useState } from "react";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import AuthDialog from "@/modules/auth/ui/auth-dialog";
 
 const navLinks = [
@@ -19,14 +19,6 @@ const navLinks = [
 const HomeNavbar = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  const { scrollY } = useScroll();
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsScrolled(latest > 20);
-  });
-
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname === "/") {
       e.preventDefault();
@@ -40,7 +32,7 @@ const HomeNavbar = () => {
       <header className="fixed top-4 sm:top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
         <div
           className={cn(
-            "pointer-events-auto flex items-center justify-between w-full max-w-xl sm:max-w-2xl h-14 px-3 sm:px-4 rounded-full",
+            "pointer-events-auto flex items-center justify-between w-full max-w-xl sm:max-w-3xl h-14 px-3 sm:px-4 rounded-full",
             "bg-background/80 backdrop-blur-md border border-foreground/5 shadow-lg transition-all duration-300"
           )}
         >
@@ -52,6 +44,9 @@ const HomeNavbar = () => {
               </span>
               <span className="text-sm sm:text-base font-semibold tracking-tight text-foreground hover:text-muted-foreground transition-colors">
                 Rescomail
+              </span>
+              <span className="border border-foreground/20 p-1 ml-1 rounded-sm text-[9px]">
+                beta
               </span>
             </Link>
           </div>

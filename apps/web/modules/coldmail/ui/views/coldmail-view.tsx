@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Badge } from "@repo/ui/components/badge";
-import { Plus, Sparkles, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 import {
   Select,
@@ -32,8 +32,6 @@ const ColdmailView = ({ emails, resumes }: ColdmailViewProps) => {
   useEffect(() => {
     initStore(emails, resumes);
   }, [emails, resumes, initStore]);
-
-  const parsedResumes = resumes.filter((r) => r.status === "parsed").length;
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:gap-8">

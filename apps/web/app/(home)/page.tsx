@@ -27,7 +27,7 @@ const faqItems = [
 export const metadata: Metadata = {
   title: "AI Resume Optimizer & Cold Email Generator",
   description:
-    "Optimize resumes for ATS, generate personalized cold emails, and track every job application with Rescomail's AI job search copilot.",
+    "Analyze resumes for ATS compatibility and generate personalized cold emails with Rescomail's focused AI workspace.",
   alternates: {
     canonical: "/",
   },

@@ -54,7 +54,25 @@ async def lifespan(app: FastAPI):
     logger.info("Rescomail AI service shutting down.")
 
 
-app = FastAPI(title="Rescomail AI Service", lifespan=lifespan)
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastAPIIntegration
+
+if settings.sentry_dsn:
+    sentry_sdk.init(
+        dsn=settings.sentry_dsn,
+        integrations=[FastAPIIntegration()],
+        traces_sample_rate=settings.sentry_traces_sample_rate,
+        send_default_pii=False,
+    )
+
+public_docs = settings.environment != "production"
+app = FastAPI(
+    title="Rescomail AI Service",
+    lifespan=lifespan,
+    docs_url="/docs" if public_docs else None,
+    redoc_url="/redoc" if public_docs else None,
+    openapi_url="/openapi.json" if public_docs else None,
+)
 
 # --- Middleware ---
 app.state.limiter = limiter

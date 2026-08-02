@@ -27,7 +27,7 @@ const siteUrl = (
 ).replace(/\/$/, "");
 
 const productDescription =
-  "Rescomail helps job seekers optimize resumes for ATS, generate personalized cold emails, and track job applications from one AI-powered workspace.";
+  "Rescomail helps people analyze resumes for ATS compatibility and generate personalized cold emails from one private workspace.";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -59,7 +59,6 @@ const structuredData = {
       featureList: [
         "ATS resume optimization",
         "AI cold email generation",
-        "Application tracking",
         "Resume parsing",
       ],
       offers: {
@@ -98,8 +97,7 @@ export const metadata: Metadata = {
     "ATS optimization",
     "ATS resume checker",
     "cold email generator",
-    "job application tracker",
-    "AI job search copilot",
+    "resume analysis workspace",
     "AI career coach",
     "resume parser",
   ],
@@ -127,7 +125,7 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Rescomail AI job search workspace",
+        alt: "Rescomail AI resume analysis workspace",
       },
     ],
   },

@@ -30,7 +30,7 @@ interface AccountDetailsProps {
   } | null;
   geminiApiKey?: string | null;
   groqApiKey?: string | null;
-  primaryProvider?: string;
+  primaryProvider?: "gemini" | "groq";
 }
 
 export function AccountDetails({

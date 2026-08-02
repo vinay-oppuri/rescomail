@@ -1,15 +1,23 @@
 import type { NextConfig } from "next";
 
+const isDevelopment = process.env.NODE_ENV === "development";
+const scriptSources = [
+  "'self'",
+  "'unsafe-inline'",
+  ...(isDevelopment ? ["'unsafe-eval'"] : []),
+].join(" ");
+
 const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",   // tighten to nonce later
+      `script-src ${scriptSources}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://utfs.io https://ufs.sh",
-      "connect-src 'self' https://uploadthing.com https://api.uploadthing.com",
+      "connect-src 'self' https://uploadthing.com https://api.uploadthing.com https://ufs.sh https://utfs.io",
       "font-src 'self'",
+      "worker-src 'self' blob:",
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",
@@ -52,6 +60,8 @@ const securityHeaders = [
   },
 ];
 
+import { withSentryConfig } from "@sentry/nextjs";
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   async headers() {
@@ -64,4 +74,13 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  org: "rescomail",
+  project: "web-app",
+  widenClientFileUpload: true,
+  tunnelRoute: "/monitoring",
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
+});

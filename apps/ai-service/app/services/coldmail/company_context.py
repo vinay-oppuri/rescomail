@@ -145,12 +145,31 @@ def get_rag_company_context(
     if not rag_query:
         rag_query = f"{company_name} news and context"
         
-    scores = semantic_search_scores(rag_query, chunks)
+    from app.embeddings.cache import embed_with_cache
+    from app.embeddings.semantic import cosine_similarity, _calibrate_similarity
+
+    query_vec = embed_with_cache(rag_query, task_type="RETRIEVAL_QUERY")
+    scores = [
+        _calibrate_similarity(cosine_similarity(query_vec, embed_with_cache(chunk, task_type="RETRIEVAL_DOCUMENT")))
+        for chunk in chunks
+    ]
     
     ranked = list(zip(chunks, scores))
     ranked.sort(key=lambda item: -item[1])
     
-    top_chunks = [chunk for chunk, score in ranked[:3]]
+    MIN_CHUNK_RELEVANCE = 45  # on 0-100 scale from _calibrate_similarity
+    top_chunks = [
+        chunk for chunk, score in ranked[:3]
+        if score >= MIN_CHUNK_RELEVANCE
+    ]
+
+    if not top_chunks:
+        logger.warning(
+            "No chunks met relevance threshold (%d) for '%s' — skipping context injection.",
+            MIN_CHUNK_RELEVANCE,
+            target_name,
+        )
+        return ""
     
     context = "\n\n".join(top_chunks)
     result_text = _clamp_text(context, MAX_COMPANY_CONTEXT_LENGTH)
@@ -168,21 +187,31 @@ def get_rag_company_context(
     return f"{prefix}Extracted company context:\n{result_text}"
 
 
-def _chunk_text(text: str, chunk_size: int = 500) -> list[str]:
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
-    chunks = []
-    current_chunk = ""
-    
-    for line in lines:
-        if len(current_chunk) + len(line) > chunk_size and current_chunk:
-            chunks.append(current_chunk.strip())
-            current_chunk = line + " "
+def _chunk_text(text: str, chunk_size: int = 500, overlap: int = 100) -> list[str]:
+    """Split text into chunks at sentence boundaries with overlap.
+
+    Sentence-aware: splits on '.', '!', '?' followed by whitespace so a
+    sentence is never cut in half between two chunks.
+    Overlap: the last `overlap` characters of each chunk are repeated at the
+    start of the next chunk so context at chunk boundaries is preserved.
+    """
+    # Split on sentence-ending punctuation followed by space or end-of-string
+    sentences = re.split(r"(?<=[.!?])\s+", text)
+    chunks: list[str] = []
+    current = ""
+
+    for sentence in sentences:
+        if len(current) + len(sentence) + 1 > chunk_size and current:
+            chunks.append(current.strip())
+            # Seed the next chunk with the tail of the current one for overlap
+            overlap_seed = current[-overlap:].strip() if len(current) > overlap else current.strip()
+            current = overlap_seed + " " + sentence
         else:
-            current_chunk += line + " "
-            
-    if current_chunk.strip():
-        chunks.append(current_chunk.strip())
-        
+            current = (current + " " + sentence).strip()
+
+    if current.strip():
+        chunks.append(current.strip())
+
     return chunks
 
 

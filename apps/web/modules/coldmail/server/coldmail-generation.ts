@@ -2,7 +2,7 @@ import { coldEmails, db, resumes } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 import { ColdmailError } from "./coldmail-errors";
-import { checkUsageLimit } from "@/modules/dashboard/server/usage-limits";
+import { releaseUsage, reserveUsage } from "@/modules/dashboard/server/usage-limits";
 import { coldmailGenerationTask } from "@/trigger/coldmail-generation";
 import type { ColdEmailGenerateInput } from "@repo/validations";
 import { logRouteError } from "@/lib/server/api-errors";
@@ -10,8 +10,6 @@ import { logRouteError } from "@/lib/server/api-errors";
 export const generateColdEmailForUser = async (
   input: ColdEmailGenerateInput & { userId: string },
 ) => {
-  await checkUsageLimit(input.userId, "cold_email_generate");
-
   const resume = await db.query.resumes.findFirst({
     where: and(
       eq(resumes.id, input.resumeId),
@@ -31,7 +29,6 @@ export const generateColdEmailForUser = async (
       .insert(coldEmails)
       .values({
         userId: input.userId,
-        organizationId: resume.organizationId || null,
         resumeId: resume.id,
         jobTitle: input.jobTitle || "Job Opening",
         companyName: input.companyName || "Unknown",
@@ -53,6 +50,8 @@ export const generateColdEmailForUser = async (
     }
 
     savedColdmailId = savedColdmail.id;
+
+    await reserveUsage(input.userId, "cold_email_generate", savedColdmail.id);
 
     // 2. Queue the job in Trigger.dev
     await coldmailGenerationTask.trigger(
@@ -79,6 +78,7 @@ export const generateColdEmailForUser = async (
     const message = "Unable to start cold email generation right now.";
 
     if (savedColdmailId) {
+      await releaseUsage(savedColdmailId);
       await db
         .update(coldEmails)
         .set({

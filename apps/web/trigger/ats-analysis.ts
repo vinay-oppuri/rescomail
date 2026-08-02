@@ -1,10 +1,11 @@
 import { logger, task } from "@trigger.dev/sdk/v3";
-import { atsAnalyses, db, resumes, usageEvents, userPreferences } from "@repo/db";
+import { atsAnalyses, db, resumes, userPreferences } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 import { AtsAnalysisError } from "@/modules/ats/server/ats-errors";
 import { runAiAtsAnalysis } from "@/modules/ats/server/ats-service-client";
 import { decryptSecret } from "@/lib/server/secrets";
+import { consumeUsage, releaseUsage } from "@/modules/dashboard/server/usage-limits";
 
 type AtsAnalysisPayload = {
   analysisId: string;
@@ -44,6 +45,7 @@ export const atsAnalysisTask = task({
     }
 
     if (analysisRecord.status === "completed") {
+      await consumeUsage(analysisId);
       logger.log("ATS analysis already completed - skipping duplicate run.");
       return { success: true, alreadyCompleted: true };
     }
@@ -85,8 +87,8 @@ export const atsAnalysisTask = task({
       },
       resume,
       userId,
-      decryptSecret(prefs?.geminiApiKey) ?? undefined,
-      decryptSecret(prefs?.groqApiKey) ?? undefined,
+      decryptSecret(prefs?.geminiApiKey, payload.userId, "gemini") ?? undefined,
+      decryptSecret(prefs?.groqApiKey, payload.userId, "groq") ?? undefined,
       prefs?.primaryProvider ?? "gemini"
     );
 
@@ -104,17 +106,11 @@ export const atsAnalysisTask = task({
           and(eq(atsAnalyses.id, analysisId), eq(atsAnalyses.userId, userId)),
         );
 
-      await tx.insert(usageEvents).values({
-        userId,
-        organizationId: resume.organizationId,
-        type: "ats_analysis",
-        metadata: {
-          resumeId: resume.id,
-          jobTitle: analysisRecord.jobTitle,
-          companyName: analysisRecord.companyName,
-          overallScore: analysis.overallScore,
-        },
-      });
+    });
+
+    await consumeUsage(analysisId, {
+      resumeId: resume.id,
+      overallScore: analysis.overallScore,
     });
 
     logger.log(`Successfully completed ATS analysis: ${analysisId}`);
@@ -125,6 +121,8 @@ export const atsAnalysisTask = task({
     const reason = getFailureMessage(error);
 
     logger.error(`ATS analysis failed permanently: ${reason}`);
+
+    await releaseUsage(payload.analysisId);
 
     await db
       .update(atsAnalyses)

@@ -1,10 +1,11 @@
 import { logger, task } from "@trigger.dev/sdk/v3";
-import { coldEmails, db, resumes, usageEvents, userPreferences } from "@repo/db";
+import { coldEmails, db, resumes, userPreferences } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 import { ColdmailError } from "@/modules/coldmail/server/coldmail-errors";
 import { runAiColdmailGeneration } from "@/modules/coldmail/server/coldmail-service-client";
 import { decryptSecret } from "@/lib/server/secrets";
+import { consumeUsage, releaseUsage } from "@/modules/dashboard/server/usage-limits";
 import type {
   ColdEmailCallToAction,
   ColdEmailLength,
@@ -41,6 +42,7 @@ export const coldmailGenerationTask = task({
     }
 
     if (emailRecord.status === "completed") {
+      await consumeUsage(coldEmailId);
       logger.log("Cold email already generated - skipping duplicate run.");
       return { success: true, alreadyCompleted: true };
     }
@@ -89,7 +91,7 @@ export const coldmailGenerationTask = task({
       },
       resume,
       userId,
-      decryptSecret(prefs?.geminiApiKey) ?? undefined
+      decryptSecret(prefs?.geminiApiKey, payload.userId, "gemini") ?? undefined
     );
 
     await db.transaction(async (tx) => {
@@ -109,17 +111,11 @@ export const coldmailGenerationTask = task({
           and(eq(coldEmails.id, coldEmailId), eq(coldEmails.userId, userId)),
         );
 
-      await tx.insert(usageEvents).values({
-        userId,
-        organizationId: resume.organizationId,
-        type: "cold_email_generate",
-        metadata: {
-          resumeId: resume.id,
-          jobTitle: emailRecord.jobTitle,
-          companyName: emailRecord.companyName,
-          qualityScore: draft.qualityScore,
-        },
-      });
+    });
+
+    await consumeUsage(coldEmailId, {
+      resumeId: resume.id,
+      qualityScore: draft.qualityScore,
     });
 
     logger.log(`Successfully generated cold email: ${coldEmailId}`);
@@ -130,6 +126,8 @@ export const coldmailGenerationTask = task({
     const reason = getFailureMessage(error);
 
     logger.error(`Cold email generation failed permanently: ${reason}`);
+
+    await releaseUsage(payload.coldEmailId);
 
     await db
       .update(coldEmails)

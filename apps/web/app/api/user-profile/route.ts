@@ -26,7 +26,7 @@ const userProfileUpdateSchema = z.object({
   last_prompted_at: z.string().datetime().nullable().optional(),
 });
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

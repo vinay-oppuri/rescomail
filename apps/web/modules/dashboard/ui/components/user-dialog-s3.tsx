@@ -5,13 +5,10 @@ import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
 import {
-  Key,
   CheckCircle2,
   Zap,
   Brain,
   X,
-  ShieldCheck,
-  ArrowLeft,
   Check,
 } from "lucide-react";
 import { EditPreferenceAction } from "@/modules/settings/server/actions";
@@ -36,8 +33,6 @@ function maskKey(key: string): string {
 // ── Props ──────────────────────────────────────────────────────────────────
 interface Step3Props {
   onDone: () => void;
-  onSkip: () => void;
-  onPrevious: () => void;
   onSavingChange?: (saving: boolean) => void;
   initialData?: {
     primaryProvider?: "gemini" | "groq" | null;
@@ -53,8 +48,6 @@ export interface UserDialogS3Ref {
 // ── Component ──────────────────────────────────────────────────────────────
 const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
   onDone,
-  onSkip,
-  onPrevious,
   onSavingChange,
   initialData,
 }, ref) => {
@@ -70,7 +63,6 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
     initialData?.primaryProvider === "groq" ? "groq" : "gemini"
   );
 
-  const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
 
   const activeGeminiKey =
@@ -131,11 +123,10 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
   };
 
   const handleSave = async () => {
-    setSaving(true);
     onSavingChange?.(true);
     setSaveError("");
     try {
-      const payload: Record<string, any> = { primaryProvider };
+      const payload: Record<string, unknown> = { primaryProvider };
       if (stagedKeys.gemini !== undefined) payload.geminiApiKey = stagedKeys.gemini;
       if (stagedKeys.groq !== undefined) payload.groqApiKey = stagedKeys.groq;
       const result = await EditPreferenceAction(payload);
@@ -144,7 +135,6 @@ const UserDialogS3 = forwardRef<UserDialogS3Ref, Step3Props>(({
     } catch {
       setSaveError("An unexpected error occurred. Please try again.");
     } finally {
-      setSaving(false);
       onSavingChange?.(false);
     }
   };

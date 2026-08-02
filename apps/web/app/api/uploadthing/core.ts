@@ -5,8 +5,10 @@ import { resumeUploadSchema } from "@repo/validations";
 
 import {
   createResumeUpload,
+  deleteResume,
   markResumeParsingFailed,
 } from "@/modules/resumes/server/resumes";
+import { releaseUsage, reserveUsage } from "@/modules/dashboard/server/usage-limits";
 import { parseResumeTask } from "@/trigger/parse-resume";
 
 import { db, user } from "@repo/db";
@@ -83,6 +85,13 @@ export const ourFileRouter = {
         });
 
         try {
+          await reserveUsage(metadata.userId, "resume_parse", resume.id);
+        } catch (error) {
+          await deleteResume(resume.id, metadata.userId);
+          throw error;
+        }
+
+        try {
           await parseResumeTask.trigger(
             {
               resumeId: resume.id,
@@ -95,6 +104,7 @@ export const ourFileRouter = {
             },
           );
         } catch (error) {
+          await releaseUsage(resume.id);
           const reason =
             error instanceof Error
               ? error.message

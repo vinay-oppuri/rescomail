@@ -23,14 +23,16 @@ interface UserProfileDialogProps {
     github_url?: string;
     linkedin_url?: string;
     extra_links?: { label: string; url: string }[];
-    preferences?: any;
+    preferences?: {
+      primaryProvider?: "gemini" | "groq" | null;
+      hasGeminiKey?: boolean;
+      hasGroqKey?: boolean;
+    };
   }) | null;
   onSaveSuccess: () => void;
   isAutomaticPrompt?: boolean;
   initialStep?: number;
 }
-
-const TOTAL_STEPS = 3;
 
 // ── Orchestrator ──────────────────────────────────────────────────────────
 export default function UserProfileDialog({
@@ -71,6 +73,7 @@ export default function UserProfileDialog({
   // Reset form & step whenever the dialog opens
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStep(initialStep);
       if (initialData) {
         reset({
@@ -90,7 +93,7 @@ export default function UserProfileDialog({
         });
       }
     }
-  }, [open, initialData, reset]);
+  }, [open, initialData, reset, initialStep]);
 
   // Update last_prompted_at cooldown
   useEffect(() => {
@@ -208,8 +211,6 @@ export default function UserProfileDialog({
               initialData={initialData?.preferences}
               onSavingChange={setSubmitting}
               onDone={() => { onSaveSuccess(); onOpenChange(false); }}
-              onSkip={() => { onSaveSuccess(); onOpenChange(false); }}
-              onPrevious={() => setStep(2)}
             />
           )}
         </div>

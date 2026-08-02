@@ -1,9 +1,7 @@
 "use client";
 
 import { AccountDetails } from "./account-details";
-import { ProfileDefaults } from "./profile-defaults";
 import { DangerActions } from "./danger-actions";
-import { UserProfileSettings } from "./user-profile-settings";
 
 interface SettingsClientProps {
   user: {
@@ -16,7 +14,7 @@ interface SettingsClientProps {
   };
   geminiApiKey?: string | null;
   groqApiKey?: string | null;
-  primaryProvider?: string;
+  primaryProvider?: "gemini" | "groq";
   profile?: {
     fullName: string;
     email: string;
@@ -56,8 +54,6 @@ export default function SettingsClient({
         groqApiKey={groqApiKey}
         primaryProvider={primaryProvider}
       />
-      {/* <UserProfileSettings profile={profile} /> */}
-      <ProfileDefaults />
       <DangerActions />
     </div>
   );

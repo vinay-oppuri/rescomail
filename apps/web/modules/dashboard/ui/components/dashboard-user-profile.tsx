@@ -105,11 +105,6 @@ const DashboardUserProfile = () => {
               <span className="text-xs font-medium">Dashboard</span>
             </DropdownMenuItem>
             
-{/* <DropdownMenuItem onClick={() => router.push("/dashboard/billing")} className="cursor-pointer gap-3 py-2.5 hover:rounded-sm! ">
-              <CreditCard className="h-4 w-4 text-muted-foreground" />
-              <span className="text-xs font-medium">Billing & Plans</span>
-            </DropdownMenuItem> */}
-            
             <DropdownMenuItem onClick={() => router.push("/dashboard/settings")} className="cursor-pointer gap-3 py-2.5 hover:rounded-sm! ">
               <Settings className="h-4 w-4 text-muted-foreground" />
               <span className="text-xs font-medium">Settings</span>

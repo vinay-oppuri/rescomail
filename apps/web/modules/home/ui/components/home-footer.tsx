@@ -43,7 +43,7 @@ const HomeFooter = () => {
             </div>
           </div>
           <p className="text-[10px] md:text-xs text-foreground leading-relaxed">
-            The AI copilot designed to help you organize your job search, optimize your resume, and land more interviews.
+            A focused AI workspace for resume analysis and personalized professional outreach.
           </p>
         </div>
 

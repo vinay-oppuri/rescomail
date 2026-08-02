@@ -33,6 +33,8 @@ const serverEnvSchema = z
     DATA_ENCRYPTION_KEY: requiredSecret.optional(),
     GOOGLE_CLIENT_ID: optionalNonEmptyString,
     GOOGLE_CLIENT_SECRET: optionalNonEmptyString,
+    GITHUB_CLIENT_ID: optionalNonEmptyString,
+    GITHUB_CLIENT_SECRET: optionalNonEmptyString,
     RESEND_API_KEY: optionalNonEmptyString,
     RESEND_FROM_EMAIL: optionalNonEmptyString,
     UPLOADTHING_TOKEN: optionalNonEmptyString,
@@ -40,6 +42,7 @@ const serverEnvSchema = z
     AI_SERVICE_GRPC_URL: optionalUrl,
     TAVILY_API_KEY: optionalNonEmptyString,
     AI_SERVICE_API_KEY: optionalNonEmptyString,
+    TRIGGER_SECRET_KEY: z.string().min(1, "TRIGGER_SECRET_KEY is required"),
   })
   .superRefine((env, ctx) => {
     const hasGoogleId = Boolean(env.GOOGLE_CLIENT_ID);
@@ -54,11 +57,39 @@ const serverEnvSchema = z
       });
     }
 
+    const hasGitHubId = Boolean(env.GITHUB_CLIENT_ID);
+    const hasGitHubSecret = Boolean(env.GITHUB_CLIENT_SECRET);
+
+    if (hasGitHubId !== hasGitHubSecret) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["GITHUB_CLIENT_ID"],
+        message:
+          "GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET must be configured together.",
+      });
+    }
+
     const skipValidation =
       process.env.SKIP_ENV_VALIDATION === "1" ||
       process.env.SKIP_ENV_VALIDATION === "true";
 
     if (env.NODE_ENV === "production" && !skipValidation) {
+      if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["GOOGLE_CLIENT_ID"],
+          message: "Google OAuth credentials are required in production.",
+        });
+      }
+
+      if (!env.GITHUB_CLIENT_ID || !env.GITHUB_CLIENT_SECRET) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["GITHUB_CLIENT_ID"],
+          message: "GitHub OAuth credentials are required in production.",
+        });
+      }
+
       const publicUrls = [
         ["BETTER_AUTH_URL", env.BETTER_AUTH_URL],
         ["NEXT_PUBLIC_BETTER_AUTH_URL", env.NEXT_PUBLIC_BETTER_AUTH_URL],
@@ -98,6 +129,29 @@ const serverEnvSchema = z
         });
       }
 
+      if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["RESEND_API_KEY"],
+          message: "RESEND_API_KEY and RESEND_FROM_EMAIL are required in production.",
+        });
+      } else if (/@resend\.dev\b/i.test(env.RESEND_FROM_EMAIL)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["RESEND_FROM_EMAIL"],
+          message:
+            "RESEND_FROM_EMAIL must use a verified sender domain in production.",
+        });
+      }
+
+      if (!env.UPLOADTHING_TOKEN) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["UPLOADTHING_TOKEN"],
+          message: "UPLOADTHING_TOKEN is required in production.",
+        });
+      }
+
       if (!env.AI_SERVICE_URL.startsWith("https://")) {
         ctx.addIssue({
           code: "custom",
@@ -126,6 +180,8 @@ export const serverEnv = serverEnvSchema.parse({
   DATA_ENCRYPTION_KEY: process.env.DATA_ENCRYPTION_KEY,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL,
   UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
@@ -133,6 +189,7 @@ export const serverEnv = serverEnvSchema.parse({
   AI_SERVICE_GRPC_URL: process.env.AI_SERVICE_GRPC_URL,
   TAVILY_API_KEY: process.env.TAVILY_API_KEY,
   AI_SERVICE_API_KEY: process.env.AI_SERVICE_API_KEY,
+  TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

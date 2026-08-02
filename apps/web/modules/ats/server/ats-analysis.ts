@@ -2,7 +2,7 @@ import { atsAnalyses, db, resumes } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 import { AtsAnalysisError } from "./ats-errors";
-import { checkUsageLimit } from "@/modules/dashboard/server/usage-limits";
+import { releaseUsage, reserveUsage } from "@/modules/dashboard/server/usage-limits";
 import { atsAnalysisTask } from "@/trigger/ats-analysis";
 import type { AtsAnalyzeInput } from "@repo/validations";
 import { logRouteError } from "@/lib/server/api-errors";
@@ -10,9 +10,6 @@ import { logRouteError } from "@/lib/server/api-errors";
 export const runAtsAnalysisForUser = async (
   input: AtsAnalyzeInput & { userId: string },
 ) => {
-  // Pre-flight: enforce monthly credit limit before triggering the AI service.
-  await checkUsageLimit(input.userId, "ats_analysis");
-
   const resume = await db.query.resumes.findFirst({
     where: and(
       eq(resumes.id, input.resumeId),
@@ -32,7 +29,6 @@ export const runAtsAnalysisForUser = async (
       .insert(atsAnalyses)
       .values({
         userId: input.userId,
-        organizationId: resume.organizationId || null,
         resumeId: resume.id,
         jobTitle: input.jobTitle || "Custom Job Description",
         companyName: input.companyName || "Unknown Company",
@@ -47,6 +43,8 @@ export const runAtsAnalysisForUser = async (
     }
 
     savedAnalysisId = savedAnalysis.id;
+
+    await reserveUsage(input.userId, "ats_analysis", savedAnalysis.id);
 
     // 2. Queue the job in Trigger.dev
     await atsAnalysisTask.trigger(
@@ -73,6 +71,7 @@ export const runAtsAnalysisForUser = async (
     const message = "Unable to start ATS analysis right now.";
 
     if (savedAnalysisId) {
+      await releaseUsage(savedAnalysisId);
       await db
         .update(atsAnalyses)
         .set({

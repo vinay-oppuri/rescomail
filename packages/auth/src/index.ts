@@ -1,20 +1,30 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { emailOTP } from "better-auth/plugins";
 
 import { db } from "@repo/db";
 import { serverEnv } from "@repo/env/server";
 
-import { sendPasswordResetEmail } from "./email";
+import { sendLoginOtpEmail } from "./email";
 
-const socialProviders =
-  serverEnv.GOOGLE_CLIENT_ID && serverEnv.GOOGLE_CLIENT_SECRET
+const socialProviders = {
+  ...(serverEnv.GOOGLE_CLIENT_ID && serverEnv.GOOGLE_CLIENT_SECRET
     ? {
         google: {
           clientId: serverEnv.GOOGLE_CLIENT_ID,
           clientSecret: serverEnv.GOOGLE_CLIENT_SECRET,
         },
       }
-    : undefined;
+    : {}),
+  ...(serverEnv.GITHUB_CLIENT_ID && serverEnv.GITHUB_CLIENT_SECRET
+    ? {
+        github: {
+          clientId: serverEnv.GITHUB_CLIENT_ID,
+          clientSecret: serverEnv.GITHUB_CLIENT_SECRET,
+        },
+      }
+    : {}),
+};
 
 export const auth = betterAuth({
   secret: serverEnv.BETTER_AUTH_SECRET,
@@ -29,24 +39,24 @@ export const auth = betterAuth({
     window: 60,
     max: 100,
     customRules: {
-      "/sign-in/email": {
-        window: 60 * 15,
-        max: 5,
+      "/email-otp/send-verification-otp": {
+        window: 60,
+        max: 3,
       },
     },
   },
 
-  emailAndPassword: {
-    enabled: true,
-    resetPasswordTokenExpiresIn: 60 * 60,
-    revokeSessionsOnPasswordReset: true,
-    sendResetPassword: async ({ user, url }) => {
-      await sendPasswordResetEmail({
-        email: user.email,
-        name: user.name,
-        resetUrl: url,
-      });
-    },
-  },
   socialProviders,
+  plugins: [
+    emailOTP({
+      expiresIn: 5 * 60,
+      otpLength: 6,
+      allowedAttempts: 5,
+      storeOTP: "hashed",
+      sendVerificationOTP: async ({ email, otp, type }) => {
+        if (type !== "sign-in") return;
+        await sendLoginOtpEmail({ email, otp });
+      },
+    }),
+  ],
 });

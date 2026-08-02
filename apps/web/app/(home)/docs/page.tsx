@@ -1,10 +1,10 @@
 import { Metadata } from "next";
-import { ArrowRight, BookOpen, CheckCircle, FileText, Settings, Shield, User, SlidersHorizontal, Upload, Search } from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle, FileText, Settings, Shield, User, Upload } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Documentation | Rescomail",
-  description: "Learn how to use Rescomail to optimize your job search, analyze your resume, and generate cold emails.",
+  description: "Learn how to use Rescomail to analyze resumes and generate cold emails.",
 };
 
 const Page = () => {
@@ -19,8 +19,6 @@ const Page = () => {
           <Link href="#resume-editor" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">Editor</Link>
           <Link href="#ats-analysis" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">ATS</Link>
           <Link href="#cold-emails" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">Emails</Link>
-          <Link href="#job-search" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">Jobs</Link>
-          <Link href="#profile-defaults" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">Profile</Link>
           <Link href="#custom-api-key" className="whitespace-nowrap px-3 py-1.5 bg-muted rounded-full text-xs font-medium">API Keys</Link>
         </div>
 
@@ -54,14 +52,12 @@ const Page = () => {
                 <ul className="space-y-2 text-xs text-muted-foreground">
                   <li><Link href="#ats-analysis" className="hover:text-primary transition-colors">ATS Analysis</Link></li>
                   <li><Link href="#cold-emails" className="hover:text-primary transition-colors">Cold Emails</Link></li>
-                  <li><Link href="#job-search" className="hover:text-primary transition-colors">Job Search</Link></li>
                 </ul>
               </div>
 
               <div>
                 <h4 className="font-medium text-xs text-foreground mb-2 uppercase tracking-wider">Configuration</h4>
                 <ul className="space-y-2 text-xs text-muted-foreground">
-                  <li><Link href="#profile-defaults" className="hover:text-primary transition-colors">Profile Defaults</Link></li>
                   <li><Link href="#custom-api-key" className="hover:text-primary transition-colors">Custom API Key</Link></li>
                   <li><Link href="#account-management" className="hover:text-primary transition-colors">Account Management</Link></li>
                 </ul>
@@ -85,7 +81,7 @@ const Page = () => {
             <section id="introduction" className="scroll-mt-28">
               <h2 className="text-xl font-bold mb-3 tracking-tight border-b border-border/50 pb-2">What is Rescomail?</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Rescomail is an AI-powered job search copilot designed specifically to give you an edge in today&apos;s competitive job market. We combine advanced natural language processing with career expertise to help you build better resumes and write outreach emails that actually get responses.
+                Rescomail is a focused AI workspace for understanding resume quality, comparing a resume with a role description, and writing personalized professional outreach.
               </p>
             </section>
 
@@ -230,51 +226,6 @@ const Page = () => {
               </div>
             </section>
 
-            {/* Job Search & Tracking */}
-            <section id="job-search" className="scroll-mt-28">
-              <h2 className="text-xl font-bold mb-3 tracking-tight border-b border-border/50 pb-2 flex items-center gap-2">
-                <Search className="w-5 h-5 text-orange-500" />
-                Job Search & Tracking
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                Discover the perfect role and manage your entire application pipeline directly within Rescomail.
-              </p>
-              <div className="rounded-sm bg-muted/30 p-5 border border-border/50 ">
-                <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-                  <li>Navigate to <strong>Applications</strong> in the sidebar.</li>
-                  <li>Use the <strong>Job Search</strong> panel to find relevant roles based on your preferences.</li>
-                  <li>Save interesting jobs with one click to add them to your <strong>Kanban Board</strong>.</li>
-                  <li>Drag and drop applications across stages (Saved, Applied, Phone Screen, Interview, Offer, Rejected).</li>
-                  <li>Attach a specific <strong>Resume</strong> to each application to keep track of which version you used.</li>
-                </ol>
-              </div>
-            </section>
-
-            {/* Profile Defaults */}
-            <section id="profile-defaults" className="scroll-mt-28">
-              <h2 className="text-xl font-bold mb-3 tracking-tight border-b border-border/50 pb-2 flex items-center gap-2">
-                <SlidersHorizontal className="w-5 h-5 text-orange-500" />
-                Setting Profile Defaults
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                To save time when running multiple ATS scans or generating emails, you can set global defaults for your job search preferences.
-              </p>
-              <div className="rounded-sm bg-muted/30 p-5 border border-border/50 mb-3">
-                <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-                  <li>Go to the <strong>Settings</strong> page from your dashboard.</li>
-                  <li>In the <strong>Profile Defaults</strong> section, specify your preferences:
-                    <ul className="list-disc list-inside ml-6 mt-2 space-y-1">
-                      <li>Target Seniority (e.g., Senior, New Grad)</li>
-                      <li>Work Mode (Remote, Hybrid)</li>
-                      <li>Employment Type</li>
-                      <li>Preferred Locations</li>
-                    </ul>
-                  </li>
-                  <li>Click <strong>Save Preferences</strong>.</li>
-                </ol>
-              </div>
-            </section>
-
             {/* Custom API Key */}
             <section id="custom-api-key" className="scroll-mt-28">
               <h2 className="text-xl font-bold mb-3 tracking-tight border-b border-border/50 pb-2 flex items-center gap-2">
@@ -282,7 +233,7 @@ const Page = () => {
                 Custom API Keys (Bypass Limits)
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                Rescomail offers a generous free tier for trial users. If you hit your limits, you can simply provide your own Google Gemini API key to unlock <strong>unlimited usage</strong>.
+                You can provide your own Gemini or Groq API key for a higher beta limit. Platform abuse controls still apply.
               </p>
               <div className="rounded-sm border border-border/50 bg-muted/30 p-5 ">
                 <h4 className="font-semibold text-sm text-foreground mb-3">How to add your API Key:</h4>

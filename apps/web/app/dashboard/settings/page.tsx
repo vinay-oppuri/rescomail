@@ -26,9 +26,9 @@ const Page = async () => {
   return (
     <SettingsClient
       user={session.user}
-      geminiApiKey={maskSecret(prefs?.geminiApiKey)}
-      groqApiKey={maskSecret(prefs?.groqApiKey)}
-      primaryProvider={prefs?.primaryProvider || "gemini"}
+      geminiApiKey={maskSecret(prefs?.geminiApiKey, session.user.id, "gemini")}
+      groqApiKey={maskSecret(prefs?.groqApiKey, session.user.id, "groq")}
+      primaryProvider={prefs?.primaryProvider === "groq" ? "groq" : "gemini"}
       profile={profile ? {
         fullName: profile.fullName || "",
         email: profile.email || "",

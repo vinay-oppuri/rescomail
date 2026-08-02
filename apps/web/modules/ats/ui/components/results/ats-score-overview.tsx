@@ -1,7 +1,6 @@
 import type { AtsAnalysisResponse } from "@repo/validations";
 import { Badge } from "@repo/ui/components/badge";
 import { cn } from "@repo/ui/lib/utils";
-import { Sparkles } from "lucide-react";
 
 import { categoryLabels, scoreColor, verdictLabel, verdictTone } from "./ats-result-utils";
 

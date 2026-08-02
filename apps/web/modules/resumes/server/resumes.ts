@@ -72,13 +72,8 @@ export const deleteResume = async (resumeId: string, userId: string) => {
   }
 
   // Delete file from UploadThing storage
-  try {
-    const utapi = new UTApi();
-    await utapi.deleteFiles(resume.fileKey);
-  } catch {
-    // Non-fatal: log but continue with DB deletion
-    console.warn("Failed to delete file from storage:", resume.fileKey);
-  }
+  const utapi = new UTApi();
+  await utapi.deleteFiles(resume.fileKey);
 
   await db
     .delete(resumes)

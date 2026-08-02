@@ -10,7 +10,6 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { user } from "./auth";
-import { organizations } from "./organizations";
 import { resumes } from "./resumes";
 
 export const atsAnalyses = pgTable(
@@ -20,9 +19,6 @@ export const atsAnalyses = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    organizationId: uuid("organization_id").references(() => organizations.id, {
-      onDelete: "set null",
-    }),
     resumeId: uuid("resume_id")
       .notNull()
       .references(() => resumes.id, { onDelete: "cascade" }),
@@ -46,10 +42,6 @@ export const atsAnalyses = pgTable(
     ),
     resumeCreatedAtIdx: index("ats_analyses_resume_created_at_idx").on(
       table.resumeId,
-      table.createdAt,
-    ),
-    organizationCreatedAtIdx: index("ats_analyses_org_created_at_idx").on(
-      table.organizationId,
       table.createdAt,
     ),
     scoreIdx: index("ats_analyses_score_idx").on(table.overallScore),
