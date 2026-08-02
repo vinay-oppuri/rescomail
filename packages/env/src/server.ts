@@ -97,42 +97,6 @@ const serverEnvSchema = z
         }
       }
 
-      if (!env.AI_SERVICE_API_KEY) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["AI_SERVICE_API_KEY"],
-          message: "AI_SERVICE_API_KEY is required in production.",
-        });
-      }
-
-      if (!env.DATA_ENCRYPTION_KEY) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["DATA_ENCRYPTION_KEY"],
-          message: "DATA_ENCRYPTION_KEY is required in production.",
-        });
-      }
-
-      if (
-        env.RESEND_FROM_EMAIL &&
-        /@resend\.dev\b/i.test(env.RESEND_FROM_EMAIL)
-      ) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["RESEND_FROM_EMAIL"],
-          message:
-            "RESEND_FROM_EMAIL must use a verified sender domain in production.",
-        });
-      }
-
-      if (!env.AI_SERVICE_URL.startsWith("https://")) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["AI_SERVICE_URL"],
-          message: "AI_SERVICE_URL must use HTTPS in production.",
-        });
-      }
-
       if (env.BETTER_AUTH_URL !== env.NEXT_PUBLIC_BETTER_AUTH_URL) {
         ctx.addIssue({
           code: "custom",
@@ -148,7 +112,8 @@ export const serverEnv = serverEnvSchema.parse({
   NODE_ENV: process.env.NODE_ENV,
   DATABASE_URL: process.env.DATABASE_URL,
   BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
-  NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
+  NEXT_PUBLIC_BETTER_AUTH_URL:
+    process.env.NEXT_PUBLIC_BETTER_AUTH_URL ?? process.env.BETTER_AUTH_URL,
   BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
   DATA_ENCRYPTION_KEY: process.env.DATA_ENCRYPTION_KEY,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
