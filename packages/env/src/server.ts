@@ -42,7 +42,7 @@ const serverEnvSchema = z
     AI_SERVICE_GRPC_URL: optionalUrl,
     TAVILY_API_KEY: optionalNonEmptyString,
     AI_SERVICE_API_KEY: optionalNonEmptyString,
-    TRIGGER_SECRET_KEY: z.string().min(1, "TRIGGER_SECRET_KEY is required"),
+    TRIGGER_SECRET_KEY: optionalNonEmptyString,
   })
   .superRefine((env, ctx) => {
     const hasGoogleId = Boolean(env.GOOGLE_CLIENT_ID);
@@ -74,22 +74,6 @@ const serverEnvSchema = z
       process.env.SKIP_ENV_VALIDATION === "true";
 
     if (env.NODE_ENV === "production" && !skipValidation) {
-      if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["GOOGLE_CLIENT_ID"],
-          message: "Google OAuth credentials are required in production.",
-        });
-      }
-
-      if (!env.GITHUB_CLIENT_ID || !env.GITHUB_CLIENT_SECRET) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["GITHUB_CLIENT_ID"],
-          message: "GitHub OAuth credentials are required in production.",
-        });
-      }
-
       const publicUrls = [
         ["BETTER_AUTH_URL", env.BETTER_AUTH_URL],
         ["NEXT_PUBLIC_BETTER_AUTH_URL", env.NEXT_PUBLIC_BETTER_AUTH_URL],
@@ -129,26 +113,15 @@ const serverEnvSchema = z
         });
       }
 
-      if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["RESEND_API_KEY"],
-          message: "RESEND_API_KEY and RESEND_FROM_EMAIL are required in production.",
-        });
-      } else if (/@resend\.dev\b/i.test(env.RESEND_FROM_EMAIL)) {
+      if (
+        env.RESEND_FROM_EMAIL &&
+        /@resend\.dev\b/i.test(env.RESEND_FROM_EMAIL)
+      ) {
         ctx.addIssue({
           code: "custom",
           path: ["RESEND_FROM_EMAIL"],
           message:
             "RESEND_FROM_EMAIL must use a verified sender domain in production.",
-        });
-      }
-
-      if (!env.UPLOADTHING_TOKEN) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["UPLOADTHING_TOKEN"],
-          message: "UPLOADTHING_TOKEN is required in production.",
         });
       }
 

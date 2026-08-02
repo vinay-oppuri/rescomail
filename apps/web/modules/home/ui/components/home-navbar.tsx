@@ -32,16 +32,18 @@ const HomeNavbar = () => {
       <header className="fixed top-4 sm:top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
         <div
           className={cn(
-            "pointer-events-auto flex items-center justify-between w-full max-w-xl sm:max-w-3xl h-14 px-3 sm:px-4 rounded-full",
+            "pointer-events-auto flex items-center justify-between w-full max-w-xl sm:max-w-3xl h-14 px-3 sm:px-4 rounded-lg",
             "bg-background/80 backdrop-blur-md border border-foreground/5 shadow-lg transition-all duration-300"
           )}
         >
           {/* Left: Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center md:-ml-1">
             <Link href="/" onClick={handleLogoClick} className="inline-flex items-center gap-2 group">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground text-background font-bold text-sm transition-transform duration-300 group-hover:scale-105">
-                R
-              </span>
+              <div className="bg-custom p-1 rounded-md">
+                <span className="flex h-7 w-7 items-center justify-center rounded-sm bg-custom/80 text-white font-bold text-sm transition-transform duration-300 group-hover:shadow-[inset_0_0_10px_rgba(255,255,255,0.4)]">
+                  R
+                </span>
+              </div>
               <span className="text-sm sm:text-base font-semibold tracking-tight text-foreground hover:text-muted-foreground transition-colors">
                 Rescomail
               </span>
@@ -71,7 +73,7 @@ const HomeNavbar = () => {
           <div className="flex items-center gap-1.5 sm:gap-2">
             <ThemeToggle />
             <div className="h-5 w-px bg-black/8 dark:bg-white/10 hidden sm:block" />
-            <AuthDialog className="hidden md:flex rounded-full h-8 px-4 text-xs font-medium" />
+            <AuthDialog className="hidden md:flex rounded-md h-8 px-4 text-xs font-medium" />
 
             {/* Mobile Menu Toggle */}
             <Button

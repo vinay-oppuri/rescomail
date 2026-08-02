@@ -4,6 +4,7 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const scriptSources = [
   "'self'",
   "'unsafe-inline'",
+  "https://static.cloudflareinsights.com",
   ...(isDevelopment ? ["'unsafe-eval'"] : []),
 ].join(" ");
 

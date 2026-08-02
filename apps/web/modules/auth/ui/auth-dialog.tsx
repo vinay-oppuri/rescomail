@@ -15,18 +15,20 @@ const AuthDialog = ({ className }: AuthProps) => {
   const destination = session?.user ? "/dashboard" : "/login";
 
   return (
-    <Button
-      asChild
-      className={cn(
-        "-mr-1 h-8 gap-2 bg-foreground px-4 font-semibold text-background transition-all duration-300 hover:-translate-y-0.5 hover:opacity-90 hover:shadow-lg",
-        className,
-      )}
-    >
-      <Link href={destination}>
-        <LogIn className="h-4 w-4" />
-        <span>{session?.user ? "Dashboard" : "Login"}</span>
-      </Link>
-    </Button>
+    <div className={cn("bg-custom p-0.5! rounded-md! -mr-1", className)}>
+      <Button
+        asChild
+        className={cn(
+          "h-7! gap-2 bg-custom/80! px-3! font-semibold text-white! transition-all duration-300 hover:shadow-[inset_0_0_10px_rgba(255,255,255,0.4)]",
+          className,
+        )}
+      >
+        <Link href={destination}>
+          <LogIn className="h-4 w-4" />
+          <span>{session?.user ? "Dashboard" : "Login"}</span>
+        </Link>
+      </Button>
+    </div>
   );
 };
 
