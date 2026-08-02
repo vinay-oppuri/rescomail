@@ -4,7 +4,6 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const scriptSources = [
   "'self'",
   "'unsafe-inline'",
-  "https://static.cloudflareinsights.com",
   ...(isDevelopment ? ["'unsafe-eval'"] : []),
 ].join(" ");
 
@@ -16,7 +15,7 @@ const securityHeaders = [
       `script-src ${scriptSources}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://utfs.io https://ufs.sh",
-      "connect-src 'self' https://uploadthing.com https://api.uploadthing.com https://ufs.sh https://utfs.io",
+      "connect-src 'self' https://uploadthing.com https://api.uploadthing.com https://*.ingest.uploadthing.com https://ufs.sh https://utfs.io",
       "font-src 'self'",
       "worker-src 'self' blob:",
       "base-uri 'self'",

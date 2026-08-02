@@ -90,12 +90,24 @@ const ResumeUploadPanel = () => {
       return;
     }
 
-    const uploadResult = await startUpload([file], {
-      title: title.trim() || undefined,
-    });
+    try {
+      const uploadResult = await startUpload([file], {
+        title: title.trim() || undefined,
+      });
 
-    if (!uploadResult) {
+      if (uploadResult) {
+        return;
+      }
+
       setProgress(0);
+      setError("Unable to upload resume. Please try again.");
+    } catch (uploadError) {
+      setProgress(0);
+      setError(
+        uploadError instanceof Error
+          ? uploadError.message
+          : "Unable to upload resume. Please try again.",
+      );
     }
   };
 

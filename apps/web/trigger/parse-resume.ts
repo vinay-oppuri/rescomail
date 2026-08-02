@@ -3,7 +3,6 @@ import { db, resumes, userPreferences } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 import { serverEnv } from "@repo/env/server";
 import { decryptSecret } from "@/lib/server/secrets";
-import { consumeUsage, releaseUsage } from "@/modules/dashboard/server/usage-limits";
 
 const AI_SERVICE_TIMEOUT_MS = 120_000;
 
@@ -72,7 +71,6 @@ export const parseResumeTask = task({
     }
 
     if (resume.status === "parsed") {
-      await consumeUsage(resumeId);
       logger.log("Resume already parsed - skipping duplicate run.");
       return { success: true, alreadyParsed: true };
     }
@@ -92,6 +90,9 @@ export const parseResumeTask = task({
     try {
       const prefs = await db.query.userPreferences.findFirst({
         where: eq(userPreferences.userId, userId),
+        columns: {
+          geminiApiKey: true,
+        },
       });
 
       const response = await fetch(`${serverEnv.AI_SERVICE_URL}/parse`, {
@@ -101,7 +102,9 @@ export const parseResumeTask = task({
           resumeId,
           fileUrl,
           fileName,
-          geminiApiKey: decryptSecret(prefs?.geminiApiKey, payload.userId, "gemini") ?? undefined,
+          geminiApiKey:
+            decryptSecret(prefs?.geminiApiKey, payload.userId, "gemini") ??
+            undefined,
         }),
         signal: controller.signal,
       }).catch((error: unknown) => {
@@ -143,8 +146,6 @@ export const parseResumeTask = task({
         })
         .where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId)));
 
-      await consumeUsage(resumeId, { fileSize: resume.fileSize });
-
       logger.log(`Successfully parsed resume: ${resumeId}`);
 
       return { success: true };
@@ -156,8 +157,6 @@ export const parseResumeTask = task({
     const reason = getFailureMessage(error);
 
     logger.error(`Resume parse failed permanently: ${reason}`);
-
-    await releaseUsage(payload.resumeId);
 
     await db
       .update(resumes)

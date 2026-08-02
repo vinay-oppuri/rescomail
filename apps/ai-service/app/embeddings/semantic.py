@@ -26,7 +26,7 @@ from app.utils.text import normalize_keyword, tokenize
 
 logger = logging.getLogger("rescomail.ai-service.embeddings.semantic")
 
-GEMINI_EMBEDDING_MODEL = "text-embedding-004"
+GEMINI_EMBEDDING_MODEL = "gemini-embedding-2"
 _EMBED_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
 _REQUEST_TIMEOUT = (5, 30)
 

@@ -1,4 +1,4 @@
-import { logger, task } from "@trigger.dev/sdk/v3";
+import { logger, task } from "@trigger.dev/sdk";
 import { coldEmails, db, resumes, userPreferences } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
@@ -72,6 +72,9 @@ export const coldmailGenerationTask = task({
 
     const prefs = await db.query.userPreferences.findFirst({
       where: eq(userPreferences.userId, userId),
+      columns: {
+        geminiApiKey: true,
+      },
     });
 
     const draft = await runAiColdmailGeneration(
@@ -91,7 +94,7 @@ export const coldmailGenerationTask = task({
       },
       resume,
       userId,
-      decryptSecret(prefs?.geminiApiKey, payload.userId, "gemini") ?? undefined
+      decryptSecret(prefs?.geminiApiKey, payload.userId, "gemini") ?? undefined,
     );
 
     await db.transaction(async (tx) => {
@@ -110,7 +113,6 @@ export const coldmailGenerationTask = task({
         .where(
           and(eq(coldEmails.id, coldEmailId), eq(coldEmails.userId, userId)),
         );
-
     });
 
     await consumeUsage(coldEmailId, {

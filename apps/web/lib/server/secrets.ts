@@ -1,6 +1,11 @@
 import "server-only";
 
-import { createCipheriv, createDecipheriv, createHash, randomBytes } from "crypto";
+import {
+  createCipheriv,
+  createDecipheriv,
+  createHash,
+  randomBytes,
+} from "crypto";
 import { serverEnv } from "@repo/env/server";
 
 export type SecretProvider = "gemini" | "groq";
@@ -11,9 +16,6 @@ const IV_BYTES = 12;
 const TAG_BYTES = 16;
 
 const sourceKey = serverEnv.DATA_ENCRYPTION_KEY;
-if (!sourceKey && serverEnv.NODE_ENV === "production") {
-  throw new Error("DATA_ENCRYPTION_KEY is required in production.");
-}
 
 const encryptionKey = createHash("sha256")
   .update(`rescomail:byok:v2:${sourceKey ?? serverEnv.BETTER_AUTH_SECRET}`)
@@ -31,11 +33,21 @@ export const encryptSecret = (
   if (!value) throw new Error("Cannot encrypt an empty secret.");
 
   const iv = randomBytes(IV_BYTES);
-  const cipher = createCipheriv(ALGORITHM, encryptionKey, iv, { authTagLength: TAG_BYTES });
+  const cipher = createCipheriv(ALGORITHM, encryptionKey, iv, {
+    authTagLength: TAG_BYTES,
+  });
   cipher.setAAD(context(userId, provider));
-  const encrypted = Buffer.concat([cipher.update(value, "utf8"), cipher.final()]);
+  const encrypted = Buffer.concat([
+    cipher.update(value, "utf8"),
+    cipher.final(),
+  ]);
 
-  return [PREFIX, iv.toString("base64url"), cipher.getAuthTag().toString("base64url"), encrypted.toString("base64url")].join(".");
+  return [
+    PREFIX,
+    iv.toString("base64url"),
+    cipher.getAuthTag().toString("base64url"),
+    encrypted.toString("base64url"),
+  ].join(".");
 };
 
 export const decryptSecret = (
@@ -44,11 +56,24 @@ export const decryptSecret = (
   provider: SecretProvider,
 ): string | null => {
   if (!stored?.startsWith(`${PREFIX}.`)) return null;
-  const [prefix, ivValue, tagValue, encryptedValue, ...extra] = stored.split(".");
-  if (prefix !== PREFIX || !ivValue || !tagValue || !encryptedValue || extra.length) return null;
+  const [prefix, ivValue, tagValue, encryptedValue, ...extra] =
+    stored.split(".");
+  if (
+    prefix !== PREFIX ||
+    !ivValue ||
+    !tagValue ||
+    !encryptedValue ||
+    extra.length
+  )
+    return null;
 
   try {
-    const decipher = createDecipheriv(ALGORITHM, encryptionKey, Buffer.from(ivValue, "base64url"), { authTagLength: TAG_BYTES });
+    const decipher = createDecipheriv(
+      ALGORITHM,
+      encryptionKey,
+      Buffer.from(ivValue, "base64url"),
+      { authTagLength: TAG_BYTES },
+    );
     decipher.setAAD(context(userId, provider));
     decipher.setAuthTag(Buffer.from(tagValue, "base64url"));
     return Buffer.concat([

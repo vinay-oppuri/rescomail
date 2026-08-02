@@ -55,12 +55,12 @@ async def lifespan(app: FastAPI):
 
 
 import sentry_sdk
-from sentry_sdk.integrations.fastapi import FastAPIIntegration
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 
 if settings.sentry_dsn:
     sentry_sdk.init(
         dsn=settings.sentry_dsn,
-        integrations=[FastAPIIntegration()],
+        integrations=[FastApiIntegration()],
         traces_sample_rate=settings.sentry_traces_sample_rate,
         send_default_pii=False,
     )

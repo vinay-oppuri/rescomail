@@ -1,9 +1,10 @@
 import { coldEmails, db, resumes } from "@repo/db";
+import { tasks } from "@trigger.dev/sdk";
 import { and, eq } from "drizzle-orm";
 
 import { ColdmailError } from "./coldmail-errors";
 import { releaseUsage, reserveUsage } from "@/modules/dashboard/server/usage-limits";
-import { coldmailGenerationTask } from "@/trigger/coldmail-generation";
+import type { coldmailGenerationTask } from "@/trigger/coldmail-generation";
 import type { ColdEmailGenerateInput } from "@repo/validations";
 import { logRouteError } from "@/lib/server/api-errors";
 
@@ -54,7 +55,8 @@ export const generateColdEmailForUser = async (
     await reserveUsage(input.userId, "cold_email_generate", savedColdmail.id);
 
     // 2. Queue the job in Trigger.dev
-    await coldmailGenerationTask.trigger(
+    await tasks.trigger<typeof coldmailGenerationTask>(
+      "coldmail-generation",
       {
         coldEmailId: savedColdmail.id,
         userId: input.userId,

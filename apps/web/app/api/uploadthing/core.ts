@@ -1,15 +1,14 @@
 import { auth } from "@repo/auth";
+import { tasks } from "@trigger.dev/sdk";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { resumeUploadSchema } from "@repo/validations";
 
 import {
   createResumeUpload,
-  deleteResume,
   markResumeParsingFailed,
 } from "@/modules/resumes/server/resumes";
-import { releaseUsage, reserveUsage } from "@/modules/dashboard/server/usage-limits";
-import { parseResumeTask } from "@/trigger/parse-resume";
+import type { parseResumeTask } from "@/trigger/parse-resume";
 
 import { db, user } from "@repo/db";
 import { eq } from "drizzle-orm";
@@ -39,7 +38,7 @@ export const ourFileRouter = {
           .update(user)
           .set({ image: fileUrl })
           .where(eq(user.id, metadata.userId));
-        
+
         return { uploadedBy: metadata.userId, fileUrl };
       } catch (error) {
         logRouteError("Avatar upload completion failed", error);
@@ -85,14 +84,8 @@ export const ourFileRouter = {
         });
 
         try {
-          await reserveUsage(metadata.userId, "resume_parse", resume.id);
-        } catch (error) {
-          await deleteResume(resume.id, metadata.userId);
-          throw error;
-        }
-
-        try {
-          await parseResumeTask.trigger(
+          await tasks.trigger<typeof parseResumeTask>(
+            "parse-resume",
             {
               resumeId: resume.id,
               userId: metadata.userId,
@@ -104,7 +97,6 @@ export const ourFileRouter = {
             },
           );
         } catch (error) {
-          await releaseUsage(resume.id);
           const reason =
             error instanceof Error
               ? error.message

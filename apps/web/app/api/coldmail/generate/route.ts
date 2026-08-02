@@ -7,6 +7,9 @@ import { generateColdEmailForUser } from "@/modules/coldmail/server/coldmail-gen
 import { UsageLimitError } from "@/modules/dashboard/server/usage-limits";
 import { internalServerError } from "@/lib/server/api-errors";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 const parseRequestJson = async (req: Request) => {
   try {
     return await req.json();
