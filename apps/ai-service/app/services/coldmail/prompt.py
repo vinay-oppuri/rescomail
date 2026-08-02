@@ -1,3 +1,5 @@
+"""Prompt construction for cold-email generation."""
+
 from app.schemas.coldmail import ColdEmailGenerateRequest
 
 

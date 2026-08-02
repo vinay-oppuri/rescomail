@@ -1,13 +1,12 @@
-import asyncio
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from app.api.dependencies import require_service_auth
-from app.core.executor import thread_executor
+from app.core.executor import run_in_thread
 from app.core.rate_limit import limiter
-from app.pipelines.resume_parser import parse_resume
 from app.schemas.resume import ParseRequest, StructuredResume
+from app.services.resume.workflow import parse_resume
 
 logger = logging.getLogger("rescomail.ai-service.resume-parser")
 router = APIRouter(tags=["resume-parser"])
@@ -22,9 +21,8 @@ async def parse_resume_route(
 ):
     logger.info("Parsing resume %s", body.resumeId)
 
-    loop = asyncio.get_running_loop()
     try:
-        return await loop.run_in_executor(thread_executor, parse_resume, body)
+        return await run_in_thread(parse_resume, body)
     except Exception as error:
         logger.exception("Resume parsing failed for %s", body.resumeId)
         raise HTTPException(

@@ -8,7 +8,7 @@ from .resume import StructuredResume
 class AtsAnalyzeRequest(BaseModel):
     geminiApiKey: str | None = None
     groqApiKey: str | None = None
-    primaryProvider: str | None = None
+    primaryProvider: Literal["gemini", "groq"] | None = None
     resumeId: str | None = None
     fileUrl: str | None = None
     fileName: str | None = None

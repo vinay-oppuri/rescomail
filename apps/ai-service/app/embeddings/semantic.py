@@ -21,7 +21,7 @@ from typing import Literal
 import requests
 
 from app.core.config import settings
-from app.models.ats_semantics import SEMANTIC_ALIASES
+from app.embeddings.aliases import SEMANTIC_ALIASES
 from app.utils.text import normalize_keyword, tokenize
 
 logger = logging.getLogger("rescomail.ai-service.embeddings.semantic")

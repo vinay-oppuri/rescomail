@@ -1,3 +1,6 @@
+"""Gemini response schema for structured resumes."""
+
+
 GEMINI_STRUCTURED_RESUME_SCHEMA = {
     "type": "OBJECT",
     "properties": {

@@ -10,8 +10,10 @@ from app.embeddings.semantic import semantic_search_scores
 logger = logging.getLogger("rescomail.ai-service.company_context")
 
 TAVILY_SEARCH_ENDPOINT = "https://api.tavily.com/search"
+TAVILY_EXTRACT_ENDPOINT = "https://api.tavily.com/extract"
 TAVILY_TIMEOUT_MS = 20_000
 MAX_COMPANY_CONTEXT_LENGTH = 2000
+MIN_CHUNK_RELEVANCE = 45
 
 
 def _is_public_website_url(value: str) -> bool:
@@ -73,7 +75,7 @@ def _fetch_tavily_search(api_key: str, query: str, company_website_url: str) -> 
 def _fetch_tavily_extract(api_key: str, url: str) -> list[str]:
     try:
         response = requests.post(
-            "https://api.tavily.com/extract",
+            TAVILY_EXTRACT_ENDPOINT,
             headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
             json={"urls": url},
             timeout=TAVILY_TIMEOUT_MS / 1000.0,
@@ -145,19 +147,9 @@ def get_rag_company_context(
     if not rag_query:
         rag_query = f"{company_name} news and context"
         
-    from app.embeddings.cache import embed_with_cache
-    from app.embeddings.semantic import cosine_similarity, _calibrate_similarity
+    scores = semantic_search_scores(rag_query, chunks)
+    ranked = sorted(zip(chunks, scores), key=lambda item: item[1], reverse=True)
 
-    query_vec = embed_with_cache(rag_query, task_type="RETRIEVAL_QUERY")
-    scores = [
-        _calibrate_similarity(cosine_similarity(query_vec, embed_with_cache(chunk, task_type="RETRIEVAL_DOCUMENT")))
-        for chunk in chunks
-    ]
-    
-    ranked = list(zip(chunks, scores))
-    ranked.sort(key=lambda item: -item[1])
-    
-    MIN_CHUNK_RELEVANCE = 45  # on 0-100 scale from _calibrate_similarity
     top_chunks = [
         chunk for chunk, score in ranked[:3]
         if score >= MIN_CHUNK_RELEVANCE
@@ -226,9 +218,3 @@ def _clamp_text(value: str, max_length: int) -> str:
     if len(value) <= max_length:
         return value
     return f"{value[:max_length - 3].strip()}..."
-
-
-def get_company_context_from_website(
-    company_website_url: str, company_name: str, job_title: str
-) -> str:
-    return get_rag_company_context(company_name, job_title, "", company_website_url)

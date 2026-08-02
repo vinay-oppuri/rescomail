@@ -1,3 +1,6 @@
+"""Gemini response schema for generated cold emails."""
+
+
 GEMINI_COLD_EMAIL_SCHEMA = {
     "type": "OBJECT",
     "properties": {

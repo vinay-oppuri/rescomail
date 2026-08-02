@@ -1,13 +1,12 @@
-import asyncio
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from app.api.dependencies import require_service_auth
-from app.core.executor import thread_executor
+from app.core.executor import run_in_thread
 from app.core.rate_limit import limiter
-from app.pipelines.coldmail_generation import generate_coldmail
 from app.schemas.coldmail import ColdEmailGenerateRequest, ColdEmailResponse
+from app.services.coldmail.workflow import generate_coldmail
 
 logger = logging.getLogger("rescomail.ai-service.coldmail")
 router = APIRouter(prefix="/coldmail", tags=["coldmail"])
@@ -25,9 +24,8 @@ async def generate_coldmail_route(
         body.resumeId or "inline",
     )
 
-    loop = asyncio.get_running_loop()
     try:
-        return await loop.run_in_executor(thread_executor, generate_coldmail, body)
+        return await run_in_thread(generate_coldmail, body)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
     except Exception as error:

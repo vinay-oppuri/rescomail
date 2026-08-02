@@ -1,3 +1,6 @@
+"""Prompt used to turn extracted resume text into structured data."""
+
+
 def build_resume_parser_prompt(preprocessed: dict) -> str:
     return f"""You are an ATS parser. Extract and strictly format into JSON matching the schema.
 

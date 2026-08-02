@@ -1,5 +1,0 @@
-from .resume import GEMINI_STRUCTURED_RESUME_SCHEMA
-
-__all__ = [
-    "GEMINI_STRUCTURED_RESUME_SCHEMA",
-]

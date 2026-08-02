@@ -1,13 +1,14 @@
 from unittest.mock import patch
-import pytest
-from app.pipelines.resume_parser import parse_resume
+
+from app.services.resume.workflow import parse_resume
 from app.schemas.resume import ParseRequest, StructuredResume
-from app.pipelines.ats_analysis import analyze_ats
+from app.services.ats.workflow import analyze_ats
 from app.schemas.ats import AtsAnalyzeRequest, AtsAnalysisResponse
-from app.pipelines.coldmail_generation import generate_coldmail
+from app.services.coldmail.workflow import generate_coldmail
 from app.schemas.coldmail import ColdEmailGenerateRequest, ColdEmailResponse
 
-@patch("app.pipelines.resume_parser.extract_text_from_url")
+
+@patch("app.services.resume.workflow.extract_text_from_url")
 @patch("app.services.resume.structuring.generate_gemini_json")
 def test_parse_resume_pipeline(mock_gemini, mock_extract):
     mock_extract.return_value = "This is a raw resume text for John Doe."
@@ -31,15 +32,18 @@ def test_parse_resume_pipeline(mock_gemini, mock_extract):
         resumeId="mock-resume-id",
         fileUrl="https://utfs.io/f/test.pdf",
         fileName="test.pdf",
-        geminiApiKey="mock-key"
+        geminiApiKey="mock-key",
     )
     res = parse_resume(req)
     assert isinstance(res, StructuredResume)
     assert res.personalInfo.name == "John Doe"
     assert "Python" in res.skills
 
+
+@patch("app.services.ats.workflow.shared_concepts", return_value=["python", "fastapi"])
+@patch("app.services.ats.workflow.semantic_similarity_score", return_value=88)
 @patch("app.services.ats.core.generate_gemini_json")
-def test_ats_analysis_pipeline(mock_gemini):
+def test_ats_analysis_pipeline(mock_gemini, mock_similarity, mock_concepts):
     mock_gemini.return_value = {
         "overallScore": 85,
         "verdict": "strong_match",
@@ -73,15 +77,18 @@ def test_ats_analysis_pipeline(mock_gemini):
             "education": [],
             "projects": [],
         },
-        geminiApiKey="mock-key"
+        geminiApiKey="mock-key",
     )
     res = analyze_ats(req)
     assert isinstance(res, AtsAnalysisResponse)
     assert res.overallScore == 85
     assert res.verdict == "strong_match"
+    assert res.categoryScores.semantic == 88
+    assert res.intelligence.semanticMatch.matchedConcepts == ["python", "fastapi"]
+
 
 @patch("app.services.coldmail.generation.generate_gemini_json")
-@patch("app.services.coldmail.company_context.get_rag_company_context")
+@patch("app.services.coldmail.workflow.get_rag_company_context")
 def test_coldmail_generation_pipeline(mock_rag, mock_gemini):
     mock_rag.return_value = "Mocked company context from Tavily."
     mock_gemini.return_value = {
@@ -102,8 +109,9 @@ def test_coldmail_generation_pipeline(mock_rag, mock_gemini):
         recipientName="Jane Smith",
         recipientRole="Hiring Manager",
         personalNote="Love your recent blog post on FastAPI.",
-        geminiApiKey="mock-key"
+        geminiApiKey="mock-key",
     )
     res = generate_coldmail(req)
     assert isinstance(res, ColdEmailResponse)
     assert res.estimatedReadTimeSeconds > 0
+    assert res.companyContext == "Mocked company context from Tavily."

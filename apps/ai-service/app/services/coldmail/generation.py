@@ -18,8 +18,6 @@ import logging
 from pydantic import ValidationError
 
 from app.llm.gemini import generate_gemini_json
-from app.models.coldmail import GEMINI_COLD_EMAIL_SCHEMA
-from app.prompts.coldmail import build_cold_email_prompt
 from app.schemas.coldmail import ColdEmailGenerateRequest, ColdEmailResponse
 from app.schemas.resume import StructuredResume
 from app.services.coldmail.body import normalize_body
@@ -38,6 +36,9 @@ from app.services.coldmail.helpers import (
     read_time_seconds,
     subject_line,
 )
+
+from .prompt import build_cold_email_prompt
+from .response_schema import GEMINI_COLD_EMAIL_SCHEMA
 
 logger = logging.getLogger("rescomail.ai-service.coldmail")
 

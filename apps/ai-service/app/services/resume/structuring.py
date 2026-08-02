@@ -1,7 +1,8 @@
 from app.llm.gemini import generate_gemini_json
-from app.models.resume import GEMINI_STRUCTURED_RESUME_SCHEMA
-from app.prompts.resume_parser import build_resume_parser_prompt
 from app.schemas.resume import StructuredResume
+
+from .prompt import build_resume_parser_prompt
+from .response_schema import GEMINI_STRUCTURED_RESUME_SCHEMA
 
 
 def structure_resume(preprocessed: dict, api_key: str | None = None) -> StructuredResume:

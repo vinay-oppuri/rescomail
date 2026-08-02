@@ -1,3 +1,6 @@
+"""Equivalent terms used when finding shared resume and job concepts."""
+
+
 SEMANTIC_ALIASES = {
     "api": {"apis", "rest", "graphql", "endpoint", "backend service"},
     "aws": {"cloud", "lambda", "ec2", "s3", "cloud infrastructure"},
