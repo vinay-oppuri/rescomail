@@ -141,8 +141,10 @@ const AuthLogin = () => {
         <div className="w-full max-w-sm space-y-6 md:space-y-8 px-2 md:px-6">
           <div className="space-y-2">
             <Link href="/" className="group mb-6 flex items-center gap-2 md:mb-8">
-              <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary font-bold text-primary-foreground">
-                R
+              <div className="bg-custom p-1 rounded-md">
+                <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-custom/80 font-bold text-white hover:shadow-[inset_0_0_10px_rgba(255,255,255,0.4)]">
+                  R
+                </div>
               </div>
               <span className="text-base font-bold md:text-xl">Rescomail</span>
             </Link>

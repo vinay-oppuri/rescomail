@@ -25,7 +25,7 @@ const AuthDialog = ({ className }: AuthProps) => {
       >
         <Link href={destination}>
           <LogIn className="h-4 w-4" />
-          <span>{session?.user ? "Dashboard" : "Login"}</span>
+          <span>Login</span>
         </Link>
       </Button>
     </div>
