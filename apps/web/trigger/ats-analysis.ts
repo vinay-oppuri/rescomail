@@ -5,17 +5,15 @@ import { and, eq } from "drizzle-orm";
 import { AtsAnalysisError } from "@/modules/ats/server/ats-errors";
 import { runAiAtsAnalysis } from "@/modules/ats/server/ats-service-client";
 import { decryptSecret } from "@/lib/server/secrets";
-import { consumeUsage, releaseUsage } from "@/modules/dashboard/server/usage-limits";
+import {
+  consumeUsage,
+  releaseUsage,
+} from "@/modules/dashboard/server/usage-limits";
 
 type AtsAnalysisPayload = {
   analysisId: string;
   userId: string;
 };
-
-const getTargetKeywords = (value: unknown) =>
-  Array.isArray(value)
-    ? value.filter((keyword): keyword is string => typeof keyword === "string")
-    : [];
 
 const getFailureMessage = (error: unknown) =>
   error instanceof AtsAnalysisError
@@ -83,13 +81,12 @@ export const atsAnalysisTask = task({
         jobTitle: analysisRecord.jobTitle,
         companyName: analysisRecord.companyName,
         jobDescription: analysisRecord.jobDescription,
-        targetKeywords: getTargetKeywords(analysisRecord.targetKeywords),
       },
       resume,
       userId,
       decryptSecret(prefs?.geminiApiKey, payload.userId, "gemini") ?? undefined,
       decryptSecret(prefs?.groqApiKey, payload.userId, "groq") ?? undefined,
-      prefs?.primaryProvider ?? "gemini"
+      prefs?.primaryProvider ?? "gemini",
     );
 
     await db.transaction(async (tx) => {
@@ -105,7 +102,6 @@ export const atsAnalysisTask = task({
         .where(
           and(eq(atsAnalyses.id, analysisId), eq(atsAnalyses.userId, userId)),
         );
-
     });
 
     await consumeUsage(analysisId, {

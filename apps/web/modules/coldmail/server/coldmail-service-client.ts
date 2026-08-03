@@ -20,7 +20,7 @@ export type AiColdmailInput = ColdEmailGenerateInput & {
 export const buildAiColdmailPayload = (
   input: AiColdmailInput,
   resume: typeof resumes.$inferSelect,
-  geminiApiKey?: string
+  geminiApiKey?: string,
 ) => {
   const payload: Record<string, unknown> = {
     resumeId: input.resumeId,
@@ -31,7 +31,6 @@ export const buildAiColdmailPayload = (
     recipientRole: input.recipientRole,
     jobDescription: input.jobDescription,
     companyContext: input.companyContext,
-    personalNote: input.personalNote,
     tone: input.tone,
     length: input.length,
     callToAction: input.callToAction,
@@ -66,12 +65,17 @@ export const runAiColdmailGeneration = async (
   const timeout = setTimeout(() => controller.abort(), AI_SERVICE_TIMEOUT_MS);
 
   try {
-    const response = await fetch(`${serverEnv.AI_SERVICE_URL}/coldmail/generate`, {
-      method: "POST",
-      headers: aiServiceHeaders(userId),
-      body: JSON.stringify(buildAiColdmailPayload(input, resume, geminiApiKey)),
-      signal: controller.signal,
-    }).catch((err: unknown) => {
+    const response = await fetch(
+      `${serverEnv.AI_SERVICE_URL}/coldmail/generate`,
+      {
+        method: "POST",
+        headers: aiServiceHeaders(userId),
+        body: JSON.stringify(
+          buildAiColdmailPayload(input, resume, geminiApiKey),
+        ),
+        signal: controller.signal,
+      },
+    ).catch((err: unknown) => {
       if (err instanceof Error && err.name === "AbortError") {
         throw new ColdmailError("AI service request timed out.", 504);
       }

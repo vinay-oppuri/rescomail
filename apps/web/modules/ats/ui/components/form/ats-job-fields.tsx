@@ -1,24 +1,26 @@
 "use client";
 
-import { Label, Textarea, Input } from "@repo/ui";
+import { Label, Input } from "@repo/ui";
+import JobDescriptionInput from "@/modules/dashboard/ui/components/job-description-input";
 import { useAtsStore } from "../../../store/ats-store";
-import AtsJobDescriptionInput from "./ats-job-description-input";
 
 const AtsJobFields = () => {
   const {
     jobTitle,
     companyName,
-    keywordText,
+    jobDescription,
     setJobTitle,
     setCompanyName,
-    setKeywordText,
+    setJobDescription,
   } = useAtsStore();
 
   return (
     <>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center mb-4">
+      <div className="mb-4 grid gap-4 sm:grid-cols-2">
         <div className="flex-1 space-y-2">
-          <Label htmlFor="job-title">Job Title</Label>
+          <Label htmlFor="job-title">
+            Job title <span className="text-muted-foreground">(optional)</span>
+          </Label>
           <Input
             id="job-title"
             value={jobTitle}
@@ -28,7 +30,9 @@ const AtsJobFields = () => {
           />
         </div>
         <div className="flex-1 space-y-2">
-          <Label htmlFor="company-name">Company Name</Label>
+          <Label htmlFor="company-name">
+            Company <span className="text-muted-foreground">(optional)</span>
+          </Label>
           <Input
             id="company-name"
             value={companyName}
@@ -39,18 +43,12 @@ const AtsJobFields = () => {
         </div>
       </div>
 
-      <AtsJobDescriptionInput />
-
-      <div className="space-y-2 mt-4">
-        <Label htmlFor="priority-keywords">Priority Keywords (Optional)</Label>
-        <Textarea
-          id="priority-keywords"
-          value={keywordText}
-          onChange={(event) => setKeywordText(event.target.value)}
-          className="h-16 resize-y bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin rounded-sm"
-          placeholder="Python, FastAPI, SQL"
-        />
-      </div>
+      <JobDescriptionInput
+        inputId="ats-job-description"
+        value={jobDescription}
+        onValueChange={setJobDescription}
+        minimumCharacters={20}
+      />
     </>
   );
 };

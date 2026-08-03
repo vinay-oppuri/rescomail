@@ -2,7 +2,10 @@ import { atsAnalyses, db, resumes } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 import { AtsAnalysisError } from "./ats-errors";
-import { releaseUsage, reserveUsage } from "@/modules/dashboard/server/usage-limits";
+import {
+  releaseUsage,
+  reserveUsage,
+} from "@/modules/dashboard/server/usage-limits";
 import { atsAnalysisTask } from "@/trigger/ats-analysis";
 import type { AtsAnalyzeInput } from "@repo/validations";
 import { logRouteError } from "@/lib/server/api-errors";
@@ -33,7 +36,6 @@ export const runAtsAnalysisForUser = async (
         jobTitle: input.jobTitle || "Custom Job Description",
         companyName: input.companyName || "Unknown Company",
         jobDescription: input.jobDescription || "",
-        targetKeywords: input.targetKeywords || [],
         status: "processing",
       })
       .returning({ id: atsAnalyses.id });

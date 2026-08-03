@@ -5,6 +5,7 @@ Deterministic helper functions for cold email generation.
 Covers resume extraction, copy building, scoring, and text utilities.
 None of these touch the LLM — they are all pure Python.
 """
+
 import math
 import re
 
@@ -15,6 +16,7 @@ from app.schemas.resume import StructuredResume
 # ---------------------------------------------------------------------------
 # Resume extraction helpers
 # ---------------------------------------------------------------------------
+
 
 def candidate_name(
     structured_resume: StructuredResume | None,
@@ -66,7 +68,11 @@ def experience_highlight(
     """Return a one-sentence summary of the candidate's top experience."""
     if structured_resume and structured_resume.experience:
         experience = structured_resume.experience[0]
-        desc_str = " ".join(experience.description) if isinstance(experience.description, list) else experience.description
+        desc_str = (
+            " ".join(experience.description)
+            if isinstance(experience.description, list)
+            else experience.description
+        )
         details = " ".join(
             item.strip()
             for item in [
@@ -87,6 +93,7 @@ def experience_highlight(
 # ---------------------------------------------------------------------------
 # Copy / body-part builders
 # ---------------------------------------------------------------------------
+
 
 def greeting(request: ColdEmailGenerateRequest) -> str:
     if request.recipientName:
@@ -182,15 +189,13 @@ def personalization_notes(
     notes.append(sentence(highlight, "Added a resume-backed experience proof point."))
     notes.append("Included a low-friction call to action.")
 
-    if request.personalNote:
-        notes.append("Included the candidate's custom note.")
-
     return notes[:6]
 
 
 # ---------------------------------------------------------------------------
 # Scoring
 # ---------------------------------------------------------------------------
+
 
 def quality_score(
     request: ColdEmailGenerateRequest,
@@ -205,7 +210,6 @@ def quality_score(
       +8  company name provided
       +4  recipient name or role
       +6  company context (scraped or manual)
-      +5  personal note
       +4  skills found in resume
       +5  structured (parsed) resume
     """
@@ -214,7 +218,6 @@ def quality_score(
     score += 8 if request.companyName else 0
     score += 4 if request.recipientName or request.recipientRole else 0
     score += 6 if request.companyContext else 0
-    score += 5 if request.personalNote else 0
     score += 4 if skills else 0
     score += 5 if structured_resume else 0
     return max(0, min(score, 98))
@@ -228,6 +231,7 @@ def read_time_seconds(body: str) -> int:
 # ---------------------------------------------------------------------------
 # Generic text utilities
 # ---------------------------------------------------------------------------
+
 
 def join_items(items: list[str]) -> str:
     clean_items = [item for item in items if item]
@@ -260,9 +264,24 @@ def keywords_from_text(text: str) -> list[str]:
     """Extract unique non-stop-word keywords from raw text."""
     words = re.findall(r"[A-Za-z][A-Za-z+#.-]{2,}", text.lower())
     stop_words = {
-        "and", "are", "for", "the", "with", "you", "our", "your",
-        "will", "this", "that", "from", "have", "role", "team",
-        "work", "experience", "candidate",
+        "and",
+        "are",
+        "for",
+        "the",
+        "with",
+        "you",
+        "our",
+        "your",
+        "will",
+        "this",
+        "that",
+        "from",
+        "have",
+        "role",
+        "team",
+        "work",
+        "experience",
+        "candidate",
     }
     seen: set[str] = set()
     keywords: list[str] = []

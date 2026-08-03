@@ -13,6 +13,7 @@ Flow:
 All deterministic helpers (copy building, scoring, text utilities) live in
 coldmail/helpers.py. Body post-processing lives in coldmail/body.py.
 """
+
 import logging
 
 from pydantic import ValidationError
@@ -88,13 +89,16 @@ def generate_cold_email_draft(
 # Internal helpers
 # ---------------------------------------------------------------------------
 
+
 def _validated_response(
     generated: dict,
     request: ColdEmailGenerateRequest,
     company_context: str = "",
 ) -> ColdEmailResponse:
     response = ColdEmailResponse.model_validate(generated)
-    return response.model_copy(update={"resumeId": request.resumeId, "companyContext": company_context})
+    return response.model_copy(
+        update={"resumeId": request.resumeId, "companyContext": company_context}
+    )
 
 
 def _fallback_response(
@@ -126,9 +130,6 @@ def _fallback_response(
         "",
         ctx,
     ]
-
-    if request.personalNote:
-        body_parts.extend(["", request.personalNote])
 
     body_parts.extend(["", cta, "", f"Best,\n{signoff_name}"])
     body = "\n".join(part for part in body_parts if part is not None).strip()

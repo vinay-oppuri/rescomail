@@ -29,7 +29,6 @@ export const coldEmails = pgTable(
     recipientRole: text("recipient_role").notNull(),
     jobDescription: text("job_description").notNull(),
     companyContext: text("company_context").notNull(),
-    personalNote: text("personal_note").notNull(),
     tone: varchar("tone", { length: 50 }).notNull(),
     length: varchar("length", { length: 50 }).notNull(),
     callToAction: varchar("call_to_action", { length: 50 }).notNull(),

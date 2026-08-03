@@ -108,7 +108,6 @@ def test_coldmail_generation_pipeline(mock_rag, mock_gemini):
         companyWebsiteUrl="https://techcorp.com",
         recipientName="Jane Smith",
         recipientRole="Hiring Manager",
-        personalNote="Love your recent blog post on FastAPI.",
         geminiApiKey="mock-key",
     )
     res = generate_coldmail(req)

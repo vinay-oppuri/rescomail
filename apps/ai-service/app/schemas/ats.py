@@ -17,7 +17,6 @@ class AtsAnalyzeRequest(BaseModel):
     jobTitle: str = Field(default="", max_length=200)
     companyName: str = Field(default="", max_length=200)
     jobDescription: str = Field(min_length=20, max_length=100_000)
-    targetKeywords: list[str] = Field(default_factory=list, max_length=80)
 
     @model_validator(mode="after")
     def require_resume_source(self):
@@ -26,15 +25,7 @@ class AtsAnalyzeRequest(BaseModel):
         has_file = bool(self.fileUrl)
 
         if not (has_resume_text or has_structured_resume or has_file):
-            raise ValueError(
-                "Provide resumeText, structuredResume, or fileUrl."
-            )
-
-        self.targetKeywords = [
-            keyword.strip()
-            for keyword in self.targetKeywords
-            if keyword and keyword.strip()
-        ]
+            raise ValueError("Provide resumeText, structuredResume, or fileUrl.")
 
         return self
 

@@ -24,7 +24,6 @@ class ColdEmailGenerateRequest(BaseModel):
     recipientRole: str = Field(default="", max_length=160)
     jobDescription: str = Field(min_length=20, max_length=100_000)
     companyContext: str = Field(default="", max_length=2_000)
-    personalNote: str = Field(default="", max_length=1_000)
     tone: ColdEmailTone = "warm"
     length: ColdEmailLength = "standard"
     callToAction: ColdEmailCallToAction = "conversation"
@@ -45,7 +44,6 @@ class ColdEmailGenerateRequest(BaseModel):
         self.recipientRole = self.recipientRole.strip()
         self.jobDescription = self.jobDescription.strip()
         self.companyContext = self.companyContext.strip()
-        self.personalNote = self.personalNote.strip()
 
         return self
 

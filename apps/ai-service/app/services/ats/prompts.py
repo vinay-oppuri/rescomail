@@ -8,7 +8,10 @@ GEMINI_ATS_SCHEMA = {
             "type": "STRING",
             "enum": ["strong_match", "good_match", "partial_match", "needs_work"],
         },
-        "summary": {"type": "STRING", "description": "A 2-3 sentence professional match summary evaluating how well the candidate fits the target role based on key alignments and gaps. Do NOT output contact information, name headers, emails, or phone numbers here."},
+        "summary": {
+            "type": "STRING",
+            "description": "A 2-3 sentence professional match summary evaluating how well the candidate fits the target role based on key alignments and gaps. Do NOT output contact information, name headers, emails, or phone numbers here.",
+        },
         "categoryScores": {
             "type": "OBJECT",
             "properties": {
@@ -25,7 +28,10 @@ GEMINI_ATS_SCHEMA = {
             "type": "OBJECT",
             "properties": {
                 "title": {"type": "STRING"},
-                "seniority": {"type": "STRING", "enum": ["entry", "mid", "senior", "lead", "staff"]},
+                "seniority": {
+                    "type": "STRING",
+                    "enum": ["entry", "mid", "senior", "lead", "staff"],
+                },
                 "yearsRequired": {"type": "INTEGER"},
                 "requiredKeywords": {"type": "ARRAY", "items": {"type": "STRING"}},
                 "preferredKeywords": {"type": "ARRAY", "items": {"type": "STRING"}},
@@ -33,9 +39,13 @@ GEMINI_ATS_SCHEMA = {
                 "certifications": {"type": "ARRAY", "items": {"type": "STRING"}},
             },
             "required": [
-                "title", "seniority", "yearsRequired",
-                "requiredKeywords", "preferredKeywords",
-                "responsibilities", "certifications",
+                "title",
+                "seniority",
+                "yearsRequired",
+                "requiredKeywords",
+                "preferredKeywords",
+                "responsibilities",
+                "certifications",
             ],
         },
         "evidence": {
@@ -74,10 +84,22 @@ GEMINI_ATS_SCHEMA = {
             "items": {
                 "type": "OBJECT",
                 "properties": {
-                    "target": {"type": "STRING", "description": "The category of the rewrite. Must be one of: 'Summary', 'Work Experience', or 'Projects'"},
-                    "reason": {"type": "STRING", "description": "Why this specific bullet point replacement is suggested and how it enhances the ATS score"},
-                    "before": {"type": "STRING", "description": "The exact original bullet point or sentence from the candidate's resume that should be replaced. Must match the original text verbatim."},
-                    "after": {"type": "STRING", "description": "The complete, optimized new bullet point or sentence to insert instead, incorporating missing keywords and action verbs. Must be a single bullet point/sentence, not a merged paragraph."},
+                    "target": {
+                        "type": "STRING",
+                        "description": "The category of the rewrite. Must be one of: 'Summary', 'Work Experience', or 'Projects'",
+                    },
+                    "reason": {
+                        "type": "STRING",
+                        "description": "Why this specific bullet point replacement is suggested and how it enhances the ATS score",
+                    },
+                    "before": {
+                        "type": "STRING",
+                        "description": "The exact original bullet point or sentence from the candidate's resume that should be replaced. Must match the original text verbatim.",
+                    },
+                    "after": {
+                        "type": "STRING",
+                        "description": "The complete, optimized new bullet point or sentence to insert instead, incorporating missing keywords and action verbs. Must be a single bullet point/sentence, not a merged paragraph.",
+                    },
                 },
                 "required": ["target", "reason", "before", "after"],
             },
@@ -90,7 +112,12 @@ GEMINI_ATS_SCHEMA = {
                 "requiredSkillCoverage": {"type": "INTEGER"},
                 "matchedConcepts": {"type": "ARRAY", "items": {"type": "STRING"}},
             },
-            "required": ["resumeToJob", "titleAlignment", "requiredSkillCoverage", "matchedConcepts"],
+            "required": [
+                "resumeToJob",
+                "titleAlignment",
+                "requiredSkillCoverage",
+                "matchedConcepts",
+            ],
         },
         "compatibilityPrediction": {
             "type": "OBJECT",
@@ -123,7 +150,13 @@ GEMINI_ATS_SCHEMA = {
                     "recommendation": {"type": "STRING"},
                     "learningFocus": {"type": "STRING"},
                 },
-                "required": ["skill", "severity", "currentEvidence", "recommendation", "learningFocus"],
+                "required": [
+                    "skill",
+                    "severity",
+                    "currentEvidence",
+                    "recommendation",
+                    "learningFocus",
+                ],
             },
         },
         "recruiterGuidance": {
@@ -142,7 +175,11 @@ GEMINI_ATS_SCHEMA = {
                                 "title": {"type": "STRING"},
                                 "sourceType": {
                                     "type": "STRING",
-                                    "enum": ["recruiter_guideline", "resume_pattern", "domain_knowledge"],
+                                    "enum": [
+                                        "recruiter_guideline",
+                                        "resume_pattern",
+                                        "domain_knowledge",
+                                    ],
                                 },
                                 "relevance": {"type": "INTEGER"},
                             },
@@ -155,10 +192,22 @@ GEMINI_ATS_SCHEMA = {
         },
     },
     "required": [
-        "overallScore", "verdict", "summary", "categoryScores",
-        "jobProfile", "evidence", "matchedKeywords", "missingKeywords",
-        "strengths", "risks", "suggestions", "rewriteSuggestions",
-        "semanticMatch", "compatibilityPrediction", "skillGaps", "recruiterGuidance",
+        "overallScore",
+        "verdict",
+        "summary",
+        "categoryScores",
+        "jobProfile",
+        "evidence",
+        "matchedKeywords",
+        "missingKeywords",
+        "strengths",
+        "risks",
+        "suggestions",
+        "rewriteSuggestions",
+        "semanticMatch",
+        "compatibilityPrediction",
+        "skillGaps",
+        "recruiterGuidance",
     ],
 }
 
@@ -204,12 +253,12 @@ def build_ats_prompt(
     resume_text: str,
     job_description: str,
     company_name: str,
-    target_keywords: list[str],
     structured_resume: StructuredResume | None = None,
 ) -> str:
     structured_text = ""
     if structured_resume:
         import json
+
         try:
             structured_text = f"\n## Structured Candidate Resume JSON:\n{json.dumps(structured_resume.model_dump(), indent=2)}\n"
         except Exception:
@@ -223,9 +272,6 @@ def build_ats_prompt(
 
 ## Company Name:
 {company_name or "Not specified"}
-
-## User-Specified Target Keywords:
-{", ".join(target_keywords) if target_keywords else "None specified"}
 
 ---
 ### Instructions:

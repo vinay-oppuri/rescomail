@@ -13,13 +13,6 @@ import { getApiErrorMessage, readApiJson, sleep } from "@/lib/api-client";
 // Helpers
 // ---------------------------------------------------------------------------
 
-const parseKeywords = (value: string) =>
-  value
-    .split(/[,\n]/)
-    .map((kw) => kw.trim())
-    .filter(Boolean)
-    .slice(0, 80);
-
 const POLL_INTERVAL_MS = 3000;
 const MAX_POLL_TIME_MS = 10 * 60 * 1000;
 
@@ -78,7 +71,6 @@ const requestAnalysis = async (payload: {
   jobTitle: string;
   companyName: string;
   jobDescription: string;
-  targetKeywords: string[];
 }) => {
   const response = await fetch("/api/ats/analyze", {
     method: "POST",
@@ -114,7 +106,6 @@ interface AtsStore {
   jobTitle: string;
   companyName: string;
   jobDescription: string;
-  keywordText: string;
 
   // Result & UI
   analysis: AtsAnalysisResponse | null;
@@ -140,7 +131,6 @@ interface AtsStore {
   setJobTitle: (value: string) => void;
   setCompanyName: (value: string) => void;
   setJobDescription: (value: string) => void;
-  setKeywordText: (value: string) => void;
   setAnalysis: (analysis: AtsAnalysisResponse | null) => void;
   setShowForm: (show: boolean) => void;
 
@@ -155,7 +145,6 @@ export const useAtsStore = create<AtsStore>((set, get) => ({
   jobTitle: "",
   companyName: "",
   jobDescription: "",
-  keywordText: "",
   analysis: null,
   isAnalyzing: false,
   error: null,
@@ -171,8 +160,8 @@ export const useAtsStore = create<AtsStore>((set, get) => ({
         initialResumeId && resumes.some((r) => r.id === initialResumeId)
           ? initialResumeId
           : state.resumeId && resumes.some((r) => r.id === state.resumeId)
-          ? state.resumeId
-          : (firstParsed?.id ?? "");
+            ? state.resumeId
+            : (firstParsed?.id ?? "");
 
       return { resumes, history: analyses, resumeId: nextResumeId };
     });
@@ -183,28 +172,26 @@ export const useAtsStore = create<AtsStore>((set, get) => ({
   setJobTitle: (value) => set({ jobTitle: value }),
   setCompanyName: (value) => set({ companyName: value }),
   setJobDescription: (value) => set({ jobDescription: value }),
-  setKeywordText: (value) => set({ keywordText: value }),
   setAnalysis: (analysis) => set({ analysis }),
   setShowForm: (showForm) => set({ showForm }),
 
   // ---------------------------------------------------------------------------
   handleAnalyze: async (event) => {
     event.preventDefault();
-    const {
-      resumeId,
-      jobTitle,
-      companyName,
-      jobDescription,
-      keywordText,
-      resumes,
-    } = get();
+    const { resumeId, jobTitle, companyName, jobDescription, resumes } = get();
 
-    const canAnalyze = Boolean(resumeId && jobDescription.trim().length >= 20);
+    const selectedResume = resumes.find((resume) => resume.id === resumeId);
+    const canAnalyze = Boolean(
+      selectedResume?.status === "parsed" && jobDescription.trim().length >= 20,
+    );
 
     set({ error: null, analysis: null });
 
     if (!canAnalyze) {
-      set({ error: "Choose a resume and add a job description." });
+      set({
+        error:
+          "Choose a parsed resume and add a job description with at least 20 characters.",
+      });
       return false;
     }
 
@@ -216,10 +203,8 @@ export const useAtsStore = create<AtsStore>((set, get) => ({
         jobTitle,
         companyName,
         jobDescription,
-        targetKeywords: parseKeywords(keywordText),
       });
 
-      const selectedResume = resumes.find((r) => r.id === resumeId);
       const analysisId = nextAnalysis.analysisId;
 
       set({ analysis: nextAnalysis, showForm: false });

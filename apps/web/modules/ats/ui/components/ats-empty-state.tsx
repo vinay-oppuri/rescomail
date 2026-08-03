@@ -1,10 +1,15 @@
-import { BrainCircuit, FileText, ListChecks, Target } from "lucide-react";
+"use client";
+
+import Link from "next/link";
+import { BrainCircuit, FileText, ListChecks, Plus, Target } from "lucide-react";
+import { Button } from "@repo/ui/components/button";
 
 interface AtsEmptyStateProps {
   hasResumes: boolean;
+  onStart: () => void;
 }
 
-const AtsEmptyState = ({ hasResumes }: AtsEmptyStateProps) => {
+const AtsEmptyState = ({ hasResumes, onStart }: AtsEmptyStateProps) => {
   const Icon = hasResumes ? Target : FileText;
 
   return (
@@ -12,6 +17,16 @@ const AtsEmptyState = ({ hasResumes }: AtsEmptyStateProps) => {
       <div className="flex h-12 w-12 items-center justify-center border bg-muted/40 rounded-sm">
         <Icon className="h-5 w-5 text-muted-foreground" />
       </div>
+      {hasResumes ? (
+        <Button type="button" onClick={onStart}>
+          <Plus className="h-4 w-4" />
+          Start an analysis
+        </Button>
+      ) : (
+        <Button asChild>
+          <Link href="/dashboard/resumes">Upload a resume</Link>
+        </Button>
+      )}
       <div className="space-y-1">
         <p className="text-sm font-medium">
           {hasResumes ? "No analysis yet" : "Upload a resume first"}

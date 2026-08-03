@@ -5,7 +5,10 @@ import { and, eq } from "drizzle-orm";
 import { ColdmailError } from "@/modules/coldmail/server/coldmail-errors";
 import { runAiColdmailGeneration } from "@/modules/coldmail/server/coldmail-service-client";
 import { decryptSecret } from "@/lib/server/secrets";
-import { consumeUsage, releaseUsage } from "@/modules/dashboard/server/usage-limits";
+import {
+  consumeUsage,
+  releaseUsage,
+} from "@/modules/dashboard/server/usage-limits";
 import type {
   ColdEmailCallToAction,
   ColdEmailLength,
@@ -87,7 +90,6 @@ export const coldmailGenerationTask = task({
         recipientRole: emailRecord.recipientRole,
         jobDescription: emailRecord.jobDescription,
         companyContext: emailRecord.companyContext,
-        personalNote: emailRecord.personalNote,
         tone: emailRecord.tone as ColdEmailTone,
         length: emailRecord.length as ColdEmailLength,
         callToAction: emailRecord.callToAction as ColdEmailCallToAction,

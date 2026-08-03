@@ -31,7 +31,9 @@ const isPublicWebsiteUrl = (value: string) => {
 
     if (
       ipv4Parts.length === 4 &&
-      ipv4Parts.every((part) => Number.isInteger(part) && part >= 0 && part <= 255)
+      ipv4Parts.every(
+        (part) => Number.isInteger(part) && part >= 0 && part <= 255,
+      )
     ) {
       const first = ipv4Parts[0]!;
       const second = ipv4Parts[1]!;
@@ -53,24 +55,27 @@ const isPublicWebsiteUrl = (value: string) => {
   }
 };
 
-const companyWebsiteUrlSchema = z.preprocess((value) => {
-  if (typeof value !== "string") {
-    return value;
-  }
+const companyWebsiteUrlSchema = z.preprocess(
+  (value) => {
+    if (typeof value !== "string") {
+      return value;
+    }
 
-  const trimmed = value.trim();
+    const trimmed = value.trim();
 
-  if (!trimmed) {
-    return trimmed;
-  }
+    if (!trimmed) {
+      return trimmed;
+    }
 
-  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-}, z
-  .string()
-  .trim()
-  .url("Enter a valid company website URL.")
-  .max(500)
-  .refine(isPublicWebsiteUrl, "Enter a public company website URL."));
+    return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  },
+  z
+    .string()
+    .trim()
+    .url("Enter a valid company website URL.")
+    .max(500)
+    .refine(isPublicWebsiteUrl, "Enter a public company website URL."),
+);
 
 export const coldEmailToneSchema = z.enum([
   "warm",
@@ -100,7 +105,6 @@ export const coldEmailGenerateSchema = z.object({
   recipientName: optionalTrimmedString(120),
   recipientRole: optionalTrimmedString(160),
   jobDescription: z.string().trim().min(20).max(100_000),
-  personalNote: optionalTrimmedString(1_000),
   tone: coldEmailToneSchema.default("warm"),
   length: coldEmailLengthSchema.default("standard"),
   callToAction: coldEmailCallToActionSchema.default("conversation"),
@@ -124,6 +128,4 @@ export type ColdEmailGenerateInput = z.infer<typeof coldEmailGenerateSchema>;
 export type ColdEmailResponse = z.infer<typeof coldEmailResponseSchema>;
 export type ColdEmailTone = z.infer<typeof coldEmailToneSchema>;
 export type ColdEmailLength = z.infer<typeof coldEmailLengthSchema>;
-export type ColdEmailCallToAction = z.infer<
-  typeof coldEmailCallToActionSchema
->;
+export type ColdEmailCallToAction = z.infer<typeof coldEmailCallToActionSchema>;

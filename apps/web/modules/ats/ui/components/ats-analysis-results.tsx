@@ -13,22 +13,14 @@ const AtsAnalysisResults = () => {
 
   return (
     <div className="flex flex-col bg-background rounded-b-sm overflow-hidden border border-foreground/5">
-      {/* 1. Score percentages and summary overview */}
       <AtsScoreOverview analysis={analysis} />
-
-      {/* 2. Missing keywords section (Moved to top of details for prominent display) */}
-      <div>
-        <AtsKeywordPanel
-          title="Missing Keywords (Highly critical for ATS parsing)"
-          keywords={analysis.missingKeywords}
-        />
-      </div>
-
-      {/* 3. Rewrite suggestions comparison plan */}
+      <AtsKeywordPanel
+        title="Missing keywords to prioritize"
+        keywords={analysis.missingKeywords}
+      />
       <AtsRewritePlan rewrites={analysis.rewriteSuggestions} />
     </div>
   );
 };
 
 export default AtsAnalysisResults;
-

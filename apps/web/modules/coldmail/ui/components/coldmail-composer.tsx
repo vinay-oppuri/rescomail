@@ -1,98 +1,41 @@
 "use client";
 
 import type { FormEvent } from "react";
-import type {
-  ColdEmailCallToAction,
-  ColdEmailLength,
-  ColdEmailTone,
-} from "@repo/validations";
 import {
   AlertTriangle,
   ArrowRight,
-  Loader2,
-  Sparkles,
   Building2,
-  Settings2,
   FileText,
+  Loader2,
+  Mail,
+  Settings2,
+  Sparkles,
 } from "lucide-react";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
-import { Input } from "@repo/ui/components/input";
-import { Label } from "@repo/ui/components/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@repo/ui/components/select";
-import { Textarea } from "@repo/ui/components/textarea";
 
+import { WorkflowSection } from "@/modules/dashboard/ui/components/workflow-form";
 import { useColdmailStore } from "../../store/coldmail-store";
-
-const toneOptions: Array<{ value: ColdEmailTone; label: string }> = [
-  { value: "warm", label: "Warm" },
-  { value: "confident", label: "Confident" },
-  { value: "direct", label: "Direct" },
-  { value: "friendly", label: "Friendly" },
-];
-
-const lengthOptions: Array<{ value: ColdEmailLength; label: string }> = [
-  { value: "concise", label: "Concise" },
-  { value: "standard", label: "Standard" },
-  { value: "detailed", label: "Detailed" },
-];
-
-const callToActionOptions: Array<{
-  value: ColdEmailCallToAction;
-  label: string;
-}> = [
-  { value: "conversation", label: "Conversation" },
-  { value: "referral", label: "Referral" },
-  { value: "interview", label: "Interview" },
-  { value: "feedback", label: "Feedback" },
-];
+import ColdmailContentFields from "./form/coldmail-content-fields";
+import ColdmailSetupFields from "./form/coldmail-setup-fields";
+import ColdmailTargetFields from "./form/coldmail-target-fields";
 
 const ColdmailComposer = () => {
   const {
     resumes,
     resumeId,
-    jobTitle,
-    companyName,
     companyWebsiteUrl,
-    recipientName,
-    recipientRole,
     jobDescription,
-    personalNote,
-    tone,
-    length,
-    callToAction,
     error,
     isGenerating,
-    setResumeId,
-    setJobTitle,
-    setCompanyName,
-    setCompanyWebsiteUrl,
-    setRecipientName,
-    setRecipientRole,
-    setJobDescription,
-    setPersonalNote,
-    setTone,
-    setLength,
-    setCallToAction,
     handleGenerate,
   } = useColdmailStore();
-
-  const selectedResume = resumes.find((r) => r.id === resumeId);
-  const parsedCount = resumes.filter((r) => r.status === "parsed").length;
+  const selectedResume = resumes.find((resume) => resume.id === resumeId);
   const hasParsedResume = selectedResume?.status === "parsed";
-  const jobDescriptionLength = jobDescription.trim().length;
+  const hasCompanyWebsite = companyWebsiteUrl.trim().length > 0;
+  const hasJobDescription = jobDescription.trim().length >= 20;
   const canGenerate = Boolean(
-    resumeId &&
-    hasParsedResume &&
-    companyWebsiteUrl.trim() &&
-    jobDescriptionLength >= 20,
+    hasParsedResume && hasCompanyWebsite && hasJobDescription,
   );
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -102,286 +45,82 @@ const ColdmailComposer = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col border border-foreground/5 bg-card/20 shadow-sm overflow-hidden rounded-sm"
+      className="flex flex-col overflow-hidden rounded-sm border border-foreground/5 bg-card/20 shadow-sm"
     >
-      <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 md:px-5 py-3 md:py-4">
+      <div className="flex items-start justify-between gap-3 border-b border-foreground/5 bg-muted/10 px-3 py-3 md:px-5 md:py-4">
         <div>
           <h2 className="text-sm font-semibold tracking-tight text-foreground">
-            Email Composer
+            Build your outreach draft
           </h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Configure the parameters for your AI-generated outreach.
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            Complete the three steps below. Optional context makes the result
+            more personal.
           </p>
         </div>
-        <Badge
-          variant="secondary"
-          className="shrink-0 gap-1.5 shadow-sm"
-        >
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
-          AI Draft
-        </Badge>
       </div>
 
       <div className="flex flex-col gap-6 p-3 sm:p-6">
-        {/* Section 1: Setup */}
-        <div className="space-y-4">
-          <h3 className="flex items-center gap-2 text-xs font-semibold text-foreground uppercase tracking-widest">
-            <Settings2 className="h-4 w-4 text-primary" />
-            Core Configuration
-          </h3>
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-            <div className="space-y-2">
-              <Label htmlFor="resume">Resume Source</Label>
-              <Select value={resumeId} onValueChange={setResumeId}>
-                <SelectTrigger
-                  id="resume"
-                  className="w-full bg-muted/20! border-foreground/5! rounded-sm"
-                >
-                  <SelectValue placeholder="Select parsed resume" />
-                </SelectTrigger>
-                <SelectContent className="">
-                  <SelectGroup>
-                    {resumes.map((resume) => (
-                      <SelectItem
-                        key={resume.id}
-                        value={resume.id}
-                        disabled={resume.status !== "parsed"}
-                        className=""
-                      >
-                        {resume.title}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                {selectedResume
-                  ? selectedResume.status === "parsed"
-                    ? selectedResume.fileName
-                    : (selectedResume.parsingError ??
-                      "Resume is not parsed yet.")
-                  : `${parsedCount} parsed resumes available`}
-              </p>
-            </div>
+        <WorkflowSection
+          step={1}
+          icon={Settings2}
+          title="Choose your source and style"
+          description="Select the resume the draft should represent, then choose its tone and length."
+        >
+          <ColdmailSetupFields />
+        </WorkflowSection>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="tone">Tone</Label>
-                <Select
-                  value={tone}
-                  onValueChange={(value) => setTone(value as ColdEmailTone)}
-                >
-                  <SelectTrigger
-                    id="tone"
-                    className="w-full bg-muted/20! border-foreground/5! rounded-sm"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="">
-                    <SelectGroup>
-                      {toneOptions.map((option) => (
-                        <SelectItem
-                          key={option.value}
-                          value={option.value}
-                          className=""
-                        >
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
+        <WorkflowSection
+          step={2}
+          icon={Building2}
+          title="Identify the target"
+          description="Add company context, recipient details, and the response you want."
+          separated
+        >
+          <ColdmailTargetFields />
+        </WorkflowSection>
 
-              <div className="space-y-2">
-                <Label htmlFor="length">Length</Label>
-                <Select
-                  value={length}
-                  onValueChange={(value) => setLength(value as ColdEmailLength)}
-                >
-                  <SelectTrigger
-                    id="length"
-                    className="w-full bg-muted/20! border-foreground/5! rounded-sm"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="">
-                    <SelectGroup>
-                      {lengthOptions.map((option) => (
-                        <SelectItem
-                          key={option.value}
-                          value={option.value}
-                          className=""
-                        >
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Section 2: Target */}
-        <div className="space-y-4 pt-5 border-t border-foreground/5">
-          <h3 className="flex items-center gap-2 text-xs font-semibold text-foreground uppercase tracking-widest">
-            <Building2 className="h-4 w-4 text-primary" />
-            Target Information
-          </h3>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="job-title">Role Title</Label>
-              <Input
-                id="job-title"
-                value={jobTitle}
-                onChange={(event) => setJobTitle(event.target.value)}
-                placeholder="e.g. Product Engineer"
-                className="bg-muted/20! border-foreground/5! rounded-sm"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="company-name">Company Name</Label>
-              <Input
-                id="company-name"
-                value={companyName}
-                onChange={(event) => setCompanyName(event.target.value)}
-                placeholder="e.g. Acme Corp"
-                className="bg-muted/20! border-foreground/5! rounded-sm"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="company-website">Company Website</Label>
-              <Input
-                id="company-website"
-                value={companyWebsiteUrl}
-                onChange={(event) => setCompanyWebsiteUrl(event.target.value)}
-                placeholder="https://acme.com"
-                inputMode="url"
-                className="bg-muted/20! border-foreground/5! rounded-sm"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="recipient-name">Recipient Name</Label>
-              <Input
-                id="recipient-name"
-                value={recipientName}
-                onChange={(event) => setRecipientName(event.target.value)}
-                placeholder="e.g. Alex Morgan"
-                className="bg-muted/20! border-foreground/5! rounded-sm"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="recipient-role">Recipient Role</Label>
-              <Input
-                id="recipient-role"
-                value={recipientRole}
-                onChange={(event) => setRecipientRole(event.target.value)}
-                placeholder="e.g. Recruiting Lead"
-                className="bg-muted/20! border-foreground/5! rounded-sm"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Section 3: Content */}
-        <div className="space-y-4 pt-5 border-t border-foreground/5">
-          <h3 className="flex items-center gap-2 text-xs font-semibold text-foreground uppercase tracking-widest">
-            <FileText className="h-4 w-4 text-primary" />
-            Content & Personalization
-          </h3>
-
-          <div className="grid gap-4 sm:grid-cols-[1fr_220px]">
-            <div className="space-y-2">
-              <Label htmlFor="job-description">Job Description</Label>
-              <Textarea
-                id="job-description"
-                value={jobDescription}
-                onChange={(event) => setJobDescription(event.target.value)}
-                placeholder="Paste the target role or recruiter post"
-                className="h-24 md:h-48 resize-y bg-muted/20! border-foreground/5! leading-relaxed scrollbar-thin rounded-sm"
-              />
-              <p className="text-xs text-muted-foreground">
-                Add at least 20 characters so the AI has enough role context.
-                {jobDescriptionLength > 0
-                  ? ` Current: ${jobDescriptionLength}.`
-                  : ""}
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="cta">Call to Action (Ask)</Label>
-              <Select
-                value={callToAction}
-                onValueChange={(value) =>
-                  setCallToAction(value as ColdEmailCallToAction)
-                }
-              >
-                <SelectTrigger
-                  id="cta"
-                  className="w-full bg-muted/20! border-foreground/5! rounded-sm"
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="">
-                  <SelectGroup>
-                    {callToActionOptions.map((option) => (
-                      <SelectItem
-                        key={option.value}
-                        value={option.value}
-                        className=""
-                      >
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="grid gap-3 pt-2">
-            <div className="space-y-2">
-              <Label htmlFor="personal-note">Candidate Personal Note</Label>
-              <Textarea
-                id="personal-note"
-                value={personalNote}
-                onChange={(event) => setPersonalNote(event.target.value)}
-                placeholder="Add any specific angle, personal connection, or context to include in the draft..."
-                className="h-16 md:h-24 resize-y bg-muted/20! border-foreground/5! rounded-sm"
-              />
-            </div>
-          </div>
-        </div>
+        <WorkflowSection
+          step={3}
+          icon={FileText}
+          title="Provide role context"
+          description="Upload or paste the target role description."
+          separated
+        >
+          <ColdmailContentFields />
+        </WorkflowSection>
 
         {error ? (
-          <div className="mt-2 flex gap-3 border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive shadow-sm rounded-sm">
+          <div
+            role="alert"
+            className="flex gap-3 rounded-sm border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive shadow-sm"
+          >
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <p className="leading-relaxed">{error}</p>
           </div>
         ) : null}
 
-        <Button
-          type="submit"
-          disabled={!canGenerate || isGenerating}
-          className="mt-4 h-11 w-full font-semibold text-xs md:text-sm"
-        >
+        <div className="space-y-3">
+          <Button
+            type="submit"
+            disabled={!canGenerate || isGenerating}
+            className="h-10! text-xs px-6 font-semibold md:text-sm"
+          >
+            {isGenerating ? (
+              <Loader2 className="mr-1 h-5 w-5 animate-spin" />
+            ) : (
+              <Mail className="mr-1 h-5 w-5" />
+            )}
+            {isGenerating ? "Drafting your email..." : "Generate draft"}
+          </Button>
           {isGenerating ? (
-            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-          ) : (
-            <Sparkles className="mr-2 h-5 w-5" />
-          )}
-          {isGenerating
-            ? "Drafting your email..."
-            : "Generate Professional Draft"}
-          {!isGenerating ? <ArrowRight className="ml-2 h-5 w-5" /> : null}
-        </Button>
+            <p
+              className="text-center text-xs text-muted-foreground"
+              aria-live="polite"
+            >
+              Keep this page open while the email and follow-up are generated.
+            </p>
+          ) : null}
+        </div>
       </div>
     </form>
   );

@@ -2,16 +2,20 @@
 
 import { useRef, useState } from "react";
 import { AlertCircle, CheckCircle2, FileUp, Loader2, Type } from "lucide-react";
-
 import { Label } from "@repo/ui/components/label";
 import { Textarea } from "@repo/ui/components/textarea";
 import { cn } from "@repo/ui/lib/utils";
 
-import { useAtsStore } from "../../../store/ats-store";
-
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 
 type InputMode = "file" | "text";
+
+interface JobDescriptionInputProps {
+  value: string;
+  onValueChange: (value: string) => void;
+  inputId: string;
+  minimumCharacters?: number;
+}
 
 const isSupportedFile = (file: File) => {
   const name = file.name.toLowerCase();
@@ -48,13 +52,17 @@ const getResponseText = (value: unknown) => {
   return null;
 };
 
-const wordCount = (value: string) =>
+const countWords = (value: string) =>
   value.trim() ? value.trim().split(/\s+/).length : 0;
 
-const AtsJobDescriptionInput = () => {
-  const { jobDescription, setJobDescription } = useAtsStore();
-  const [mode, setMode] = useState<InputMode>(jobDescription ? "text" : "file");
-  const [manualText, setManualText] = useState(jobDescription);
+const JobDescriptionInput = ({
+  value,
+  onValueChange,
+  inputId,
+  minimumCharacters,
+}: JobDescriptionInputProps) => {
+  const [mode, setMode] = useState<InputMode>(value ? "text" : "file");
+  const [manualText, setManualText] = useState(value);
   const [uploadedText, setUploadedText] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +76,7 @@ const AtsJobDescriptionInput = () => {
     activeModeRef.current = nextMode;
     setMode(nextMode);
     setError(null);
-    setJobDescription(nextMode === "text" ? manualText : uploadedText);
+    onValueChange(nextMode === "text" ? manualText : uploadedText);
   };
 
   const extractFile = async (nextFile?: File) => {
@@ -80,15 +88,16 @@ const AtsJobDescriptionInput = () => {
     if (!isSupportedFile(nextFile)) {
       setFile(null);
       setUploadedText("");
-      setJobDescription("");
+      onValueChange("");
       setIsExtracting(false);
       setError("Upload a PDF or Markdown file.");
       return;
     }
+
     if (nextFile.size > MAX_FILE_BYTES) {
       setFile(null);
       setUploadedText("");
-      setJobDescription("");
+      onValueChange("");
       setIsExtracting(false);
       setError("File must be 5 MB or smaller.");
       return;
@@ -96,7 +105,7 @@ const AtsJobDescriptionInput = () => {
 
     setFile(nextFile);
     setUploadedText("");
-    setJobDescription("");
+    onValueChange("");
     setIsExtracting(true);
 
     try {
@@ -109,23 +118,21 @@ const AtsJobDescriptionInput = () => {
       });
       const data: unknown = await response.json().catch(() => null);
 
-      if (!response.ok) {
-        throw new Error(getResponseError(data));
-      }
+      if (!response.ok) throw new Error(getResponseError(data));
 
-      const text = getResponseText(data);
-      if (!text) {
+      const extractedText = getResponseText(data);
+      if (!extractedText) {
         throw new Error("No readable text was found in that file.");
       }
       if (extractionId !== extractionIdRef.current) return;
 
-      setUploadedText(text);
-      if (activeModeRef.current === "file") setJobDescription(text);
+      setUploadedText(extractedText);
+      if (activeModeRef.current === "file") onValueChange(extractedText);
     } catch (uploadError) {
       if (extractionId !== extractionIdRef.current) return;
       setFile(null);
       setUploadedText("");
-      if (activeModeRef.current === "file") setJobDescription("");
+      if (activeModeRef.current === "file") onValueChange("");
       setError(
         uploadError instanceof Error
           ? uploadError.message
@@ -136,11 +143,14 @@ const AtsJobDescriptionInput = () => {
     }
   };
 
-  const currentWordCount = wordCount(jobDescription);
+  const helpTextId = `${inputId}-help`;
 
   return (
     <div className="space-y-3">
-      <Label>Job Description</Label>
+      <Label htmlFor={mode === "text" ? inputId : undefined}>
+        Job description{" "}
+        <span className="text-muted-foreground">(required)</span>
+      </Label>
 
       <div
         className="grid grid-cols-2 gap-2"
@@ -151,14 +161,14 @@ const AtsJobDescriptionInput = () => {
           type="button"
           aria-pressed={mode === "file"}
           className={cn(
-            "flex items-center gap-3 rounded-sm border p-3 text-left transition-colors",
+            "flex items-center gap-3 rounded-sm border-2 p-3 text-left transition-colors",
             mode === "file"
-              ? "border-primary/40 bg-primary/5"
-              : "border-foreground/5 bg-muted/10 hover:border-primary/30 hover:bg-muted/30",
+              ? "border-foreground/10 bg-primary/5"
+              : "border-foreground/5 bg-muted/10 hover:border-primary/20 hover:bg-muted/30",
           )}
           onClick={() => changeMode("file")}
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-foreground/5 bg-card shadow-xs">
+          <span className="flex h-8 sm:h-9 w-8 sm:w-9 shrink-0 items-center justify-center rounded-sm border border-foreground/5 bg-card shadow-xs">
             <FileUp
               className={cn(
                 "h-4 w-4",
@@ -167,10 +177,10 @@ const AtsJobDescriptionInput = () => {
             />
           </span>
           <span className="min-w-0">
-            <span className="block text-xs font-medium text-foreground">
+            <span className="block text-[10px] sm:text-xs font-medium text-foreground">
               Upload file
             </span>
-            <span className="block text-xs text-muted-foreground">
+            <span className="block text-[10px] sm:text-xs text-muted-foreground">
               PDF or Markdown
             </span>
           </span>
@@ -180,14 +190,14 @@ const AtsJobDescriptionInput = () => {
           type="button"
           aria-pressed={mode === "text"}
           className={cn(
-            "flex items-center gap-3 rounded-sm border p-3 text-left transition-colors",
+            "flex items-center gap-3 rounded-sm border-2 p-3 text-left transition-colors",
             mode === "text"
-              ? "border-primary/40 bg-primary/5"
-              : "border-foreground/5 bg-muted/10 hover:border-primary/30 hover:bg-muted/30",
+              ? "border-foreground/10 bg-primary/5"
+              : "border-foreground/5 bg-muted/10 hover:border-primary/20 hover:bg-muted/30",
           )}
           onClick={() => changeMode("text")}
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-foreground/5 bg-card shadow-xs">
+          <span className="flex h-8 sm:h-9 w-8 sm:w-9 shrink-0 items-center justify-center rounded-sm border border-foreground/5 bg-card shadow-xs">
             <Type
               className={cn(
                 "h-4 w-4",
@@ -196,10 +206,10 @@ const AtsJobDescriptionInput = () => {
             />
           </span>
           <span className="min-w-0">
-            <span className="block text-xs font-medium text-foreground">
+            <span className="block text-[10px] sm:text-xs font-medium text-foreground">
               Paste text
             </span>
-            <span className="block text-xs text-muted-foreground">
+            <span className="block text-[10px] sm:text-xs text-muted-foreground">
               Type or paste the JD
             </span>
           </span>
@@ -254,7 +264,7 @@ const AtsJobDescriptionInput = () => {
               </p>
               <p className="text-xs text-muted-foreground">
                 {uploadedText
-                  ? `${wordCount(uploadedText)} words extracted - choose another file to replace it`
+                  ? `${countWords(uploadedText)} words extracted - choose another file to replace it`
                   : "One .pdf, .md, or .markdown file, up to 5 MB"}
               </p>
             </div>
@@ -262,6 +272,7 @@ const AtsJobDescriptionInput = () => {
 
           <input
             ref={fileInputRef}
+            id={`${inputId}-file`}
             type="file"
             accept="application/pdf,text/markdown,.pdf,.md,.markdown"
             className="hidden"
@@ -273,27 +284,34 @@ const AtsJobDescriptionInput = () => {
         </>
       ) : (
         <Textarea
-          id="job-description"
+          id={inputId}
           value={manualText}
           onChange={(event) => {
             setManualText(event.target.value);
-            setJobDescription(event.target.value);
+            onValueChange(event.target.value);
           }}
           className="h-24 resize-y rounded-sm border-foreground/5! bg-muted/20! leading-relaxed scrollbar-thin md:h-48"
           placeholder="Paste the role description here..."
+          aria-describedby={helpTextId}
         />
       )}
 
       {error ? (
-        <div className="flex items-start gap-2 rounded-sm border border-destructive/20 bg-destructive/5 p-3 text-xs text-destructive">
+        <div
+          role="alert"
+          className="flex items-start gap-2 rounded-sm border border-destructive/20 bg-destructive/5 p-3 text-xs text-destructive"
+        >
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
       ) : null}
 
-      <p className="text-xs text-muted-foreground">{currentWordCount} words</p>
+      <p id={helpTextId} className="text-xs text-muted-foreground">
+        {countWords(value)} words - {value.trim().length} characters
+        {minimumCharacters ? ` (${minimumCharacters} minimum)` : ""}
+      </p>
     </div>
   );
 };
 
-export default AtsJobDescriptionInput;
+export default JobDescriptionInput;

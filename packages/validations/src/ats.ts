@@ -13,7 +13,6 @@ export const atsAnalyzeSchema = z.object({
   jobTitle: optionalTrimmedString(200),
   companyName: optionalTrimmedString(200),
   jobDescription: z.string().trim().min(20).max(100_000),
-  targetKeywords: z.array(z.string().trim().min(1).max(100)).max(80).default([]),
 });
 
 export const atsScoreBreakdownSchema = z.object({
@@ -136,7 +135,12 @@ export const atsAnalysisResponseSchema = z.object({
   analysisId: z.string().uuid().optional(),
   resumeId: z.string().nullable().optional(),
   overallScore: z.number().int().min(0).max(100),
-  verdict: z.enum(["strong_match", "good_match", "partial_match", "needs_work"]),
+  verdict: z.enum([
+    "strong_match",
+    "good_match",
+    "partial_match",
+    "needs_work",
+  ]),
   categoryScores: atsScoreBreakdownSchema,
   jobProfile: atsJobProfileSchema,
   evidence: z.array(atsKeywordEvidenceSchema),

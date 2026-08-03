@@ -25,7 +25,6 @@ export const atsAnalyses = pgTable(
     jobTitle: text("job_title").notNull(),
     companyName: text("company_name").notNull(),
     jobDescription: text("job_description").notNull(),
-    targetKeywords: jsonb("target_keywords").notNull(),
     analysis: jsonb("analysis"),
     overallScore: integer("overall_score"),
     verdict: varchar("verdict", { length: 50 }),

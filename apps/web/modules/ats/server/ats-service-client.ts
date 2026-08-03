@@ -25,7 +25,6 @@ export const buildAiPayload = (
     jobTitle: input.jobTitle,
     companyName: input.companyName,
     jobDescription: input.jobDescription,
-    targetKeywords: input.targetKeywords,
   };
 
   if (geminiApiKey) {
@@ -70,7 +69,15 @@ export const runAiAtsAnalysis = async (
     const response = await fetch(`${serverEnv.AI_SERVICE_URL}/ats/analyze`, {
       method: "POST",
       headers: aiServiceHeaders(userId),
-      body: JSON.stringify(buildAiPayload(input, resume, geminiApiKey, groqApiKey, primaryProvider)),
+      body: JSON.stringify(
+        buildAiPayload(
+          input,
+          resume,
+          geminiApiKey,
+          groqApiKey,
+          primaryProvider,
+        ),
+      ),
       signal: controller.signal,
     }).catch((err: unknown) => {
       if (err instanceof Error && err.name === "AbortError") {

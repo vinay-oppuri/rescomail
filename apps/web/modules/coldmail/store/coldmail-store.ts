@@ -110,7 +110,6 @@ interface ColdmailStore {
   recipientName: string;
   recipientRole: string;
   jobDescription: string;
-  personalNote: string;
   tone: ColdEmailTone;
   length: ColdEmailLength;
   callToAction: ColdEmailCallToAction;
@@ -141,7 +140,6 @@ interface ColdmailStore {
   setRecipientName: (value: string) => void;
   setRecipientRole: (value: string) => void;
   setJobDescription: (value: string) => void;
-  setPersonalNote: (value: string) => void;
   setTone: (value: ColdEmailTone) => void;
   setLength: (value: ColdEmailLength) => void;
   setCallToAction: (value: ColdEmailCallToAction) => void;
@@ -162,7 +160,6 @@ export const useColdmailStore = create<ColdmailStore>((set, get) => ({
   recipientName: "",
   recipientRole: "",
   jobDescription: "",
-  personalNote: "",
   tone: "warm",
   length: "standard",
   callToAction: "conversation",
@@ -200,7 +197,6 @@ export const useColdmailStore = create<ColdmailStore>((set, get) => ({
   setRecipientName: (value) => set({ recipientName: value }),
   setRecipientRole: (value) => set({ recipientRole: value }),
   setJobDescription: (value) => set({ jobDescription: value }),
-  setPersonalNote: (value) => set({ personalNote: value }),
   setTone: (value) => set({ tone: value }),
   setLength: (value) => set({ length: value }),
   setCallToAction: (value) => set({ callToAction: value }),
@@ -218,7 +214,6 @@ export const useColdmailStore = create<ColdmailStore>((set, get) => ({
       recipientName,
       recipientRole,
       jobDescription,
-      personalNote,
       tone,
       length,
       callToAction,
@@ -255,7 +250,6 @@ export const useColdmailStore = create<ColdmailStore>((set, get) => ({
         recipientName,
         recipientRole,
         jobDescription,
-        personalNote,
         tone,
         length,
         callToAction,

@@ -61,7 +61,6 @@ Company website: {request.companyWebsiteUrl or "Unknown"}
 Recipient name: {request.recipientName or "Unknown"}
 Recipient role: {request.recipientRole or "Unknown"}
 Company context from website: {company_context or request.companyContext or "None provided"}
-Candidate note: {request.personalNote or "None provided"}
 
 Job description:
 {request.jobDescription[:12000]}
