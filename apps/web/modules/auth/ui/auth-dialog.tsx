@@ -15,7 +15,7 @@ const AuthDialog = ({ className }: AuthProps) => {
   const destination = session?.user ? "/dashboard" : "/login";
 
   return (
-    <div className={cn("bg-custom p-0.5! rounded-md! -mr-1", className)}>
+    <div className={cn("md:bg-custom md:p-0.5! rounded-md -mr-1", className)}>
       <Button
         asChild
         className={cn(

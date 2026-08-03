@@ -14,28 +14,24 @@ import { HeroDashboard } from "../components/hero-dashboard";
 const HomeView = () => {
   return (
     <main className="relative min-h-screen overflow-x-hidden w-full bg-background transition-colors duration-300">
-
-      {/* ── Horizon Gradient Backdrop ── */}
+      {/* Rectangular horizon backdrop */}
       <div
         aria-hidden="true"
         className="absolute top-0 left-0 right-0 h-screen overflow-hidden pointer-events-none select-none z-0 blur-sm"
         style={{
-          backgroundImage: `radial-gradient(
-            circle at 50% 100%,
+          backgroundImage: `linear-gradient(
+            to top,
             var(--radial-center) 0%,
             var(--radial-stop1) 18%,
             var(--radial-stop2) 35%,
-            var(--radial-stop3) 25%,
-            var(--radial-stop4) 60%,
+            var(--radial-stop3) 50%,
+            var(--radial-stop4) 70%,
             var(--radial-stop5) 100%
-          )`
-
+          )`,
         }}
       >
-        {/* Semicircle Overlay */}
-        <div
-          className="absolute left-1/2 -translate-x-1/2 bg-background transition-colors duration-300 animate-fade-in z-50 w-[150vh] sm:w-[130vw] aspect-square rounded-[50%] bottom-[-75vh] sm:bottom-[-95vw]"
-        />
+        {/* Rectangular foreground overlay */}
+        <div className="absolute inset-x-0 bottom-0 z-50 h-3/4 bg-background transition-colors duration-300 animate-fade-in md:mx-24 rounded-t-4xl" />
       </div>
 
       {/* ── Hero Section ── */}
@@ -45,25 +41,31 @@ const HomeView = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8 inline-flex items-center gap-3 rounded-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium border border-foreground/5 shadow-sm relative z-10"
+          className="mb-8 inline-flex items-center gap-3 rounded-md bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium border border-foreground/5 shadow-sm relative z-10"
         >
           <span className="flex h-1.5 w-1.5 rounded-full bg-custom animate-pulse" />
           <span className="text-foreground font-semibold">Rescomail v1.0</span>
           <span className="hidden md:block text-muted-foreground">·</span>
-          <span className="hidden md:block text-muted-foreground">Your AI Enhancer</span>
+          <span className="hidden md:block text-muted-foreground">
+            Beta Version
+          </span>
         </motion.div>
 
         {/* Main Content */}
         <div className="mx-auto max-w-4xl px-4 w-full text-center relative z-10 flex flex-col items-center">
-
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-6 text-4xl sm:text-6xl font-medium tracking-tight text-foreground leading-[1.08] max-w-3xl"
+            className="font-sans tracking-wider mb-6 text-4xl sm:text-6xl font-extrabold text-foreground leading-[1.08] max-w-3xl"
           >
             An assistant for <br />
-            your <CharAnimation text="dream" className="text-4xl md:text-6xl text-blue-500! dark:text-purple-500!" /> job
+            your{" "}
+            <CharAnimation
+              text="dream"
+              className="text-4xl md:text-6xl text-blue-500! dark:text-purple-500!"
+            />{" "}
+            job
           </motion.h1>
 
           <motion.p
@@ -72,7 +74,8 @@ const HomeView = () => {
             transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="mb-8 text-sm md:text-base text-muted-foreground leading-relaxed max-w-lg mx-auto"
           >
-            Rescomail surfaces relevant jobs, perfects your resume, and writes high-converting cold emails so you can land your role.
+            Rescomail surfaces relevant jobs, perfects your resume, and writes
+            high-converting cold emails so you can land your role.
           </motion.p>
 
           <motion.div
@@ -88,13 +91,17 @@ const HomeView = () => {
               className="relative h-9 md:h-11 px-6 md:px-8 text-xs md:text-sm font-semibold rounded-full"
               asChild
             >
-              <Link href="/login" className="h-9.5! md:h-11! relative pl-11 md:pl-14!">
+              <Link
+                href="/login"
+                className="h-9.5! md:h-11! relative pl-11 md:pl-14!"
+              >
                 Try for free
-                <div className="absolute left-0.5 md:left-1 p-2 md:p-2.5 bg-background text-foreground rounded-full border border-black!"><ArrowRight className="h-4 w-4" /></div>
+                <div className="absolute left-0.5 md:left-1 p-2 md:p-2.5 bg-background text-foreground rounded-full border border-black!">
+                  <ArrowRight className="h-4 w-4" />
+                </div>
               </Link>
             </Button>
           </motion.div>
-
         </div>
       </section>
 
@@ -102,7 +109,6 @@ const HomeView = () => {
       <BentoFeatures />
       <HomeCta />
       <HomeFaq />
-
     </main>
   );
 };

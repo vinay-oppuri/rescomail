@@ -34,16 +34,18 @@ const DashboardNavbar = () => {
     <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-md">
       <div className="flex h-16 items-center gap-4 px-4 md:px-6">
         <SidebarTrigger className="transition-colors hover:bg-muted/50" />
-        <Link href="/dashboard" className="font-semibold md:hidden">Rescomail</Link>
+        <Link href="/dashboard" className="font-semibold md:hidden p-0.5 bg-custom/80 rounded-md text-sm text-white">
+          <span className="bg-custom h-7 w-7 flex items-center justify-center rounded-sm">R</span>
+        </Link>
         <div className="flex flex-1">
           <Button
             variant="outline"
-            className="hidden h-9 w-full max-w-xs justify-start rounded-sm text-xs text-muted-foreground md:flex"
-            onClick={() => setOpen(true)}
+            className="h-8! sm:h-9! w-full max-w-xs justify-start rounded-sm text-xs text-muted-foreground flex"
+            onClick={() => setOpen(true)} 
           >
             <Search className="mr-2 h-4 w-4" />
             Open a tool
-            <kbd className="ml-auto rounded border px-1.5 py-0.5 font-mono text-[10px]">Ctrl K</kbd>
+            <kbd className="hidden sm:block ml-auto rounded border px-1.5 py-0.5 font-mono text-[10px]">Ctrl K</kbd>
           </Button>
         </div>
         <DashboardUserProfile />

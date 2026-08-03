@@ -56,10 +56,10 @@
   /* --background: oklch(1 0 0); */
   --background: oklch(0.985 0.002 250);
   --foreground: oklch(0.141 0.005 285.823);
-  --radial-center: #000000;
+  --radial-center: #ffffff;
   --radial-stop1: #ffffff;
   --radial-stop2: #38bdf8;
-  --radial-stop3: #8b5cf6;
+  --radial-stop3: #0d7fb8;
   --radial-stop4: #38bdf8;
   --radial-stop5: #ffffff;
   --card: oklch(1 0 0);
@@ -98,10 +98,10 @@
 .dark {
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
-  --radial-center: #000000;
-  --radial-stop1: #09090b;
-  --radial-stop2: #06b6d4;
-  --radial-stop3: #6366f1;
+  --radial-center: oklch(0.141 0.005 285.823);
+  --radial-stop1: oklch(0.141 0.005 285.823);
+  --radial-stop2: #1e1b4b;
+  --radial-stop3: #3e41e6;
   --radial-stop4: #1e1b4b;
   --radial-stop5: #09090b;
   --card: oklch(0.21 0.006 285.885);
