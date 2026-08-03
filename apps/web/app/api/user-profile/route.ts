@@ -3,28 +3,8 @@ import { auth } from "@repo/auth";
 import { db, userProfile, userPreferences } from "@repo/db";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
-import { z } from "zod";
 import { logRouteError } from "@/lib/server/api-errors";
-
-const userProfileUpdateSchema = z.object({
-  full_name: z.string().trim().max(120).optional(),
-  email: z.string().email().optional(),
-  phone: z.string().max(30).optional(),
-  location: z.string().max(120).optional(),
-  portfolio_url: z.string().url().optional().or(z.literal("")),
-  github_url: z.string().url().optional().or(z.literal("")),
-  linkedin_url: z.string().url().optional().or(z.literal("")),
-  extra_links: z
-    .array(
-      z.object({
-        label: z.string().trim().min(1),
-        url: z.string().url(),
-      })
-    )
-    .max(5)
-    .optional(),
-  last_prompted_at: z.string().datetime().nullable().optional(),
-});
+import { userProfileUpdateSchema } from "@/modules/dashboard/server/user-profile-schema";
 
 export async function GET() {
   const session = await auth.api.getSession({
@@ -67,7 +47,8 @@ export async function GET() {
       if (!profile.lastPromptedAt) {
         should_prompt = true;
       } else {
-        const timeDiff = Date.now() - new Date(profile.lastPromptedAt).getTime();
+        const timeDiff =
+          Date.now() - new Date(profile.lastPromptedAt).getTime();
         // 24 hours cooldown
         if (timeDiff > 24 * 60 * 60 * 1000) {
           should_prompt = true;
@@ -102,7 +83,9 @@ export async function GET() {
   } catch (error) {
     logRouteError("GET user-profile error", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Internal Server Error" },
+      {
+        error: error instanceof Error ? error.message : "Internal Server Error",
+      },
       { status: 500 },
     );
   }
@@ -123,7 +106,13 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const parsed = userProfileUpdateSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: parsed.error.issues[0]?.message ?? "Invalid profile details.",
+          details: parsed.error.flatten(),
+        },
+        { status: 400 },
+      );
     }
     const validatedBody = parsed.data;
 
@@ -136,22 +125,32 @@ export async function POST(req: NextRequest) {
       portfolioUrl: string;
       githubUrl: string;
       linkedinUrl: string;
-      extraLinks: { label: string; url: string; }[];
+      extraLinks: { label: string; url: string }[];
       isComplete: boolean;
       lastPromptedAt: Date | null;
       updatedAt: Date;
     }> = {};
 
-    if (validatedBody.full_name !== undefined) dataToSave.fullName = validatedBody.full_name;
-    if (validatedBody.email !== undefined) dataToSave.email = validatedBody.email;
-    if (validatedBody.phone !== undefined) dataToSave.phone = validatedBody.phone;
-    if (validatedBody.location !== undefined) dataToSave.location = validatedBody.location;
-    if (validatedBody.portfolio_url !== undefined) dataToSave.portfolioUrl = validatedBody.portfolio_url;
-    if (validatedBody.github_url !== undefined) dataToSave.githubUrl = validatedBody.github_url;
-    if (validatedBody.linkedin_url !== undefined) dataToSave.linkedinUrl = validatedBody.linkedin_url;
-    if (validatedBody.extra_links !== undefined) dataToSave.extraLinks = validatedBody.extra_links;
+    if (validatedBody.full_name !== undefined)
+      dataToSave.fullName = validatedBody.full_name;
+    if (validatedBody.email !== undefined)
+      dataToSave.email = validatedBody.email;
+    if (validatedBody.phone !== undefined)
+      dataToSave.phone = validatedBody.phone;
+    if (validatedBody.location !== undefined)
+      dataToSave.location = validatedBody.location;
+    if (validatedBody.portfolio_url !== undefined)
+      dataToSave.portfolioUrl = validatedBody.portfolio_url;
+    if (validatedBody.github_url !== undefined)
+      dataToSave.githubUrl = validatedBody.github_url;
+    if (validatedBody.linkedin_url !== undefined)
+      dataToSave.linkedinUrl = validatedBody.linkedin_url;
+    if (validatedBody.extra_links !== undefined)
+      dataToSave.extraLinks = validatedBody.extra_links;
     if (validatedBody.last_prompted_at !== undefined) {
-      dataToSave.lastPromptedAt = validatedBody.last_prompted_at ? new Date(validatedBody.last_prompted_at) : null;
+      dataToSave.lastPromptedAt = validatedBody.last_prompted_at
+        ? new Date(validatedBody.last_prompted_at)
+        : null;
     }
 
     const existingProfile = await db.query.userProfile.findFirst({
@@ -159,15 +158,34 @@ export async function POST(req: NextRequest) {
     });
 
     // Helper function to check completeness: non-null and non-empty
-    const checkField = (val: unknown) => val !== undefined && val !== null && String(val).trim() !== "";
+    const checkField = (val: unknown) =>
+      val !== undefined && val !== null && String(val).trim() !== "";
 
     const mergedProfile = {
-      fullName: dataToSave.fullName !== undefined ? dataToSave.fullName : existingProfile?.fullName,
-      email: dataToSave.email !== undefined ? dataToSave.email : existingProfile?.email,
-      phone: dataToSave.phone !== undefined ? dataToSave.phone : existingProfile?.phone,
-      portfolioUrl: dataToSave.portfolioUrl !== undefined ? dataToSave.portfolioUrl : existingProfile?.portfolioUrl,
-      githubUrl: dataToSave.githubUrl !== undefined ? dataToSave.githubUrl : existingProfile?.githubUrl,
-      linkedinUrl: dataToSave.linkedinUrl !== undefined ? dataToSave.linkedinUrl : existingProfile?.linkedinUrl,
+      fullName:
+        dataToSave.fullName !== undefined
+          ? dataToSave.fullName
+          : existingProfile?.fullName,
+      email:
+        dataToSave.email !== undefined
+          ? dataToSave.email
+          : existingProfile?.email,
+      phone:
+        dataToSave.phone !== undefined
+          ? dataToSave.phone
+          : existingProfile?.phone,
+      portfolioUrl:
+        dataToSave.portfolioUrl !== undefined
+          ? dataToSave.portfolioUrl
+          : existingProfile?.portfolioUrl,
+      githubUrl:
+        dataToSave.githubUrl !== undefined
+          ? dataToSave.githubUrl
+          : existingProfile?.githubUrl,
+      linkedinUrl:
+        dataToSave.linkedinUrl !== undefined
+          ? dataToSave.linkedinUrl
+          : existingProfile?.linkedinUrl,
     };
 
     const isComplete =
@@ -224,7 +242,9 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     logRouteError("POST user-profile error", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Internal Server Error" },
+      {
+        error: error instanceof Error ? error.message : "Internal Server Error",
+      },
       { status: 500 },
     );
   }

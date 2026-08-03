@@ -5,7 +5,17 @@ import { useRouter } from "next/navigation";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
-import { Loader2, User, Mail, Phone, MapPin, Globe, Github, Linkedin } from "lucide-react";
+import {
+  Loader2,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Globe,
+  Github,
+  Linkedin,
+} from "lucide-react";
+import { getApiErrorMessage, readApiJson } from "@/lib/api-client";
 
 interface UserProfileSettingsProps {
   profile?: {
@@ -38,7 +48,7 @@ export function UserProfileSettings({ profile }: UserProfileSettingsProps) {
     const urls = [
       { name: "Portfolio", val: portfolioUrl },
       { name: "GitHub", val: githubUrl },
-      { name: "LinkedIn", val: linkedinUrl }
+      { name: "LinkedIn", val: linkedinUrl },
     ];
 
     for (const url of urls) {
@@ -96,16 +106,23 @@ export function UserProfileSettings({ profile }: UserProfileSettingsProps) {
           extra_links: profile?.extraLinks || [],
         }),
       });
+      const data = await readApiJson(response);
 
       if (!response.ok) {
-        throw new Error("Failed to update profile details");
+        throw new Error(
+          getApiErrorMessage(data, "Failed to update profile details"),
+        );
       }
 
       setSaved(true);
       router.refresh();
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save profile. Please try again.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to save profile. Please try again.",
+      );
     } finally {
       setIsSaving(false);
     }
@@ -119,7 +136,8 @@ export function UserProfileSettings({ profile }: UserProfileSettingsProps) {
             Contact & Online Profiles
           </h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            Configure your personal contact info and links to pre-fill generated resumes.
+            Configure your personal contact info and links to pre-fill generated
+            resumes.
           </p>
         </div>
       </div>
@@ -128,7 +146,10 @@ export function UserProfileSettings({ profile }: UserProfileSettingsProps) {
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Full Name */}
           <div className="space-y-2">
-            <Label htmlFor="settings-fullname" className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5">
+            <Label
+              htmlFor="settings-fullname"
+              className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
+            >
               <User className="h-3.5 w-3.5 text-muted-foreground" /> Full Name
             </Label>
             <Input
@@ -142,8 +163,12 @@ export function UserProfileSettings({ profile }: UserProfileSettingsProps) {
 
           {/* Email */}
           <div className="space-y-2">
-            <Label htmlFor="settings-email" className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5">
-              <Mail className="h-3.5 w-3.5 text-muted-foreground" /> Email Address
+            <Label
+              htmlFor="settings-email"
+              className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
+            >
+              <Mail className="h-3.5 w-3.5 text-muted-foreground" /> Email
+              Address
             </Label>
             <Input
               id="settings-email"
@@ -157,8 +182,12 @@ export function UserProfileSettings({ profile }: UserProfileSettingsProps) {
 
           {/* Phone */}
           <div className="space-y-2">
-            <Label htmlFor="settings-phone" className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5">
-              <Phone className="h-3.5 w-3.5 text-muted-foreground" /> Phone Number (Optional)
+            <Label
+              htmlFor="settings-phone"
+              className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
+            >
+              <Phone className="h-3.5 w-3.5 text-muted-foreground" /> Phone
+              Number (Optional)
             </Label>
             <Input
               id="settings-phone"
@@ -171,8 +200,12 @@ export function UserProfileSettings({ profile }: UserProfileSettingsProps) {
 
           {/* Location */}
           <div className="space-y-2">
-            <Label htmlFor="settings-location" className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-muted-foreground" /> Location (Optional)
+            <Label
+              htmlFor="settings-location"
+              className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
+            >
+              <MapPin className="h-3.5 w-3.5 text-muted-foreground" /> Location
+              (Optional)
             </Label>
             <Input
               id="settings-location"
@@ -185,8 +218,12 @@ export function UserProfileSettings({ profile }: UserProfileSettingsProps) {
 
           {/* Portfolio */}
           <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="settings-portfolio" className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5">
-              <Globe className="h-3.5 w-3.5 text-muted-foreground" /> Portfolio / Website URL
+            <Label
+              htmlFor="settings-portfolio"
+              className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
+            >
+              <Globe className="h-3.5 w-3.5 text-muted-foreground" /> Portfolio
+              / Website URL
             </Label>
             <Input
               id="settings-portfolio"
@@ -199,8 +236,12 @@ export function UserProfileSettings({ profile }: UserProfileSettingsProps) {
 
           {/* GitHub */}
           <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="settings-github" className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5">
-              <Github className="h-3.5 w-3.5 text-muted-foreground" /> GitHub Profile URL
+            <Label
+              htmlFor="settings-github"
+              className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
+            >
+              <Github className="h-3.5 w-3.5 text-muted-foreground" /> GitHub
+              Profile URL
             </Label>
             <Input
               id="settings-github"
@@ -213,8 +254,12 @@ export function UserProfileSettings({ profile }: UserProfileSettingsProps) {
 
           {/* LinkedIn */}
           <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="settings-linkedin" className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5">
-              <Linkedin className="h-3.5 w-3.5 text-muted-foreground" /> LinkedIn Profile URL
+            <Label
+              htmlFor="settings-linkedin"
+              className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5"
+            >
+              <Linkedin className="h-3.5 w-3.5 text-muted-foreground" />{" "}
+              LinkedIn Profile URL
             </Label>
             <Input
               id="settings-linkedin"

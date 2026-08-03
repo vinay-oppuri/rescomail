@@ -10,25 +10,31 @@ import { Loader2, ArrowRight, ArrowLeft, X } from "lucide-react";
 import UserDialogS1 from "./user-dialog-s1";
 import UserDialogS2 from "./user-dialog-s2";
 import UserDialogS3, { UserDialogS3Ref } from "./user-dialog-s3";
-import { profileFormSchema, type ProfileFormValues } from "../../server/user-profile-schema";
+import {
+  profileFormSchema,
+  type ProfileFormValues,
+} from "../../server/user-profile-schema";
 import type { UserProfile } from "@repo/db";
+import { getApiErrorMessage, readApiJson } from "@/lib/api-client";
 
 // ── Props ─────────────────────────────────────────────────────────────────
 interface UserProfileDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialData?: (Partial<UserProfile> & {
-    full_name?: string;
-    portfolio_url?: string;
-    github_url?: string;
-    linkedin_url?: string;
-    extra_links?: { label: string; url: string }[];
-    preferences?: {
-      primaryProvider?: "gemini" | "groq" | null;
-      hasGeminiKey?: boolean;
-      hasGroqKey?: boolean;
-    };
-  }) | null;
+  initialData?:
+    | (Partial<UserProfile> & {
+        full_name?: string;
+        portfolio_url?: string;
+        github_url?: string;
+        linkedin_url?: string;
+        extra_links?: { label: string; url: string }[];
+        preferences?: {
+          primaryProvider?: "gemini" | "groq" | null;
+          hasGeminiKey?: boolean;
+          hasGroqKey?: boolean;
+        };
+      })
+    | null;
   onSaveSuccess: () => void;
   isAutomaticPrompt?: boolean;
   initialStep?: number;
@@ -81,15 +87,23 @@ export default function UserProfileDialog({
           email: initialData.email || "",
           phone: initialData.phone || "",
           location: initialData.location || "",
-          portfolioUrl: initialData.portfolioUrl || initialData.portfolio_url || "",
+          portfolioUrl:
+            initialData.portfolioUrl || initialData.portfolio_url || "",
           githubUrl: initialData.githubUrl || initialData.github_url || "",
-          linkedinUrl: initialData.linkedinUrl || initialData.linkedin_url || "",
+          linkedinUrl:
+            initialData.linkedinUrl || initialData.linkedin_url || "",
           extraLinks: initialData.extraLinks || initialData.extra_links || [],
         });
       } else {
         reset({
-          fullName: "", email: "", phone: "", location: "",
-          portfolioUrl: "", githubUrl: "", linkedinUrl: "", extraLinks: [],
+          fullName: "",
+          email: "",
+          phone: "",
+          location: "",
+          portfolioUrl: "",
+          githubUrl: "",
+          linkedinUrl: "",
+          extraLinks: [],
         });
       }
     }
@@ -102,7 +116,9 @@ export default function UserProfileDialog({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ last_prompted_at: new Date().toISOString() }),
-      }).catch((err) => console.error("Failed to update last_prompted_at cooldown:", err));
+      }).catch((err) =>
+        console.error("Failed to update last_prompted_at cooldown:", err),
+      );
     }
   }, [open, isAutomaticPrompt]);
 
@@ -121,7 +137,12 @@ export default function UserProfileDialog({
         extra_links: values.extraLinks,
       }),
     });
-    if (!response.ok) throw new Error("Failed to update profile details");
+    const data = await readApiJson(response);
+    if (!response.ok) {
+      throw new Error(
+        getApiErrorMessage(data, "Failed to update profile details"),
+      );
+    }
   };
 
   const handleNext = async () => {
@@ -171,145 +192,150 @@ export default function UserProfileDialog({
       bodyClassName="flex min-h-0 flex-1 flex-col"
       drawerBodyClassName="max-h-none!"
     >
-        {/* ── Top bar: progress pills + close ── */}
-        <div className="flex items-center justify-between px-6 py-4 shrink-0 border-b border-border/10">
-          <div className="flex gap-1.5">
-            {[1, 2, 3].map((s) => (
-              <span
-                key={s}
-                className={`h-1.5 rounded-full transition-all duration-300 ${step === s
-                    ? "w-10 bg-primary shadow-[0_0_8px_rgba(99,102,241,0.4)]"
-                    : step > s
-                      ? "w-10 bg-primary/40"
-                      : "w-6 bg-muted"
-                  }`}
-              />
-            ))}
-          </div>
-          {!isAutomaticPrompt && (
-            <button
-              onClick={() => onOpenChange(false)}
-              className="rounded-full p-1.5 text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors"
-              aria-label="Close"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
-
-        {/* ── Scrollable step content ── */}
-        <div className="flex flex-col flex-1 overflow-y-auto px-6 py-5 min-h-0">
-          {step === 1 && (
-            <UserDialogS1 register={register} errors={errors} />
-          )}
-          {step === 2 && (
-            <UserDialogS2 register={register} errors={errors} control={control} />
-          )}
-          {step === 3 && (
-            <UserDialogS3
-              ref={s3Ref}
-              initialData={initialData?.preferences}
-              onSavingChange={setSubmitting}
-              onDone={() => { onSaveSuccess(); onOpenChange(false); }}
+      {/* ── Top bar: progress pills + close ── */}
+      <div className="flex items-center justify-between px-6 py-4 shrink-0 border-b border-border/10">
+        <div className="flex gap-1.5">
+          {[1, 2, 3].map((s) => (
+            <span
+              key={s}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                step === s
+                  ? "w-10 bg-primary shadow-[0_0_8px_rgba(99,102,241,0.4)]"
+                  : step > s
+                    ? "w-10 bg-primary/40"
+                    : "w-6 bg-muted"
+              }`}
             />
-          )}
+          ))}
         </div>
+        {!isAutomaticPrompt && (
+          <button
+            onClick={() => onOpenChange(false)}
+            className="rounded-full p-1.5 text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
 
-        {/* ── Shared Footer ── */}
-        <div className="flex items-center justify-between border-t border-border/10 px-3 md:px-6 py-4 bg-muted/5 shrink-0">
-          {step === 1 && (
-            <>
+      {/* ── Scrollable step content ── */}
+      <div className="flex flex-col flex-1 overflow-y-auto px-6 py-5 min-h-0">
+        {step === 1 && <UserDialogS1 register={register} errors={errors} />}
+        {step === 2 && (
+          <UserDialogS2 register={register} errors={errors} control={control} />
+        )}
+        {step === 3 && (
+          <UserDialogS3
+            ref={s3Ref}
+            initialData={initialData?.preferences}
+            onSavingChange={setSubmitting}
+            onDone={() => {
+              onSaveSuccess();
+              onOpenChange(false);
+            }}
+          />
+        )}
+      </div>
+
+      {/* ── Shared Footer ── */}
+      <div className="flex items-center justify-between border-t border-border/10 px-3 md:px-6 py-4 bg-muted/5 shrink-0">
+        {step === 1 && (
+          <>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => onOpenChange(false)}
+              className="h-7 md:h-9 text-xs text-muted-foreground hover:text-foreground font-semibold px-4"
+            >
+              {isAutomaticPrompt ? "Remind me later" : "Cancel"}
+            </Button>
+            <Button
+              type="button"
+              disabled={submitting}
+              onClick={handleNext}
+              className="h-7 md:h-9 text-xs font-semibold px-4 md:px-6 gap-1.5"
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving...
+                </>
+              ) : (
+                <>
+                  Save & Next <ArrowRight className="h-3.5 w-3.5" />
+                </>
+              )}
+            </Button>
+          </>
+        )}
+        {step === 2 && (
+          <>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={handleBack}
+              className="h-7! md:h-9! text-xs font-semibold px-4 gap-1.5"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" /> Back
+            </Button>
+            <Button
+              type="button"
+              disabled={submitting}
+              onClick={handleSubmit(onFormSubmit)}
+              className="h-7 md:h-9 text-xs font-semibold px-4 md:px-6 gap-2"
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving...
+                </>
+              ) : (
+                <>
+                  Save & Next <ArrowRight className="h-3.5 w-3.5" />
+                </>
+              )}
+            </Button>
+          </>
+        )}
+        {step === 3 && (
+          <>
+            <div className="flex gap-2">
               <Button
                 type="button"
-                variant="ghost"
-                onClick={() => onOpenChange(false)}
-                className="h-7 md:h-9 text-xs text-muted-foreground hover:text-foreground font-semibold px-4"
-              >
-                {isAutomaticPrompt ? "Remind me later" : "Cancel"}
-              </Button>
-              <Button
-                type="button"
-                disabled={submitting}
-                onClick={handleNext}
-                className="h-7 md:h-9 text-xs font-semibold px-4 md:px-6 gap-1.5"
-              >
-                {submitting ? (
-                  <>
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving...
-                  </>
-                ) : (
-                  <>
-                    Save & Next <ArrowRight className="h-3.5 w-3.5" />
-                  </>
-                )}
-              </Button>
-            </>
-          )}
-          {step === 2 && (
-            <>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={handleBack}
-                className="h-7! md:h-9! text-xs font-semibold px-4 gap-1.5"
+                variant="outline"
+                onClick={() => setStep(2)}
+                className="h-7 md:h-9 text-xs font-semibold px-4 gap-1.5 border-foreground/5!"
               >
                 <ArrowLeft className="h-3.5 w-3.5" /> Back
               </Button>
               <Button
                 type="button"
-                disabled={submitting}
-                onClick={handleSubmit(onFormSubmit)}
-                className="h-7 md:h-9 text-xs font-semibold px-4 md:px-6 gap-2"
+                variant="ghost"
+                onClick={() => {
+                  onSaveSuccess();
+                  onOpenChange(false);
+                }}
+                className="h-7 md:h-9 text-xs text-muted-foreground hover:text-foreground font-semibold px-4"
               >
-                {submitting ? (
-                  <>
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving...
-                  </>
-                ) : (
-                  <>
-                    Save & Next <ArrowRight className="h-3.5 w-3.5" />
-                  </>
-                )}
+                Skip <span className="hidden md:block">for now</span>
               </Button>
-            </>
-          )}
-          {step === 3 && (
-            <>
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setStep(2)}
-                  className="h-7 md:h-9 text-xs font-semibold px-4 gap-1.5 border-foreground/5!"
-                >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Back
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => { onSaveSuccess(); onOpenChange(false); }}
-                  className="h-7 md:h-9 text-xs text-muted-foreground hover:text-foreground font-semibold px-4"
-                >
-                  Skip <span className="hidden md:block">for now</span>
-                </Button>
-              </div>
-              <Button
-                type="button"
-                disabled={submitting}
-                onClick={() => s3Ref.current?.save()}
-                className="h-7 md:h-9 text-xs font-semibold px-4 md:px-6 gap-2"
-              >
-                {submitting ? (
-                  <>
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving...
-                  </>
-                ) : (
-                  "Save & Finish"
-                )}
-              </Button>
-            </>
-          )}
-        </div>
+            </div>
+            <Button
+              type="button"
+              disabled={submitting}
+              onClick={() => s3Ref.current?.save()}
+              className="h-7 md:h-9 text-xs font-semibold px-4 md:px-6 gap-2"
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" /> Saving...
+                </>
+              ) : (
+                "Save & Finish"
+              )}
+            </Button>
+          </>
+        )}
+      </div>
     </ResponsiveDialog>
   );
 }

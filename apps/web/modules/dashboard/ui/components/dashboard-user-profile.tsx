@@ -64,7 +64,7 @@ const DashboardUserProfile = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-64 border-foreground/5 shadow-lg bg-card/80 backdrop-blur-md p-2">
+      <DropdownMenuContent align="end" className="w-64 border-foreground/5 shadow-lg bg-background/80 backdrop-blur-xl p-2">
         <div className="flex items-center justify-start gap-3 p-2">
           <Avatar className="h-10 w-10 border border-primary/20 bg-primary/10">
             <AvatarImage
@@ -77,7 +77,7 @@ const DashboardUserProfile = () => {
           </Avatar>
           <div className="flex flex-col gap-1">
             <p className="text-sm font-semibold leading-tight">{user?.name || "Unknown User"}</p>
-            <p className="text-xs text-muted-foreground truncate w-[160px]">
+            <p className="text-xs text-muted-foreground truncate w-40">
               {user?.email}
             </p>
           </div>

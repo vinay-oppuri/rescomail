@@ -218,7 +218,7 @@ const ResumeUploadPanel = () => {
       <Button
         type="button"
         className={cn(
-          "mt-2 h-9 w-full font-semibold text-xs md:text-sm transition-colors",
+          "mt-2 h-9 w-full font-semibold text-xs md:text-sm tracking-tight transition-colors",
           success && "bg-emerald-500 hover:bg-emerald-600 text-white"
         )}
         onClick={uploadResume}

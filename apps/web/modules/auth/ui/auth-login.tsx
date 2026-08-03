@@ -248,12 +248,14 @@ const AuthLogin = () => {
                   ))}
                 </InputOTPGroup>
               </InputOTP>
-              <Button type="submit" className="h-10 w-full" disabled={isPending}>
-                {isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
-                Verify and continue
-              </Button>
+              <div className="bg-custom p-0.5! rounded-lg!">
+                <Button type="submit" className="h-9! w-full rounded-lg! bg-custom/60! text-white! hover:shadow-[inset_0_0_20px_rgba(255,255,255,0.4)]! transition-all! duration-300!" disabled={isPending}>
+                  {isPending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : null}
+                  Verify and continue
+                </Button>
+              </div>
               <Button
                 type="button"
                 variant="ghost"

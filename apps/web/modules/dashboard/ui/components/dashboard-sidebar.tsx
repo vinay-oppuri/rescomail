@@ -44,8 +44,10 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
     <Sidebar className="font-mono border-r border-border/50 bg-sidebar/80 backdrop-blur-xl ">
       <SidebarHeader className="h-16 border-b border-border/50 px-6 flex flex-row items-center gap-3">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-foreground text-background font-bold shadow-md transition-all group-hover:scale-105">
-            <span className="text-base">R</span>
+          <div className="bg-custom p-1 rounded-lg">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-custom text-white font-bold transition-all hover:shadow-[inset_0_0_10px_rgba(255,255,255,0.4)]">
+              R
+            </div>
           </div>
           <div className="flex flex-col gap-0.5">
             <span className="font-extrabold text-lg tracking-tight leading-none text-foreground">
@@ -59,9 +61,9 @@ const DashboardSidebar = ({ creditsSlot }: { creditsSlot?: React.ReactNode }) =>
       </SidebarHeader>
 
       <SidebarContent className="p-4 gap-6">
-        <div className="px-2">
+        <div className="p-0.5 mx-2 bg-custom rounded-md">
           <Button
-            className="h-10 w-full justify-start gap-2 transition-all shadow-md shadow-primary/10 hover:shadow-primary/20 hover:-translate-y-0.5"
+            className="h-9! w-full bg-custom/80! text-white justify-start gap-2 transition-all hover:shadow-[inset_0_0_10px_rgba(255,255,255,0.4)] "
             size="sm"
             asChild
             onClick={() => {

@@ -23,17 +23,6 @@ export function DangerActions() {
           </p>
         </div>
       </div>
-      <div className="flex items-center justify-between border-b border-destructive/20 p-3 sm:p-6">
-        <div>
-          <p className="text-xs md:text-sm font-medium">Export Account Data</p>
-          <p className="mt-1 text-[10px] md:text-xs text-muted-foreground">
-            Download your profile, resumes, analyses, and generated emails as JSON.
-          </p>
-        </div>
-        <Button asChild variant="outline" size="sm" className="h-7 md:h-9">
-          <a href="/api/account/export" download>Export Data</a>
-        </Button>
-      </div>
       <div className="flex items-center justify-between p-3 sm:p-6">
         <div>
           <p className="text-xs md:text-sm font-medium">Delete Account</p>

@@ -40,7 +40,7 @@ const HomeNavbar = () => {
           <div className="flex items-center md:-ml-1">
             <Link href="/" onClick={handleLogoClick} className="inline-flex items-center gap-2 group">
               <div className="bg-custom p-1 rounded-md">
-                <span className="flex h-7 w-7 items-center justify-center rounded-sm bg-custom/80 text-white font-bold text-sm transition-transform duration-300 group-hover:shadow-[inset_0_0_10px_rgba(255,255,255,0.4)]">
+                <span className="flex h-7 w-7 items-center justify-center rounded-sm bg-custom/80 text-white font-bold text-base transition-transform duration-300 group-hover:shadow-[inset_0_0_10px_rgba(255,255,255,0.4)]">
                   R
                 </span>
               </div>
