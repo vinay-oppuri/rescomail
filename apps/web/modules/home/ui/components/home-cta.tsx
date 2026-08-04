@@ -8,7 +8,7 @@ export function HomeCta() {
   return (
     <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 border border-foreground/5 dark:border-border/30 rounded-2xl overflow-hidden bg-linear-to-b from-blue-500/10 via-blue-500/5 to-transparent dark:from-blue-500/5 dark:via-blue-500/3 dark:to-blue-500/1 shadow-xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 border border-foreground/5 dark:border-border/30 backdrop-blur-xl rounded-2xl overflow-hidden bg-linear-to-b from-blue-500/10 via-blue-500/5 to-transparent dark:from-blue-500/5 dark:via-blue-500/3 dark:to-blue-500/1 shadow-xl">
 
           {/* Left — copy + actions */}
           <div className="px-6 py-10 md:px-10 md:py-14 flex flex-col justify-center">

@@ -105,7 +105,7 @@ const HomeView = () => {
               <div className="absolute -inset-x-8 -inset-y-4 bg-blue-500/20 blur-2xl rounded-full opacity-60 group-hover:opacity-85 transition-opacity duration-500 pointer-events-none" />
 
               <Button
-                className="relative h-9 md:h-11 px-6 md:px-8 text-xs md:text-sm font-semibold rounded-full"
+                className="relative h-9 md:h-11 px-6 md:px-8 text-xs md:text-sm backdrop-blur-xl! font-semibold rounded-full"
                 asChild
               >
                 <Link

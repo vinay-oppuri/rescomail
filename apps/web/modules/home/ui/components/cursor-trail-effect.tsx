@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import {
   ChromaFlow,
   CursorRipples,
@@ -13,13 +14,16 @@ type CursorTrailEffectProps = {
 };
 
 export function CursorTrailEffect({ fixed = false }: CursorTrailEffectProps) {
+  const { resolvedTheme } = useTheme();
+  const isLightTheme = resolvedTheme === "light";
+
   return (
     <div
       aria-hidden="true"
       className={`pointer-events-none inset-0 overflow-hidden bg-transparent motion-reduce:hidden [@media(hover:none)]:hidden [@media(pointer:coarse)]:hidden ${fixed ? "fixed z-[5]" : "absolute z-0"}`}
     >
       <Shader className="pointer-events-none absolute inset-0 block h-full w-full bg-transparent">
-        {/* ChromaFlow drives DotGrid, which masks the visible white layer. */}
+        {/* ChromaFlow drives DotGrid, which masks the theme-aware color layer. */}
         <DotGrid
           id="trailDots"
           density={40}
@@ -42,8 +46,8 @@ export function CursorTrailEffect({ fixed = false }: CursorTrailEffectProps) {
           visible={false}
         />
         <LinearGradient
-          colorA="#ffffff"
-          colorB="#ffffff"
+          colorA={isLightTheme ? "#0284c7" : "#ffffff"}
+          colorB={isLightTheme ? "#38bdf8" : "#ffffff"}
           colorSpace="hsl"
           end={{ x: 1, y: 0 }}
           maskSource="trailDots"

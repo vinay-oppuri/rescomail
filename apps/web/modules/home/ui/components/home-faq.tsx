@@ -80,7 +80,7 @@ export function HomeFaq() {
         </div>
 
         {/* Accordion */}
-        <div className="border border-foreground/5 rounded-2xl bg-muted/20 backdrop-blur-xs py-2 ">
+        <div className="border border-foreground/5 rounded-2xl bg-muted/20 backdrop-blur-xl py-2 ">
           {FAQS.map((faq, index) => (
             <FaqItem
               key={faq.q}

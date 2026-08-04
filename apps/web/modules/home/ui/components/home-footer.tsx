@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const HomeFooter = () => {
   return (
-    <footer className="relative flex flex-col justify-between h-screen min-h-[500px] overflow-hidden bg-muted/10 pt-12 pb-6">
+    <footer className="relative flex flex-col justify-between h-screen min-h-125 overflow-hidden pt-12 pb-6 rounded-4xl">
       
       {/* 1. Background Image Layer */}
       <div
@@ -32,7 +32,7 @@ const HomeFooter = () => {
       </div>
 
       {/* 4. Foreground Content Layer */}
-      <div className="relative z-30 mx-auto flex w-full max-w-7xl flex-col gap-10 px-6 lg:px-8 lg:flex-row lg:items-start lg:justify-between flex-1">
+      <div className="relative z-30 mx-auto flex w-full max-w-7xl flex-col gap-10 px-6 lg:px-8 pt-0 sm:pt-8 lg:flex-row lg:items-start lg:justify-between flex-1">
         <div className="max-w-xs">
           <div className="flex items-center gap-2 mb-4">
             <div className="flex h-6 w-6 items-center justify-center rounded-sm bg-primary text-primary-foreground font-bold text-sm md:text-lg shadow-lg">

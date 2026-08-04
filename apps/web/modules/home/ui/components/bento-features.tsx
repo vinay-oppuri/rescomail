@@ -95,9 +95,9 @@ export function BentoFeatures() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
 
           {/* Card 1: ATS — Wide (spans 2 cols on md+) */}
-          <BentoCard className="bg-linear-to-b from-violet-500/15 dark:from-violet-500/5 to-violet-500/5 dark:to-violet-500/1 md:col-span-2 flex flex-col sm:flex-row">
+          <BentoCard className="bg-linear-to-b from-violet-500/15 dark:from-violet-500/5 to-violet-500/5 dark:to-violet-500/1 backdrop-blur-xl md:col-span-2 flex flex-col sm:flex-row">
             {/* Text side */}
-            <div className="p-5 md:p-8 flex flex-col justify-center sm:min-w-[200px] sm:max-w-[240px] shrink-0">
+            <div className="p-5 md:p-8 flex flex-col justify-center sm:min-w-50 sm:max-w-60 shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-violet-500/10 text-violet-500 items-center justify-center mb-3 md:mb-5">
                 <Zap className="h-4 w-4 md:h-5 md:w-5" />
               </div>
@@ -154,7 +154,7 @@ export function BentoFeatures() {
           </BentoCard>
 
           {/* Card 2: Cold Emails — Tall (spans 2 rows on md+) */}
-          <BentoCard className="bg-linear-to-b from-blue-500/15 dark:from-blue-500/5 via-blue-500/10 dark:via-blue-500/3 to-blue-500/5 dark:to-blue-500/1 md:row-span-2 flex flex-col">
+          <BentoCard className="bg-linear-to-b from-blue-500/15 dark:from-blue-500/5 via-blue-500/10 dark:via-blue-500/3 to-blue-500/5 dark:to-blue-500/1 backdrop-blur-xl md:row-span-2 flex flex-col">
             <div className="p-5 md:p-8 flex flex-col shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-blue-500/10 text-blue-500 items-center justify-center mb-3 md:mb-5">
                 <Mail className="h-4 w-4 md:h-5 md:w-5" />
@@ -168,7 +168,7 @@ export function BentoFeatures() {
             <div className="mx-5 md:mx-8 h-px bg-border/50" />
 
             {/* Email mockup */}
-            <div className="flex-1 p-4 md:p-6 flex items-stretch min-h-[200px]">
+            <div className="flex-1 p-4 md:p-6 flex items-stretch min-h-50">
               <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden flex flex-col">
                 <div className="px-3 py-2 border-b border-border/50 flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
@@ -208,7 +208,7 @@ export function BentoFeatures() {
           </BentoCard>
 
           {/* Card 3: Privacy controls */}
-          <BentoCard className="bg-linear-to-b from-orange-500/15 dark:from-orange-500/5 to-orange-500/5 dark:to-orange-500/1 flex flex-col">
+          <BentoCard className="bg-linear-to-b from-orange-500/15 dark:from-orange-500/5 to-orange-500/5 dark:to-orange-500/1 backdrop-blur-xl flex flex-col">
             <div className="p-5 md:p-8 flex flex-col shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-purple-500/10 text-orange-500 items-center justify-center mb-3 md:mb-5">
                 <ShieldCheck className="h-4 w-4 md:h-5 md:w-5" />
@@ -221,7 +221,7 @@ export function BentoFeatures() {
 
             <div className="mx-5 md:mx-8 h-px bg-border/50" />
 
-            <div className="flex-1 p-4 md:p-6 flex items-stretch min-h-[140px]">
+            <div className="flex-1 p-4 md:p-6 flex items-stretch min-h-35">
               <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden p-2.5 flex gap-2">
                 <div className="flex-1 bg-muted/30 rounded-sm p-1.5 flex flex-col gap-1.5">
                   <div className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Your data</div>
@@ -247,7 +247,7 @@ export function BentoFeatures() {
           </BentoCard>
 
           {/* Card 4: Actionable Feedback */}
-          <BentoCard className="bg-linear-to-b from-green-500/15 dark:from-green-500/5 to-green-500/5 dark:to-green-500/1 flex flex-col">
+          <BentoCard className="bg-linear-to-b from-green-500/15 dark:from-green-500/5 to-green-500/5 dark:to-green-500/1 backdrop-blur-xl flex flex-col">
             <div className="p-5 md:p-8 flex flex-col shrink-0">
               <div className="w-8 h-8 md:w-10 md:h-10 flex rounded-sm bg-green-500/10 text-green-500 items-center justify-center mb-3 md:mb-5">
                 <FileText className="h-4 w-4 md:h-5 md:w-5" />
@@ -260,7 +260,7 @@ export function BentoFeatures() {
 
             <div className="mx-5 md:mx-8 h-px bg-border/50" />
 
-            <div className="flex-1 p-4 md:p-6 flex items-stretch min-h-[140px]">
+            <div className="flex-1 p-4 md:p-6 flex items-stretch min-h-35">
               <div className="w-full rounded-sm border border-border/50 bg-background/60 overflow-hidden p-3 relative">
                 <div className="flex flex-col gap-1.5 opacity-50">
                   <div className="h-1.5 w-1/3 bg-foreground/20 rounded-full mx-auto mb-1" />
