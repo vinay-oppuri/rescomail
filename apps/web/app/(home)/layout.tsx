@@ -12,7 +12,9 @@ export default function MarketingLayout({
         <HomeNavbar />
       </div>
       <main className="flex-1">{children}</main>
-      <HomeFooter />
+      <div className="relative z-10">
+        <HomeFooter />
+      </div>
     </div>
   );
 }
