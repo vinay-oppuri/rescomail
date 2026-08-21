@@ -8,7 +8,7 @@ import { cn } from "@repo/ui/lib/utils";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import AuthDialog from "@/modules/auth/ui/auth-dialog";
+import AuthButton from "@/modules/auth/ui/auth-dialog";
 
 const navLinks = [
   { name: "Features", path: "/#features" },
@@ -73,7 +73,7 @@ const HomeNavbar = () => {
           <div className="flex items-center gap-1.5 sm:gap-2">
             <ThemeToggle />
             <div className="h-5 w-px bg-black/8 dark:bg-white/10 hidden sm:block" />
-            <AuthDialog className="hidden md:flex rounded-md h-8 px-4 text-xs font-medium" />
+            <AuthButton className="hidden md:flex rounded-md h-8 px-4 text-xs font-medium" />
 
             {/* Mobile Menu Toggle */}
             <Button
@@ -113,7 +113,7 @@ const HomeNavbar = () => {
               ))}
             </ul>
             <div className="w-full flex flex-col">
-              <AuthDialog className="w-full rounded-lg h-10! text-sm font-medium justify-center" />
+              <AuthButton className="w-full rounded-lg h-10! text-sm font-medium justify-center" />
             </div>
           </motion.div>
         )}

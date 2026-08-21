@@ -10,7 +10,7 @@ interface AuthProps {
   className?: string;
 }
 
-const AuthDialog = ({ className }: AuthProps) => {
+const AuthButton = ({ className }: AuthProps) => {
   const { data: session } = useSession();
   const destination = session?.user ? "/dashboard" : "/login";
 
@@ -32,4 +32,4 @@ const AuthDialog = ({ className }: AuthProps) => {
   );
 };
 
-export default AuthDialog;
+export default AuthButton;

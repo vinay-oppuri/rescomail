@@ -10,7 +10,7 @@ import { HomeFaq } from "../components/home-faq";
 import { HomeCta } from "../components/home-cta";
 import CharAnimation from "@repo/ui/components/char-animation";
 import { HeroDashboard } from "../components/hero-dashboard";
-import { CursorTrailEffect } from "../components/cursor-trail-effect";
+// import { CursorTrailEffect } from "../components/cursor-trail-effect";
 
 const HomeView = () => {
   return (
@@ -35,7 +35,7 @@ const HomeView = () => {
         <div className="absolute inset-x-0 bottom-0 z-50 h-3/4 bg-background transition-colors duration-300 animate-fade-in md:mx-24 rounded-t-4xl" />
       </div>
 
-      <CursorTrailEffect fixed />
+      {/* <CursorTrailEffect fixed /> */}
 
       <div className="relative z-10">
         {/* ── Hero Section ── */}
