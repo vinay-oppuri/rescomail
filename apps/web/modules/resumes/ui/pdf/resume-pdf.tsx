@@ -84,6 +84,66 @@ export interface ResumeData {
   customSections?: ResumeCustomSection[];
 }
 
+type UnknownRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is UnknownRecord =>
+  Boolean(value) && typeof value === "object" && !Array.isArray(value);
+
+const asString = (value: unknown) => typeof value === "string" ? value.trim() : "";
+
+const asRecords = (value: unknown) =>
+  Array.isArray(value) ? value.filter(isRecord) : [];
+
+const splitDuration = (value: unknown) => {
+  const duration = asString(value);
+  const [startDate = "", endDate = ""] = duration.split(/\s*(?:-|–|—|to)\s*/i, 2);
+  return { startDate, endDate };
+};
+
+/**
+ * Adapts the current database parser response into the renderer's stable schema.
+ * Unknown or incomplete parser fields are ignored so legacy records remain safe
+ * to open in the editor.
+ */
+export function resumeDataFromParsedJson(parsedJson: unknown): ResumeData {
+  const parsed = isRecord(parsedJson) ? parsedJson : {};
+  const personalInfo = isRecord(parsed.personalInfo) ? parsed.personalInfo : {};
+  const linkDefinitions: Array<[string, unknown]> = [
+    ["Portfolio", personalInfo.portfolioUrl],
+    ["GitHub", personalInfo.githubUrl],
+    ["LinkedIn", personalInfo.linkedinUrl],
+  ];
+  const links = linkDefinitions.map(([label, url]) => ({ label, url: asString(url) })).filter((link) => Boolean(link.url));
+
+  return {
+    basics: {
+      fullName: asString(personalInfo.name),
+      email: asString(personalInfo.email),
+      phone: asString(personalInfo.phone),
+      links,
+    },
+    summary: asString(parsed.summary),
+    skills: Array.isArray(parsed.skills) ? parsed.skills.map(asString).filter(Boolean) : [],
+    experience: asRecords(parsed.experience).map((item) => ({
+      company: asString(item.company),
+      role: asString(item.role),
+      ...splitDuration(item.duration),
+      bullets: Array.isArray(item.description) ? item.description.map(asString).filter(Boolean) : [],
+    })),
+    education: asRecords(parsed.education).map((item) => ({
+      institution: asString(item.school),
+      degree: asString(item.degree),
+      endDate: asString(item.year),
+    })),
+    projects: asRecords(parsed.projects).map((item) => ({
+      name: asString(item.title),
+      bullets: Array.isArray(item.description) ? item.description.map(asString).filter(Boolean) : [],
+      description: Array.isArray(item.technologies) ? item.technologies.map(asString).filter(Boolean).join(", ") : "",
+      link: asString(item.liveUrl) || asString(item.githubUrl),
+    })),
+  };
+}
+
 export interface ResumePdfOptions {
   pageSize?: ResumePageSize;
   /** Defaults to the person's name, with a safe fallback. */
@@ -109,33 +169,33 @@ const colors = {
 };
 
 const styles: Record<string, Style> = {
-  name: { color: colors.ink, fontSize: 24, fontWeight: 700, lineHeight: 1.1 },
-  headline: { color: colors.accent, fontSize: 10.5, fontWeight: 700, marginTop: 5 },
-  contact: { color: colors.muted, fontSize: 8.5, lineHeight: 1.35, marginTop: 7 },
-  section: { marginTop: 15 },
+  name: { color: "#000000", fontSize: 24, fontWeight: 700, lineHeight: 1.1, textAlign: "center" },
+  headline: { color: "#000000", fontSize: 10, fontWeight: 700, marginTop: 4, textAlign: "center" },
+  contact: { color: "#000000", fontSize: 8.75, lineHeight: 1.35, marginTop: 6, textAlign: "center" },
+  section: { marginTop: 13 },
   sectionTitle: {
     borderBottomColor: colors.rule,
     borderBottomWidth: 0.75,
-    color: colors.accent,
-    fontSize: 10,
+    color: "#000000",
+    fontSize: 13,
     fontWeight: 700,
-    letterSpacing: 0.8,
+    letterSpacing: 0,
     paddingBottom: 3,
-    textTransform: "uppercase",
+    textTransform: "none",
   },
-  body: { color: colors.ink, fontSize: 9.25, lineHeight: 1.42 },
-  muted: { color: colors.muted, fontSize: 8.75, lineHeight: 1.35 },
+  body: { color: "#000000", fontSize: 10, lineHeight: 1.38 },
+  muted: { color: "#000000", fontSize: 9, lineHeight: 1.3 },
   entry: { marginTop: 8 },
   entryHeader: { flexDirection: "row", justifyContent: "space-between", gap: 12 },
-  entryTitle: { color: colors.ink, fontSize: 10, fontWeight: 700, lineHeight: 1.25 },
-  dates: { color: colors.muted, fontSize: 8.5, lineHeight: 1.25, textAlign: "right" },
-  subline: { color: colors.muted, fontSize: 8.75, lineHeight: 1.3, marginTop: 1 },
+  entryTitle: { color: "#000000", fontSize: 10.25, fontWeight: 700, lineHeight: 1.25 },
+  dates: { color: "#000000", fontSize: 9, fontStyle: "italic", lineHeight: 1.25, textAlign: "right" },
+  subline: { color: "#000000", fontSize: 9.5, fontStyle: "italic", lineHeight: 1.3, marginTop: 1 },
   bullets: { marginTop: 3, gap: 2 },
   bulletRow: { flexDirection: "row", gap: 5 },
-  bulletMarker: { color: colors.accent, fontSize: 9.25, lineHeight: 1.42 },
-  bulletText: { color: colors.ink, flex: 1, fontSize: 9.25, lineHeight: 1.42 },
-  skillLine: { color: colors.ink, fontSize: 9.25, lineHeight: 1.45, marginTop: 5 },
-  skillCategory: { color: colors.ink, fontWeight: 700 },
+  bulletMarker: { color: "#000000", fontSize: 10, lineHeight: 1.38 },
+  bulletText: { color: "#000000", flex: 1, fontSize: 10, lineHeight: 1.38 },
+  skillLine: { color: "#000000", fontSize: 10, lineHeight: 1.4, marginTop: 3 },
+  skillCategory: { color: "#000000", fontWeight: 700 },
   footer: { color: colors.muted, fontSize: 7.5, textAlign: "center" },
 };
 
@@ -169,7 +229,7 @@ function ContactLine({ basics }: { basics?: ResumeBasics }) {
       {links.map((item, index) => (
         <Text key={`${linkUrl(item)}-${index}`}>
           {index > 0 ? "  |  " : ""}
-          <Link href={linkUrl(item)} style={{ color: colors.muted }}>
+            <Link href={linkUrl(item)} style={{ color: "#0000EE" }}>
             {linkLabel(item)}
           </Link>
         </Text>
@@ -256,7 +316,7 @@ function ProjectEntry({ item }: { item: ResumeProject }) {
 const standardSections: ResumeSectionDefinition[] = [
   {
     id: "summary",
-    title: "Professional Summary",
+    title: "Summary",
     hasContent: (resume) => Boolean(clean(resume.summary)),
     render: (resume) => <Text style={{ ...styles.body, marginTop: 7 }}>{clean(resume.summary)}</Text>,
   },
@@ -280,7 +340,7 @@ const standardSections: ResumeSectionDefinition[] = [
   },
   {
     id: "skills",
-    title: "Skills",
+    title: "Technical Skills",
     hasContent: (resume) => Boolean(resume.skills?.length),
     render: (resume) => (
       <>
@@ -330,7 +390,7 @@ const standardSections: ResumeSectionDefinition[] = [
  * `createResumePdf`, so another visual template can share the same data and API.
  */
 export function ResumePdfDocument({ resume, options = {} }: { resume: ResumeData; options?: ResumePdfOptions }) {
-  const sectionOrder = options.sectionOrder ?? standardSections.map((section) => section.id);
+  const sectionOrder = options.sectionOrder ?? ["summary", "skills", "experience", "projects", "certifications", "education"];
   const definitions = [...standardSections, ...(options.sectionDefinitions ?? [])];
   const sections = sectionOrder
     .map((id) => definitions.find((section) => section.id === id))
@@ -339,8 +399,8 @@ export function ResumePdfDocument({ resume, options = {} }: { resume: ResumeData
   const headline = clean(resume.basics?.headline) || clean(resume.basics?.title);
 
   return (
-    <Document title={name ? `${name} Resume` : "Resume"} author={name || undefined} lang="en-US">
-      <Page size={options.pageSize ?? "Letter"} margin={{ top: 43, right: 47, bottom: 42, left: 47 }}>
+    <Document title={name ? `${name} Resume` : "Resume"} author={name || undefined} lang="en-US" style={{ fontFamily: "Times-Roman" }}>
+      <Page size={options.pageSize ?? "Letter"} margin={{ top: 36, right: 54, bottom: 42, left: 54 }}>
         <Fixed position="footer" style={{ paddingTop: 8 }}>
           <Text style={styles.footer}>Page {"{{pageNumber}}"} of {"{{totalPages}}"}</Text>
         </Fixed>
@@ -372,7 +432,8 @@ export async function createResumePdf(resume: ResumeData, options: ResumePdfOpti
 /** Triggers a browser download and promptly releases the temporary object URL. */
 export function downloadResumePdf(bytes: Uint8Array, fileName = "resume.pdf") {
   const safeName = fileName.toLowerCase().endsWith(".pdf") ? fileName : `${fileName}.pdf`;
-  const url = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+  const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
+  const url = URL.createObjectURL(new Blob([buffer], { type: "application/pdf" }));
   const anchor = document.createElement("a");
   anchor.href = url;
   anchor.download = safeName;
