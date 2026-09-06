@@ -69,6 +69,12 @@ importers:
 
   apps/web:
     dependencies:
+      '@formepdf/core':
+        specifier: ^0.11.1
+        version: 0.11.1(react@19.2.4)
+      '@formepdf/react':
+        specifier: ^0.11.1
+        version: 0.11.1(react@19.2.4)
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.76.0(react@19.2.4))
@@ -908,6 +914,19 @@ packages:
 
   '@floating-ui/utils@0.2.11':
     resolution: {integrity: sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==}
+
+  '@formepdf/core@0.11.1':
+    resolution: {integrity: sha512-MJkWc2iHIX/9S258nxxUAvN/vn0Xiljj7SW9LBT9eLMc78CW3wpTkr5hLDrNiWkp0k41iFGcwP+PdiankcJpfw==}
+    peerDependencies:
+      react: ^18 || ^19
+
+  '@formepdf/react@0.11.1':
+    resolution: {integrity: sha512-yrwLA6b2COZnfXSV0eOnxkh6efs4ORJOlK6zs7p+t9NPiHXX6a1ub1f02NqBMYXeWGyrrumkm0coWLXLuVRgIw==}
+    peerDependencies:
+      react: ^18 || ^19
+
+  '@formepdf/shared@0.11.1':
+    resolution: {integrity: sha512-PyggPPXrGsvjKj3bEJLwO+PE/caSGajCW6sPJ+ocm2OhjH6QUwsFZ9J+6ufJ4T6ZzhanwrYeJUkDtVBL/hWiZg==}
 
   '@google-cloud/precise-date@4.0.0':
     resolution: {integrity: sha512-1TUx3KdaU3cN7nfCdNf+UVqA/PSX29Cjcox3fZZBtINlRrXVTmUkQnCKv2MbBUbCopbK4olAT1IHl76uZyCiVA==}
@@ -6833,6 +6852,18 @@ snapshots:
       react-dom: 19.2.4(react@19.2.4)
 
   '@floating-ui/utils@0.2.11': {}
+
+  '@formepdf/core@0.11.1(react@19.2.4)':
+    dependencies:
+      '@formepdf/react': 0.11.1(react@19.2.4)
+      react: 19.2.4
+
+  '@formepdf/react@0.11.1(react@19.2.4)':
+    dependencies:
+      '@formepdf/shared': 0.11.1
+      react: 19.2.4
+
+  '@formepdf/shared@0.11.1': {}
 
   '@google-cloud/precise-date@4.0.0': {}
 

@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
-import { FileText, Loader2 } from "lucide-react";
+import { FilePlus2, FileText, Loader2 } from "lucide-react";
+import Link from "next/link";
 
 import type { ResumeListItem } from "../../server/resumes";
 import ResumeUploadPanel from "../components/resume-upload-panel";
@@ -79,6 +80,12 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
             analysis.
           </p>
         </div>
+        <Button asChild className="shrink-0">
+          <Link href="/dashboard/resumes/generate">
+            <FilePlus2 className="h-3.5 w-3.5" />
+            Generate resume
+          </Link>
+        </Button>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[380px_1fr]">

@@ -12,6 +12,8 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@formepdf/core": "^0.11.1",
+    "@formepdf/react": "^0.11.1",
     "@hookform/resolvers": "^5.2.2",
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
