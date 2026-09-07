@@ -10,7 +10,7 @@ import math
 import re
 
 from app.schemas.coldmail import ColdEmailGenerateRequest
-from app.schemas.resume import StructuredResume
+from app.schemas.resume import SkillGroup, StructuredResume
 
 
 # ---------------------------------------------------------------------------
@@ -44,7 +44,18 @@ def candidate_skills(
 ) -> list[str]:
     """Return up to 8 skills from the resume, falling back to JD keywords."""
     if structured_resume and structured_resume.skills:
-        return [skill.strip() for skill in structured_resume.skills if skill.strip()][:8]
+        extracted: list[str] = []
+        for item in structured_resume.skills:
+            if isinstance(item, SkillGroup):
+                extracted.extend(s.strip() for s in item.skills if s.strip())
+            elif isinstance(item, dict):
+                sub = item.get("skills", [])
+                if isinstance(sub, list):
+                    extracted.extend(str(s).strip() for s in sub if str(s).strip())
+            elif isinstance(item, str) and item.strip():
+                extracted.append(item.strip())
+        if extracted:
+            return extracted[:8]
 
     skills_match = re.search(
         r"skills?\s*[:\-]\s*(.+)",

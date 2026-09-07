@@ -5,6 +5,7 @@ from .resume import (
     Experience,
     ParseRequest,
     PersonalInfo,
+    SkillGroup,
     StructuredResume,
 )
 from .ats import (
@@ -32,5 +33,6 @@ __all__ = [
     "Experience",
     "ParseRequest",
     "PersonalInfo",
+    "SkillGroup",
     "StructuredResume",
 ]

@@ -1,4 +1,4 @@
-from app.schemas.resume import StructuredResume
+from app.schemas.resume import SkillGroup, StructuredResume
 
 
 def structured_resume_to_text(resume: StructuredResume) -> str:
@@ -19,7 +19,35 @@ def structured_resume_to_text(resume: StructuredResume) -> str:
         parts.append(f"Summary: {resume.summary}")
 
     if resume.skills:
-        parts.append("Skills: " + ", ".join(resume.skills))
+        skill_lines: list[str] = []
+        has_categories = False
+        for item in resume.skills:
+            if isinstance(item, SkillGroup):
+                sub_skills = ", ".join(s for s in item.skills if s)
+                if item.category.strip():
+                    has_categories = True
+                    skill_lines.append(f"{item.category.strip()}: {sub_skills}")
+                elif sub_skills:
+                    skill_lines.append(sub_skills)
+            elif isinstance(item, dict):
+                cat = str(item.get("category", "")).strip()
+                sub = item.get("skills", [])
+                sub_skills = (
+                    ", ".join(str(s) for s in sub if s)
+                    if isinstance(sub, list)
+                    else str(sub)
+                )
+                if cat:
+                    has_categories = True
+                    skill_lines.append(f"{cat}: {sub_skills}")
+                elif sub_skills:
+                    skill_lines.append(sub_skills)
+            elif isinstance(item, str) and item.strip():
+                skill_lines.append(item.strip())
+
+        if skill_lines:
+            joiner = " | " if has_categories else ", "
+            parts.append("Skills: " + joiner.join(skill_lines))
 
     if resume.experience:
         parts.append("Experience:")

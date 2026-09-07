@@ -19,7 +19,17 @@ GEMINI_STRUCTURED_RESUME_SCHEMA = {
         "summary": {"type": "STRING"},
         "skills": {
             "type": "ARRAY",
-            "items": {"type": "STRING"},
+            "items": {
+                "type": "OBJECT",
+                "properties": {
+                    "category": {"type": "STRING"},
+                    "skills": {
+                        "type": "ARRAY",
+                        "items": {"type": "STRING"},
+                    },
+                },
+                "required": ["category", "skills"],
+            },
         },
         "experience": {
             "type": "ARRAY",

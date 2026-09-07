@@ -100,6 +100,47 @@ const splitDuration = (value: unknown) => {
   return { startDate, endDate };
 };
 
+const parseSkills = (skillsValue: unknown): Array<string | ResumeSkillGroup> => {
+  if (Array.isArray(skillsValue)) {
+    return skillsValue
+      .map((item) => {
+        if (typeof item === "string") {
+          const trimmed = item.trim();
+          return trimmed || null;
+        }
+        if (isRecord(item)) {
+          const category = asString(item.category);
+          const rawSkills = item.skills;
+          const skillsList: string[] = Array.isArray(rawSkills)
+            ? rawSkills.map(asString).filter(Boolean)
+            : typeof rawSkills === "string"
+              ? rawSkills.split(",").map(asString).filter(Boolean)
+              : [];
+          if (category || skillsList.length > 0) {
+            return { category, skills: skillsList };
+          }
+        }
+        return null;
+      })
+      .filter((item): item is string | ResumeSkillGroup => item !== null);
+  }
+
+  if (isRecord(skillsValue)) {
+    return Object.entries(skillsValue)
+      .map(([category, rawSkills]) => {
+        const skillsList: string[] = Array.isArray(rawSkills)
+          ? rawSkills.map(asString).filter(Boolean)
+          : typeof rawSkills === "string"
+            ? rawSkills.split(",").map(asString).filter(Boolean)
+            : [];
+        return { category: category.trim(), skills: skillsList };
+      })
+      .filter((group) => Boolean(group.category || group.skills.length));
+  }
+
+  return [];
+};
+
 /**
  * Adapts the current database parser response into the renderer's stable schema.
  * Unknown or incomplete parser fields are ignored so legacy records remain safe
@@ -123,7 +164,7 @@ export function resumeDataFromParsedJson(parsedJson: unknown): ResumeData {
       links,
     },
     summary: asString(parsed.summary),
-    skills: Array.isArray(parsed.skills) ? parsed.skills.map(asString).filter(Boolean) : [],
+    skills: parseSkills(parsed.skills),
     experience: asRecords(parsed.experience).map((item) => ({
       company: asString(item.company),
       role: asString(item.role),
@@ -349,7 +390,7 @@ const standardSections: ResumeSectionDefinition[] = [
             <Text style={styles.skillLine} key={`${skill}-${index}`}>{clean(skill)}</Text>
           ) : (
             <Text style={styles.skillLine} key={`${skill.category}-${index}`}>
-              <Text style={styles.skillCategory}>{clean(skill.category)}: </Text>
+              {clean(skill.category) ? <Text style={styles.skillCategory}>{clean(skill.category)}: </Text> : null}
               {nonEmpty(skill.skills).join(", ")}
             </Text>
           ),
