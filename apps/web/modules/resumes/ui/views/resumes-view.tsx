@@ -81,7 +81,7 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
           </p>
         </div>
         <Button asChild className="shrink-0" variant="outline">
-          <Link href="/resume-editor">
+          <Link href="/dashboard/editor">
             <FileText className="h-3.5 w-3.5 mr-1" />
             Resume Docs Editor
           </Link>
@@ -156,7 +156,7 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
 
                     {resume.status === "parsed" && (
                       <Button variant="default" size="sm" asChild className="gap-1.5">
-                        <Link href={`/resume-editor?id=${resume.id}`}>
+                        <Link href={`/dashboard/editor?id=${resume.id}`}>
                           <FileText className="h-3.5 w-3.5" />
                           Edit in Docs
                         </Link>

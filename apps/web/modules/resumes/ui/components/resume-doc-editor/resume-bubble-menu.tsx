@@ -48,7 +48,7 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
         // Disappear when selection is empty/cleared
         return !state.selection.empty && from !== to;
       }}
-      className="z-50 flex items-center rounded-lg border border-slate-700/60 bg-slate-900/95 px-1.5 py-1 text-slate-100 shadow-2xl backdrop-blur-md transition-all duration-150"
+      className="z-50 flex items-center gap-0.5 rounded-md border border-border/80 bg-popover/95 px-1.5 py-1 text-popover-foreground shadow-xl backdrop-blur-md transition-all duration-150"
     >
       {/* Heading / Font size control */}
       <div className="relative">
@@ -58,18 +58,18 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
             e.preventDefault();
             setHeadingDropdownOpen((prev) => !prev);
           }}
-          className="flex h-7 items-center gap-1 rounded px-2 text-xs font-medium text-slate-200 transition-colors hover:bg-slate-800 hover:text-white"
+          className="flex h-7 items-center gap-1 rounded px-2 text-xs font-medium text-foreground transition-colors hover:bg-muted hover:text-foreground"
           title="Text style / Heading level"
           aria-label="Text style / Heading level"
         >
-          <TypeIcon className="h-3.5 w-3.5 text-slate-400" />
+          <TypeIcon className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="max-w-[70px] truncate text-[11px] font-medium">{currentLevelLabel}</span>
           <ChevronDown className="h-3 w-3 opacity-60" />
         </button>
 
         {headingDropdownOpen && (
           <div
-            className="absolute left-0 top-full mt-1.5 w-36 rounded-md border border-slate-700 bg-slate-900 p-1 shadow-xl"
+            className="absolute left-0 top-full mt-1.5 w-36 rounded-md border border-border bg-popover p-1 shadow-xl text-popover-foreground"
             onMouseDown={(e) => e.preventDefault()}
           >
             <button
@@ -79,7 +79,7 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
                 setHeadingDropdownOpen(false);
               }}
               className={`flex w-full items-center gap-2 rounded px-2 py-1 text-left text-xs transition-colors ${
-                isParagraph ? "bg-slate-800 font-semibold text-sky-400" : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                isParagraph ? "bg-primary/10 font-semibold text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               <TypeIcon className="h-3.5 w-3.5" />
@@ -92,7 +92,7 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
                 setHeadingDropdownOpen(false);
               }}
               className={`flex w-full items-center gap-2 rounded px-2 py-1 text-left text-xs transition-colors ${
-                isH1 ? "bg-slate-800 font-semibold text-sky-400" : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                isH1 ? "bg-primary/10 font-semibold text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               <H1Icon className="h-3.5 w-3.5" />
@@ -105,7 +105,7 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
                 setHeadingDropdownOpen(false);
               }}
               className={`flex w-full items-center gap-2 rounded px-2 py-1 text-left text-xs transition-colors ${
-                isH2 ? "bg-slate-800 font-semibold text-sky-400" : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                isH2 ? "bg-primary/10 font-semibold text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               <H2Icon className="h-3.5 w-3.5" />
@@ -118,7 +118,7 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
                 setHeadingDropdownOpen(false);
               }}
               className={`flex w-full items-center gap-2 rounded px-2 py-1 text-left text-xs transition-colors ${
-                isH3 ? "bg-slate-800 font-semibold text-sky-400" : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                isH3 ? "bg-primary/10 font-semibold text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               <H3Icon className="h-3.5 w-3.5" />
@@ -128,7 +128,7 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
         )}
       </div>
 
-      <div className="mx-1 h-4 w-px bg-slate-700/80" />
+      <div className="mx-1 h-4 w-px bg-border/80" />
 
       {/* Bold */}
       <button
@@ -139,8 +139,8 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
         }}
         className={`flex h-7 w-7 items-center justify-center rounded transition-colors ${
           editor.isActive("bold")
-            ? "bg-slate-800 text-sky-400"
-            : "text-slate-300 hover:bg-slate-800 hover:text-white"
+            ? "bg-primary/15 text-primary font-bold"
+            : "text-muted-foreground hover:bg-muted hover:text-foreground"
         }`}
         title="Bold (Ctrl+B)"
         aria-label="Bold"
@@ -157,8 +157,8 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
         }}
         className={`flex h-7 w-7 items-center justify-center rounded transition-colors ${
           editor.isActive("italic")
-            ? "bg-slate-800 text-sky-400"
-            : "text-slate-300 hover:bg-slate-800 hover:text-white"
+            ? "bg-primary/15 text-primary font-bold"
+            : "text-muted-foreground hover:bg-muted hover:text-foreground"
         }`}
         title="Italic (Ctrl+I)"
         aria-label="Italic"
@@ -175,8 +175,8 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
         }}
         className={`flex h-7 w-7 items-center justify-center rounded transition-colors ${
           editor.isActive("underline")
-            ? "bg-slate-800 text-sky-400"
-            : "text-slate-300 hover:bg-slate-800 hover:text-white"
+            ? "bg-primary/15 text-primary font-bold"
+            : "text-muted-foreground hover:bg-muted hover:text-foreground"
         }`}
         title="Underline (Ctrl+U)"
         aria-label="Underline"
@@ -184,7 +184,7 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
         <UnderlineIcon className="h-3.5 w-3.5" />
       </button>
 
-      <div className="mx-1 h-4 w-px bg-slate-700/80" />
+      <div className="mx-1 h-4 w-px bg-border/80" />
 
       {/* Bullet List Toggle */}
       <button
@@ -195,8 +195,8 @@ export const ResumeBubbleMenu: React.FC<ResumeBubbleMenuProps> = ({ editor }) =>
         }}
         className={`flex h-7 w-7 items-center justify-center rounded transition-colors ${
           editor.isActive("bulletList")
-            ? "bg-slate-800 text-sky-400"
-            : "text-slate-300 hover:bg-slate-800 hover:text-white"
+            ? "bg-primary/15 text-primary font-bold"
+            : "text-muted-foreground hover:bg-muted hover:text-foreground"
         }`}
         title="Bullet list"
         aria-label="Bullet list"

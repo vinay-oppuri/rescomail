@@ -46,12 +46,12 @@ export const ResumeEditableSection: React.FC<ResumeEditableSectionProps> = ({
         },
         listItem: {
           HTMLAttributes: {
-            class: "text-[13.5px] leading-relaxed text-slate-800",
+            class: "text-[13.5px] leading-relaxed text-foreground/90",
           },
         },
         paragraph: {
           HTMLAttributes: {
-            class: "text-[13.5px] leading-relaxed text-slate-800 my-0.5",
+            class: "text-[13.5px] leading-relaxed text-foreground/90 my-0.5",
           },
         },
       }),
@@ -59,7 +59,7 @@ export const ResumeEditableSection: React.FC<ResumeEditableSectionProps> = ({
     content,
     editorProps: {
       attributes: {
-        class: `outline-none focus:outline-none focus-visible:outline-none border-none ring-0 focus:ring-0 w-full min-h-[1.5rem] selection:bg-sky-200 selection:text-slate-900 ${className}`,
+        class: `outline-none focus:outline-none focus-visible:outline-none border-none ring-0 focus:ring-0 w-full min-h-[1.5rem] selection:bg-primary/20 selection:text-foreground text-foreground ${className}`,
         "data-placeholder": placeholder,
       },
     },
