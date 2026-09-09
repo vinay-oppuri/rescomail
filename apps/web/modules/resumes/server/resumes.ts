@@ -80,6 +80,22 @@ export const deleteResume = async (resumeId: string, userId: string) => {
     .where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId)));
 };
 
+export const updateResumeParsedJson = async (
+  resumeId: string,
+  userId: string,
+  parsedJson: unknown
+) => {
+  const [updated] = await db
+    .update(resumes)
+    .set({
+      parsedJson,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId)))
+    .returning();
+  return updated;
+};
+
 export type ResumeListItem = Awaited<
   ReturnType<typeof getResumesForUser>
 >[number];

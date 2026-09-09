@@ -80,12 +80,12 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
             analysis.
           </p>
         </div>
-        {/* <Button asChild className="shrink-0">
-          <Link href="/dashboard/resumes/generate">
-            <FilePlus2 className="h-3.5 w-3.5" />
-            Generate resume
+        <Button asChild className="shrink-0" variant="outline">
+          <Link href="/resume-editor">
+            <FileText className="h-3.5 w-3.5 mr-1" />
+            Resume Docs Editor
           </Link>
-        </Button> */}
+        </Button>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
@@ -153,6 +153,15 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
                         Open PDF
                       </a>
                     </Button>
+
+                    {resume.status === "parsed" && (
+                      <Button variant="default" size="sm" asChild className="gap-1.5">
+                        <Link href={`/resume-editor?id=${resume.id}`}>
+                          <FileText className="h-3.5 w-3.5" />
+                          Edit in Docs
+                        </Link>
+                      </Button>
+                    )}
 
                     <ResumeActionsRow
                       resumeId={resume.id}

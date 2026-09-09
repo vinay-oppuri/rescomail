@@ -16,9 +16,17 @@ import {
   FileText,
   Sparkles,
   Loader2,
+  Database,
 } from "lucide-react";
 import type { Editor } from "@tiptap/react";
-import type { ResumeData, ResumeExperience, ResumeEducation, ResumeProject } from "../../pdf/resume-pdf";
+import {
+  resumeDataFromParsedJson,
+  type ResumeData,
+  type ResumeExperience,
+  type ResumeEducation,
+  type ResumeProject,
+} from "../../pdf/resume-pdf";
+import { getParsedResumesAction, updateResumeParsedJsonAction } from "@/modules/resumes/server/actions";
 import { SAMPLE_RESUME_DATA, fetchResume, updateResume } from "./sample-resume";
 import { ResumeEditableSection } from "./resume-editable-section";
 import { ResumeTopToolbar } from "./resume-top-toolbar";
@@ -43,12 +51,34 @@ function htmlToBullets(html: string): string[] {
   return [div.innerHTML.trim()].filter(Boolean);
 }
 
-export const ResumeDocEditor: React.FC = () => {
+export interface DbResumeSource {
+  id: string;
+  title: string;
+  parsedJson: unknown;
+}
+
+interface ResumeDocEditorProps {
+  dbResumes?: DbResumeSource[];
+  initialResumeId?: string;
+}
+
+export const ResumeDocEditor: React.FC<ResumeDocEditorProps> = ({
+  dbResumes = [],
+  initialResumeId,
+}) => {
   const [loading, setLoading] = useState(true);
+  const [sources, setSources] = useState<DbResumeSource[]>(dbResumes);
+  const [selectedSourceId, setSelectedSourceId] = useState<string>(() => {
+    if (initialResumeId && dbResumes.some((r) => r.id === initialResumeId)) {
+      return initialResumeId;
+    }
+    return dbResumes[0]?.id ?? "sample";
+  });
   const [resume, setResume] = useState<ResumeData>(SAMPLE_RESUME_DATA);
   const [docTitle, setDocTitle] = useState("Elena Rostova – Resume");
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
   const [lastSavedTime, setLastSavedTime] = useState<string>("");
+  const [savedDestination, setSavedDestination] = useState<"database" | "cloud">("cloud");
   const [showJsonModal, setShowJsonModal] = useState(false);
   const [copiedJson, setCopiedJson] = useState(false);
 
@@ -58,18 +88,52 @@ export const ResumeDocEditor: React.FC = () => {
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 1. On load, fetch the resume JSON
+  // 1. On load, fetch parsed resume JSON from database or sample
   useEffect(() => {
     let isMounted = true;
     async function loadData() {
+      setLoading(true);
       try {
-        setLoading(true);
-        const data = await fetchResume();
-        if (isMounted) {
-          setResume(data);
-          if (data.basics?.fullName) {
-            setDocTitle(`${data.basics.fullName} – Resume`);
+        let currentSources = dbResumes;
+        if (!currentSources || currentSources.length === 0) {
+          const res = await getParsedResumesAction();
+          if (res.success && res.resumes.length > 0) {
+            currentSources = res.resumes;
+            if (isMounted) setSources(res.resumes);
           }
+        }
+
+        const targetId =
+          initialResumeId && currentSources.some((r) => r.id === initialResumeId)
+            ? initialResumeId
+            : currentSources[0]?.id ?? "sample";
+
+        if (isMounted) setSelectedSourceId(targetId);
+
+        if (targetId !== "sample") {
+          const match = currentSources.find((r) => r.id === targetId);
+          if (match && match.parsedJson) {
+            const parsedData = resumeDataFromParsedJson(match.parsedJson);
+            if (isMounted) {
+              setResume(parsedData);
+              const fullName = parsedData.basics?.fullName || match.title;
+              setDocTitle(`${fullName} – Resume`);
+              setSavedDestination("database");
+              setSaveStatus("saved");
+              setLastSavedTime("Just now");
+            }
+            return;
+          }
+        }
+
+        // Fallback to sample data
+        const sampleData = await fetchResume();
+        if (isMounted) {
+          setResume(sampleData);
+          if (sampleData.basics?.fullName) {
+            setDocTitle(`${sampleData.basics.fullName} – Resume`);
+          }
+          setSavedDestination("cloud");
           setSaveStatus("saved");
           setLastSavedTime("Just now");
         }
@@ -85,7 +149,30 @@ export const ResumeDocEditor: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [dbResumes, initialResumeId]);
+
+  // Switch between database resumes or sample
+  const selectSource = (sourceId: string) => {
+    setSelectedSourceId(sourceId);
+    if (sourceId === "sample") {
+      setResume(SAMPLE_RESUME_DATA);
+      setDocTitle(`${SAMPLE_RESUME_DATA.basics?.fullName} – Resume`);
+      setSavedDestination("cloud");
+      setSaveStatus("saved");
+      setLastSavedTime("Just now");
+      return;
+    }
+    const source = sources.find((item) => item.id === sourceId);
+    if (source && source.parsedJson) {
+      const parsedData = resumeDataFromParsedJson(source.parsedJson);
+      setResume(parsedData);
+      const name = parsedData.basics?.fullName || source.title;
+      setDocTitle(`${name} – Resume`);
+      setSavedDestination("database");
+      setSaveStatus("saved");
+      setLastSavedTime("Just now");
+    }
+  };
 
   // 5. Debounce persistence: save updated content after typing pause
   const triggerDebouncedSave = useCallback((updated: ResumeData) => {
@@ -96,15 +183,29 @@ export const ResumeDocEditor: React.FC = () => {
     debounceTimerRef.current = setTimeout(async () => {
       setSaveStatus("saving");
       try {
-        const res = await updateResume(updated);
-        setSaveStatus("saved");
-        setLastSavedTime(res.updatedAt);
+        if (selectedSourceId && selectedSourceId !== "sample") {
+          const res = await updateResumeParsedJsonAction(selectedSourceId, updated);
+          if (res.success) {
+            setSaveStatus("saved");
+            setSavedDestination("database");
+            setLastSavedTime(
+              new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
+            );
+          } else {
+            setSaveStatus("unsaved");
+          }
+        } else {
+          const res = await updateResume(updated);
+          setSaveStatus("saved");
+          setSavedDestination("cloud");
+          setLastSavedTime(res.updatedAt);
+        }
       } catch (error) {
         console.error("Failed to persist resume update:", error);
         setSaveStatus("unsaved");
       }
     }, 1000);
-  }, []);
+  }, [selectedSourceId]);
 
   const updateResumeData = useCallback(
     (updater: (prev: ResumeData) => ResumeData) => {
@@ -221,7 +322,7 @@ export const ResumeDocEditor: React.FC = () => {
             </div>
 
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <input
                   type="text"
                   value={docTitle}
@@ -229,6 +330,25 @@ export const ResumeDocEditor: React.FC = () => {
                   className="rounded px-1.5 py-0.5 text-sm font-semibold text-slate-900 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
                   title="Rename document"
                 />
+
+                {sources.length > 0 && (
+                  <div className="flex items-center gap-1 rounded border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs text-slate-700">
+                    <Database className="h-3 w-3 text-blue-600" />
+                    <select
+                      value={selectedSourceId}
+                      onChange={(e) => selectSource(e.target.value)}
+                      className="bg-transparent text-[11px] font-semibold text-slate-800 outline-none cursor-pointer"
+                      title="Select resume from database"
+                    >
+                      {sources.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.title} (DB)
+                        </option>
+                      ))}
+                      <option value="sample">Sample Resume</option>
+                    </select>
+                  </div>
+                )}
               </div>
 
               {/* Autosave status indicator */}
@@ -236,13 +356,16 @@ export const ResumeDocEditor: React.FC = () => {
                 {saveStatus === "saving" && (
                   <span className="flex items-center gap-1 text-amber-600">
                     <CloudUpload className="h-3 w-3 animate-pulse" />
-                    <span>Saving changes…</span>
+                    <span>Saving to {savedDestination === "database" ? "database" : "cloud"}…</span>
                   </span>
                 )}
                 {saveStatus === "saved" && (
                   <span className="flex items-center gap-1 text-emerald-600">
                     <Check className="h-3 w-3 font-bold" />
-                    <span>All changes saved to cloud {lastSavedTime ? `(${lastSavedTime})` : ""}</span>
+                    <span>
+                      All changes saved to {savedDestination === "database" ? "database" : "cloud"}{" "}
+                      {lastSavedTime ? `(${lastSavedTime})` : ""}
+                    </span>
                   </span>
                 )}
                 {saveStatus === "unsaved" && (

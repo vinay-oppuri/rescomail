@@ -148,6 +148,9 @@ const parseSkills = (skillsValue: unknown): Array<string | ResumeSkillGroup> => 
  */
 export function resumeDataFromParsedJson(parsedJson: unknown): ResumeData {
   const parsed = isRecord(parsedJson) ? parsedJson : {};
+  if (parsed.basics && isRecord(parsed.basics)) {
+    return parsed as unknown as ResumeData;
+  }
   const personalInfo = isRecord(parsed.personalInfo) ? parsed.personalInfo : {};
   const linkDefinitions: Array<[string, unknown]> = [
     ["Portfolio", personalInfo.portfolioUrl],
