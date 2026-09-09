@@ -80,12 +80,12 @@ const ResumesView = ({ resumes }: ResumesViewProps) => {
             analysis.
           </p>
         </div>
-        <Button asChild className="shrink-0">
+        {/* <Button asChild className="shrink-0">
           <Link href="/dashboard/resumes/generate">
             <FilePlus2 className="h-3.5 w-3.5" />
             Generate resume
           </Link>
-        </Button>
+        </Button> */}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[380px_1fr]">

@@ -363,7 +363,7 @@ const standardSections: ResumeSectionDefinition[] = [
   },
   {
     id: "experience",
-    title: "Experience",
+    title: "Experience / Contribution",
     hasContent: (resume) => Boolean(resume.experience?.length),
     render: (resume) => (
       <>
@@ -372,16 +372,14 @@ const standardSections: ResumeSectionDefinition[] = [
     ),
   },
   {
-    id: "education",
-    title: "Education",
-    hasContent: (resume) => Boolean(resume.education?.length),
-    render: (resume) => (
-      <>{(resume.education ?? []).map((item, index) => <EducationEntry item={item} key={index} />)}</>
-    ),
+    id: "projects",
+    title: "Projects",
+    hasContent: (resume) => Boolean(resume.projects?.length),
+    render: (resume) => <>{(resume.projects ?? []).map((item, index) => <ProjectEntry item={item} key={index} />)}</>,
   },
   {
     id: "skills",
-    title: "Technical Skills",
+    title: "Tech Skills / Stack",
     hasContent: (resume) => Boolean(resume.skills?.length),
     render: (resume) => (
       <>
@@ -399,10 +397,12 @@ const standardSections: ResumeSectionDefinition[] = [
     ),
   },
   {
-    id: "projects",
-    title: "Projects",
-    hasContent: (resume) => Boolean(resume.projects?.length),
-    render: (resume) => <>{(resume.projects ?? []).map((item, index) => <ProjectEntry item={item} key={index} />)}</>,
+    id: "education",
+    title: "Education",
+    hasContent: (resume) => Boolean(resume.education?.length),
+    render: (resume) => (
+      <>{(resume.education ?? []).map((item, index) => <EducationEntry item={item} key={index} />)}</>
+    ),
   },
   {
     id: "certifications",
@@ -431,7 +431,14 @@ const standardSections: ResumeSectionDefinition[] = [
  * `createResumePdf`, so another visual template can share the same data and API.
  */
 export function ResumePdfDocument({ resume, options = {} }: { resume: ResumeData; options?: ResumePdfOptions }) {
-  const sectionOrder = options.sectionOrder ?? ["summary", "skills", "experience", "projects", "certifications", "education"];
+  const sectionOrder = options.sectionOrder ?? [
+    "summary",
+    "experience",
+    "projects",
+    "skills",
+    "education",
+    "certifications",
+  ];
   const definitions = [...standardSections, ...(options.sectionDefinitions ?? [])];
   const sections = sectionOrder
     .map((id) => definitions.find((section) => section.id === id))
