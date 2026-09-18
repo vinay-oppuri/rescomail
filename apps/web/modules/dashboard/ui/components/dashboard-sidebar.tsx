@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  FileEdit,
   FileText,
   LayoutDashboard,
   Mail,
@@ -32,7 +31,6 @@ import { ThemeToggle } from "@/modules/home/ui/components/home-navbar";
 const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "AI Resumes", href: "/dashboard/resumes", icon: FileText },
-  { name: "Resume Editor", href: "/dashboard/editor", icon: FileEdit },
   { name: "ATS Analysis", href: "/dashboard/ats", icon: Target },
   { name: "Cold Emails", href: "/dashboard/emails", icon: Mail },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
